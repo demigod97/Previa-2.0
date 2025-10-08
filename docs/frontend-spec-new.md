@@ -836,3 +836,63 @@ Include starter prompts as clickable chips when empty.
 
 **End of Frontend Specification**
 
+---
+
+## 11) Acceptance Criteria (Linked to PRD)
+
+### Onboarding Flow (FR8)
+- [ ] User can complete 5–7 onboarding steps without errors (Welcome → Auth → Upload → Extract → Confirm → Preview → Complete).
+- [ ] Upload step enforces PDF/CSV and ≤ 50MB with clear inline errors.
+- [ ] Extraction step shows progress; if processing fails, user can retry or skip with explanation.
+- [ ] Confirmation step allows editing institution, account name, last 4 digits; validations enforced.
+- [ ] Completion grants first badge and routes to dashboard.
+
+### Uploads (FR1–FR2)
+- [ ] Drag/drop and file picker both work; validation prior to upload (type/size).
+- [ ] Per-file status transitions: uploading → processing → completed/failed visible in UI.
+- [ ] Retry action available on failed items; disabled while in-flight.
+- [ ] Multiple websites and copied text flows create sources and invoke processing successfully.
+
+### OCR/AI Extraction & Matching (FR3–FR4)
+- [ ] Document processing results populate content/summary for sources.
+- [ ] Reconciliation view displays unmatched transactions and receipt library.
+- [ ] Matching UI shows confidence and explanation; approve/reject updates state.
+- [ ] Manual corrections persist and reflect in views.
+
+### Dashboard Review/Approve (FR5)
+- [ ] Home widgets render with real data and responsive charts.
+- [ ] Transaction table supports search, filters, sorting, pagination.
+- [ ] Approve/reject actions available from reconciliation and transaction detail routes.
+
+### Data Export (FR7)
+- [ ] Export button (placeholder) present with disabled state until backend ready.
+
+### Non-Functional (NFR1–NFR4)
+- [ ] All new screens meet responsive breakpoints and WCAG AA basics.
+- [ ] Error states are accessible (aria-live), actionable, and consistent.
+- [ ] Upload/processing and chat show retry/backoff UX for 5xx/429.
+
+---
+
+## 12) Component Cross-Reference (by Screen)
+
+| Screen/View | Primary Components | Secondary Components |
+|---|---|---|
+| Welcome | Card, Button | Logo, Typography |
+| Auth | Form, Input, Button | Divider, Toast |
+| Upload (Onboarding) | Dropzone, Progress, Button | Badge, Toast |
+| Extraction | Progress, Skeleton | Toast |
+| Confirm Account | Card, Input, Badge, Button | Inline Edit Controls |
+| Transaction Preview | Table, ScrollArea, Button | Link |
+| Onboarding Complete | Badge, Button | Animation |
+| Home Dashboard | Card, Chart, Select | Grid, Badge |
+| Reconciliation | ResizablePanelGroup, Card, Tabs | Dialog, Progress |
+| Transaction Table | Data Table, Popover, Calendar, DropdownMenu, Pagination | Input, Checkbox |
+| Chat Assistant | ScrollArea, Textarea, Button, HoverCard | Toast |
+| Upload Hub | Dropzone, Table, Progress | Button, Toast |
+| Document Library | Tabs, Card, Table, DropdownMenu | Calendar |
+
+Notes:
+- All components are shadcn/ui with Previa theme overrides.
+- Use shared types for Edge contract payloads to avoid drift.
+
