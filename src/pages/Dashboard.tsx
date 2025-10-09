@@ -15,15 +15,15 @@ const Dashboard = () => {
   // Show loading while auth is initializing
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ backgroundColor: '#F2E9D8' }}>
         <DashboardHeader userEmail={user?.email} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-medium text-gray-900 mb-2">Welcome to PolicyAi</h1>
+            <h1 className="text-4xl font-medium mb-2" style={{ color: '#403B31' }}>Welcome to Previa</h1>
           </div>
           <div className="text-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Initializing...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4" style={{ borderColor: '#D9C8B4' }}></div>
+            <p style={{ color: '#595347' }}>Initializing...</p>
           </div>
         </main>
       </div>
@@ -33,17 +33,18 @@ const Dashboard = () => {
   // Show auth error if present
   if (authError) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ backgroundColor: '#F2E9D8' }}>
         <DashboardHeader userEmail={user?.email} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-medium text-gray-900 mb-2">Welcome to PolicyAi</h1>
+            <h1 className="text-4xl font-medium mb-2" style={{ color: '#403B31' }}>Welcome to Previa</h1>
           </div>
           <div className="text-center py-16">
             <p className="text-red-600">Authentication error: {authError}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 rounded hover:opacity-90"
+              style={{ backgroundColor: '#D9C8B4', color: '#403B31' }}
             >
               Retry
             </button>
@@ -56,15 +57,15 @@ const Dashboard = () => {
   // Show notebooks loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ backgroundColor: '#F2E9D8' }}>
         <DashboardHeader userEmail={user?.email} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-medium text-gray-900 mb-2">Welcome to PolicyAi</h1>
+            <h1 className="text-4xl font-medium mb-2" style={{ color: '#403B31' }}>Welcome to Previa</h1>
           </div>
           <div className="text-center py-16">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading your notebooks...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4" style={{ borderColor: '#D9C8B4' }}></div>
+            <p style={{ color: '#595347' }}>Loading your financial data...</p>
           </div>
         </main>
       </div>
@@ -74,17 +75,18 @@ const Dashboard = () => {
   // Show notebooks error if present
   if (isError && error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ backgroundColor: '#F2E9D8' }}>
         <DashboardHeader userEmail={user?.email} />
         <main className="max-w-7xl mx-auto px-6 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-medium text-gray-900 mb-2">Welcome to PolicyAi</h1>
+            <h1 className="text-4xl font-medium mb-2" style={{ color: '#403B31' }}>Welcome to Previa</h1>
           </div>
           <div className="text-center py-16">
-            <p className="text-red-600">Error loading notebooks: {error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            <p className="text-red-600">Error loading financial data: {error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 rounded hover:opacity-90"
+              style={{ backgroundColor: '#D9C8B4', color: '#403B31' }}
             >
               Retry
             </button>
@@ -95,12 +97,12 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen" style={{ backgroundColor: '#F2E9D8' }}>
       <DashboardHeader userEmail={user?.email} />
-      
+
       <main className="max-w-7xl mx-auto px-6 py-[60px]">
         <div className="mb-8">
-          <h1 className="font-medium text-gray-900 mb-2 text-5xl">Welcome to PolicyAi</h1>
+          <h1 className="font-medium mb-2 text-5xl" style={{ color: '#403B31' }}>Welcome to Previa</h1>
         </div>
 
         <div className="mb-8">

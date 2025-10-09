@@ -3,7 +3,7 @@ import { Trash2, Edit, CheckSquare, Square } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { useNotebookDelete } from '@/hooks/useNotebookDelete';
 import { useGlobalSourcesCount } from '@/hooks/useGlobalSourcesCount';
-import NotebookTitleEditor from '@/components/notebook/NotebookTitleEditor';
+// NotebookTitleEditor removed - will be replaced with Previa components
 
 interface NotebookCardProps {
   notebook: {
@@ -30,7 +30,6 @@ const NotebookCard = ({
   onSelectionChange
 }: NotebookCardProps) => {
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showTitleEditor, setShowTitleEditor] = useState(false);
   const {
     deleteNotebook,
     isDeleting
@@ -63,7 +62,8 @@ const NotebookCard = ({
   const handleEditTitleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
-    setShowTitleEditor(true);
+    // Title editing temporarily disabled - will be replaced with Previa functionality
+    console.log('Edit title clicked for:', notebook.id);
   };
 
   // Generate CSS classes from color name
@@ -145,14 +145,7 @@ const NotebookCard = ({
         <span>{notebook.date} • {globalSourcesCount} available source{globalSourcesCount !== 1 ? 's' : ''}</span>
       </div>
 
-      <NotebookTitleEditor
-        open={showTitleEditor}
-        onOpenChange={setShowTitleEditor}
-        notebookId={notebook.id}
-        currentTitle={notebook.title}
-        currentDescription={notebook.description}
-        onTitleChanged={onTitleChanged}
-      />
+      {/* NotebookTitleEditor temporarily removed - will be replaced with Previa components */}
     </div>;
 };
 

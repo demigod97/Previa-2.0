@@ -44,45 +44,46 @@ const UserGreetingCard = () => {
     }
   };
 
-  // Get role color
+  // Get role color using Previa color scheme
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'administrator':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'text-green-800 border-green-200';
       case 'executive':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'text-blue-800 border-blue-200';
       case 'board':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'text-purple-800 border-purple-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'border-gray-200';
     }
   };
 
   return (
-    <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+    <Card style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <div className="p-2 bg-blue-100 rounded-full">
-            <User className="h-5 w-5 text-blue-600" />
+        <CardTitle className="flex items-center gap-2 text-lg" style={{ color: '#403B31' }}>
+          <div className="p-2 rounded-full" style={{ backgroundColor: '#D9C8B4' }}>
+            <User className="h-5 w-5" style={{ color: '#403B31' }} />
           </div>
           Welcome back, {displayName}!
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex items-center gap-2 text-sm text-gray-600">
+        <div className="flex items-center gap-2 text-sm" style={{ color: '#595347' }}>
           <Mail className="h-4 w-4" />
           <span>{user.email}</span>
         </div>
-        
+
         <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-gray-500" />
-          <span className="text-sm text-gray-600">Role:</span>
+          <Shield className="h-4 w-4" style={{ color: '#8C877D' }} />
+          <span className="text-sm" style={{ color: '#595347' }}>Role:</span>
           {roleLoading ? (
-            <div className="h-5 w-20 bg-gray-200 animate-pulse rounded"></div>
+            <div className="h-5 w-20 animate-pulse rounded" style={{ backgroundColor: '#D9C8B4' }}></div>
           ) : (
-            <Badge 
-              variant="outline" 
+            <Badge
+              variant="outline"
               className={getRoleColor(userRole || '')}
+              style={{ backgroundColor: '#D9C8B4', color: '#403B31' }}
             >
               {userRole ? formatRole(userRole) : 'No Role Assigned'}
             </Badge>
@@ -90,13 +91,13 @@ const UserGreetingCard = () => {
         </div>
 
         <div className="flex items-start gap-2 pt-1">
-          <FileText className="h-4 w-4 text-gray-500 mt-0.5" />
+          <FileText className="h-4 w-4 mt-0.5" style={{ color: '#8C877D' }} />
           <div className="flex-1">
-            <span className="text-sm text-gray-600">Available Sources:</span>
+            <span className="text-sm" style={{ color: '#595347' }}>Financial Accounts:</span>
             {sourcesLoading ? (
-              <div className="h-4 w-32 bg-gray-200 animate-pulse rounded mt-1"></div>
+              <div className="h-4 w-32 animate-pulse rounded mt-1" style={{ backgroundColor: '#D9C8B4' }}></div>
             ) : (
-              <p className="text-sm text-gray-700 mt-0.5">{sourcesDescription}</p>
+              <p className="text-sm mt-0.5" style={{ color: '#403B31' }}>Ready for financial analysis and reconciliation</p>
             )}
           </div>
         </div>

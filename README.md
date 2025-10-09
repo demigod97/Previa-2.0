@@ -143,10 +143,12 @@ Core tables optimized for financial reconciliation:
 
 ### Prerequisites
 
-- Node.js 18+ (for local development)
-- Supabase account
-- n8n Cloud account (or self-hosted instance)
-- OpenAI or Gemini API key
+- **Node.js** 18+ (LTS recommended for local development)
+- **npm** 9+ or **yarn** 1.22+
+- **Supabase** account (https://supabase.com)
+- **n8n** Cloud account or self-hosted instance (https://n8n.io)
+- **Google Gemini API** key (primary LLM) - Get from https://ai.google.dev
+- **OpenAI API** key (optional fallback) - Get from https://platform.openai.com
 
 ### Installation
 
@@ -176,9 +178,17 @@ Core tables optimized for financial reconciliation:
 
 5. **Set up environment variables**
    ```bash
-   cp .env.example .env
-   # Edit .env with your Supabase and n8n credentials
+   cp .env.example .env.local
+   # Add your Supabase URL and anon key
    ```
+   
+   **Important:** See [docs/environment-variables.md](./docs/environment-variables.md) for complete environment setup including:
+   - Supabase configuration
+   - LLM API keys (Gemini + optional GPT-4o)
+   - n8n webhook URLs
+   - Server-side secrets configuration
+   
+   **Note:** n8n workflows are documented in [docs/n8n-workflow-requirements.md](./docs/n8n-workflow-requirements.md)
 
 6. **Run development server**
    ```bash
@@ -206,19 +216,43 @@ Core tables optimized for financial reconciliation:
 
 ## 🧪 Testing
 
+### Running Tests
+
 ```bash
-# Unit tests
+# Run all tests
 npm run test
 
-# Integration tests
-npm run test:integration
+# Run with UI
+npm run test:ui
 
-# E2E tests
-npm run test:e2e
+# Run with coverage
+npm run test -- --coverage
 
 # Linting
 npm run lint
 ```
+
+### Mock Data for Development
+
+Previa includes comprehensive mock financial data for testing:
+
+- **Location:** `src/test/fixtures/financial-data.ts`
+- **Includes:** Sample bank accounts, statements, transactions, receipts, and reconciliation matches
+- **Sample Files:** `public/test-fixtures/` (placeholders for bank statements and receipt images)
+
+**Test Data Summary:**
+- 3 bank accounts (Commonwealth, ANZ, Westpac)
+- 2 bank statements (Jan 2024)
+- 10 sample transactions (groceries, transport, dining, subscriptions, income)
+- 5 receipts with OCR data
+- 4 reconciliation matches (various confidence levels)
+
+Use these fixtures to:
+- Test UI components without real financial data
+- Develop reconciliation algorithms
+- Demo the platform to potential users
+
+See `src/test/fixtures/financial-data.ts` for helper functions like `getUnreconciledTransactions()` and `getTotalSpendingByCategory()`.
 
 ---
 

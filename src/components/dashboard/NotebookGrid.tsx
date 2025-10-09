@@ -51,8 +51,8 @@ const NotebookGrid = () => {
       assigned_role: 'executive' // Auto-assign to executive role
     }, {
       onSuccess: data => {
-        console.log('Navigating to notebook:', data.id);
-        navigate(`/notebook/${data.id}`);
+        console.log('Notebook created successfully:', data.id);
+        // Temporarily disabled navigation - will be updated with Previa routing
       },
       onError: error => {
         console.error('Failed to create notebook:', error);
@@ -70,7 +70,8 @@ const NotebookGrid = () => {
       console.log('Click prevented due to interactive element');
       return;
     }
-    navigate(`/notebook/${notebookId}`);
+    // Temporarily disabled navigation - will be updated with Previa routing
+    console.log('Would navigate to notebook:', notebookId);
   };
 
 
@@ -120,13 +121,19 @@ const NotebookGrid = () => {
   return <div>
       <div className="flex items-center justify-between mb-8">
         <div className="flex items-center space-x-3">
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white rounded-full px-6" onClick={handleCreateNotebook} disabled={isCreating}>
+          <Button
+            onClick={handleCreateNotebook}
+            disabled={isCreating}
+            className="rounded-full px-6 hover:opacity-90"
+            style={{ backgroundColor: '#D9C8B4', color: '#403B31' }}
+          >
             {isCreating ? 'Creating...' : '+ Create new'}
           </Button>
-          <Button 
+          <Button
             variant={bulkSelectMode ? "default" : "outline"}
             onClick={handleBulkSelectToggle}
-            className={bulkSelectMode ? "bg-blue-600 hover:bg-blue-700 rounded-full px-6" : "border-red-200 text-red-600 hover:bg-red-50 rounded-full px-6"}
+            className={bulkSelectMode ? "rounded-full px-6 hover:opacity-90" : "border-red-200 text-red-600 hover:bg-red-50 rounded-full px-6"}
+            style={bulkSelectMode ? { backgroundColor: '#D9C8B4', color: '#403B31' } : {}}
           >
             <CheckSquare className="h-4 w-4 mr-2" />
             {bulkSelectMode ? 'Exit Selection' : 'Bulk Delete'}
@@ -136,17 +143,17 @@ const NotebookGrid = () => {
         <div className="flex items-center space-x-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <div className="flex items-center space-x-2 bg-white rounded-lg border px-3 py-2 cursor-pointer hover:bg-gray-50 transition-colors">
-                <span className="text-sm text-gray-600">{sortBy}</span>
-                <ChevronDown className="h-4 w-4 text-gray-400" />
+              <div className="flex items-center space-x-2 rounded-lg border px-3 py-2 cursor-pointer transition-colors" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
+                <span className="text-sm" style={{ color: '#595347' }}>{sortBy}</span>
+                <ChevronDown className="h-4 w-4" style={{ color: '#8C877D' }} />
               </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={() => setSortBy('Most recent')} className="flex items-center justify-between">
+            <DropdownMenuContent align="end" className="w-48" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
+              <DropdownMenuItem onClick={() => setSortBy('Most recent')} className="flex items-center justify-between" style={{ color: '#403B31' }}>
                 Most recent
                 {sortBy === 'Most recent' && <Check className="h-4 w-4" />}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortBy('Title')} className="flex items-center justify-between">
+              <DropdownMenuItem onClick={() => setSortBy('Title')} className="flex items-center justify-between" style={{ color: '#403B31' }}>
                 Title
                 {sortBy === 'Title' && <Check className="h-4 w-4" />}
               </DropdownMenuItem>
@@ -156,14 +163,15 @@ const NotebookGrid = () => {
       </div>
 
       {bulkSelectMode && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div className="rounded-lg p-4 mb-6" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4', border: '1px solid' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={handleSelectAll}
-                className="text-blue-700 border-blue-300 hover:bg-blue-100"
+                className="hover:opacity-90"
+                style={{ backgroundColor: '#D9C8B4', color: '#403B31', borderColor: '#D9C8B4' }}
               >
                 {selectedDocuments.length === sortedNotebooks.length ? (
                   <>
@@ -177,13 +185,13 @@ const NotebookGrid = () => {
                   </>
                 )}
               </Button>
-              <span className="text-sm text-blue-700">
+              <span className="text-sm" style={{ color: '#403B31' }}>
                 {selectedDocuments.length} of {sortedNotebooks.length} documents selected
               </span>
             </div>
-            
+
             {selectedDocuments.length > 0 && (
-              <Button 
+              <Button
                 onClick={() => setShowBulkDeleteDialog(true)}
                 variant="destructive"
                 size="sm"

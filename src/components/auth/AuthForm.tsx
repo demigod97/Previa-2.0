@@ -70,17 +70,17 @@ const AuthForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="w-full max-w-md mx-auto" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
       <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Enter your credentials to access your notebooks
+        <CardTitle style={{ color: '#403B31' }}>Sign In</CardTitle>
+        <CardDescription style={{ color: '#595347' }}>
+          Enter your credentials to access your financial dashboard
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" style={{ color: '#403B31' }}>Email</Label>
             <Input
               id="email"
               type="email"
@@ -88,10 +88,12 @@ const AuthForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="Enter your email"
+              style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4', color: '#403B31' }}
+              className="focus:ring-2 focus:ring-opacity-50"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" style={{ color: '#403B31' }}>Password</Label>
             <Input
               id="password"
               type="password"
@@ -100,9 +102,16 @@ const AuthForm = () => {
               required
               placeholder="Enter your password"
               minLength={6}
+              style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4', color: '#403B31' }}
+              className="focus:ring-2 focus:ring-opacity-50"
             />
           </div>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button
+            type="submit"
+            className="w-full hover:opacity-90"
+            disabled={loading}
+            style={{ backgroundColor: '#D9C8B4', color: '#403B31', borderColor: '#D9C8B4' }}
+          >
             {loading ? 'Signing In...' : 'Sign In'}
           </Button>
         </form>
