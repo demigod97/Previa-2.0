@@ -52,9 +52,20 @@ export function TransactionCard({
     <Card
       ref={setNodeRef}
       style={style}
-      className={`border-sand hover:shadow-md transition-all cursor-move ${className}`}
+      className={`border-sand hover:shadow-md transition-all cursor-move focus:outline-none focus:ring-2 focus:ring-sand ${className}`}
+      role="button"
+      tabIndex={0}
+      aria-label={`Transaction: ${transaction.description}, ${formatAmount(transaction.amount)}, ${format(new Date(transaction.transaction_date), 'dd/MM/yyyy')}. Press Space to select, or drag to match with a receipt.`}
       {...attributes}
       {...listeners}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          if (onMatch) {
+            onMatch(transaction.id);
+          }
+        }
+      }}
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-2">
@@ -75,20 +86,21 @@ export function TransactionCard({
 
           {/* Right: Amount and Action */}
           <div className="flex flex-col items-end gap-2">
-            <span className={`font-mono text-sm font-semibold ${amountColor}`}>
+            <span className={`font-mono text-sm font-semibold ${amountColor}`} aria-label={`Amount: ${formatAmount(transaction.amount)}`}>
               {formatAmount(transaction.amount)}
             </span>
             {onMatch && (
               <Button
                 size="sm"
                 variant="ghost"
-                className="h-7 px-2 text-xs"
+                aria-label={`Match transaction ${transaction.description}`}
+                className="h-7 px-2 text-xs focus:outline-none focus:ring-2 focus:ring-sand"
                 onClick={(e) => {
                   e.stopPropagation();
                   onMatch(transaction.id);
                 }}
               >
-                <Check className="h-3 w-3 mr-1" />
+                <Check className="h-3 w-3 mr-1" aria-hidden="true" />
                 Match
               </Button>
             )}

@@ -3,6 +3,15 @@
 ## 1. Epic 1: Foundation & Core Services
 * **Goal**: Establish the technical foundation with monorepo setup, database schema (bank accounts, statements, receipts, transactions, reconciliation_matches), user authentication, and user/premium_user tier implementation. Apply Previa branding (color palette, logo) and configure shadcn/ui with design tokens.
 
+### Epic 1.X: User Sign-up & Staff Role System (NEW - In Progress)
+* **Goal**: Enable user self-service sign-up with verification codes and establish a staff role system (team, super_admin) for platform administration, separate from user tiers.
+* **Stories**: 
+  * 1.9: Sign-up UI with Code Verification (6-field input, validation, account creation)
+  * 1.10: Staff Role System + Database Migrations (staff_roles table, RLS, helper functions)
+  * 1.11: Sign-up Code Management (Admin CRUD interface for code management)
+* **Key Deliverables**: Working sign-up flow, staff admin system, code management interface
+* **Status**: Draft - Ready for Implementation
+
 ## 2. Epic 2: User Onboarding & Bank Account Setup
 * **Goal**: Build the interactive onboarding flow (5-7 steps) that guides users to upload their first bank statement, extract account details via OCR/AI, and create their first bank account with user confirmation. Introduce gamification elements.
 

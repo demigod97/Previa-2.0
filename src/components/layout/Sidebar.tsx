@@ -84,15 +84,18 @@ export function Sidebar() {
               <Link
                 key={item.path}
                 to={item.path}
+                aria-label={item.label}
+                aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
                   'text-sm font-medium',
+                  'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
                   active
                     ? 'bg-sand text-charcoal'
                     : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
                 )}
               >
-                <span className="text-lg">{item.emoji}</span>
+                <span className="text-lg" aria-hidden="true">{item.emoji}</span>
                 <span>{item.label}</span>
               </Link>
             );
@@ -122,9 +125,10 @@ export function Sidebar() {
           <Button
             variant="ghost"
             onClick={handleSignOut}
-            className="w-full justify-start text-darkStone hover:text-charcoal hover:bg-sand/50"
+            aria-label="Sign out of your account"
+            className="w-full justify-start text-darkStone hover:text-charcoal hover:bg-sand/50 focus:outline-none focus:ring-2 focus:ring-sand"
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
             Sign Out
           </Button>
         </div>
@@ -137,25 +141,27 @@ export function Sidebar() {
           <Logo size="md" />
         </div>
 
-        {/* Navigation Items - Icons Only */}
+        {/* Navigation Items - Emojis Only */}
         <nav className="flex-1 px-2 py-6 space-y-2">
           {navigationItems.map((item) => {
-            const Icon = item.icon;
             const active = isActive(item.path);
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
+                aria-label={item.label}
+                aria-current={active ? 'page' : undefined}
                 title={item.label}
                 className={cn(
-                  'flex items-center justify-center p-3 rounded-lg transition-colors',
+                  'flex items-center justify-center p-3 rounded-lg transition-colors text-2xl',
+                  'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
                   active
-                    ? 'bg-sand text-charcoal'
-                    : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                    ? 'bg-sand'
+                    : 'hover:bg-sand/50'
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <span aria-hidden="true">{item.emoji}</span>
               </Link>
             );
           })}
@@ -165,7 +171,8 @@ export function Sidebar() {
         <div className="px-2 py-4 border-t border-sand">
           <Link
             to="/settings"
-            className="flex items-center justify-center"
+            aria-label="Go to settings"
+            className="flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream rounded-full"
           >
             <Avatar className="h-9 w-9">
               <AvatarFallback className="bg-sand text-charcoal text-sm">
@@ -177,24 +184,29 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile Bottom Navigation (<768px) */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-cream border-t border-sand z-50">
+      <nav
+        className="md:hidden fixed bottom-0 inset-x-0 bg-cream border-t border-sand z-50"
+        aria-label="Mobile navigation"
+      >
         <div className="flex items-center justify-around px-2 py-3">
           {navigationItems.slice(0, 5).map((item) => {
-            const Icon = item.icon;
             const active = isActive(item.path);
 
             return (
               <Link
                 key={item.path}
                 to={item.path}
+                aria-label={item.label}
+                aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors',
+                  'focus:outline-none focus:ring-2 focus:ring-sand',
                   active
                     ? 'text-charcoal'
                     : 'text-darkStone'
                 )}
               >
-                <Icon className={cn('h-5 w-5', active && 'text-charcoal')} />
+                <span className="text-xl" aria-hidden="true">{item.emoji}</span>
                 <span className="text-xs font-medium">{item.label}</span>
               </Link>
             );

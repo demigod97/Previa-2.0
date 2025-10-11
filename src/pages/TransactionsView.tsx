@@ -28,6 +28,7 @@ import { EditTransactionDialog } from '@/components/transactions/EditTransaction
 import { MobileTransactionCard } from '@/components/transactions/MobileTransactionCard';
 import { MobileTransactionFilters } from '@/components/transactions/MobileTransactionFilters';
 import { useTransactions } from '@/hooks/financial/useTransactions';
+import { useDebounce } from '@/hooks/useDebounce';
 import { Transaction } from '@/types/financial';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -64,6 +65,9 @@ const TransactionsView = () => {
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [globalFilter, setGlobalFilter] = React.useState('');
+
+  // Debounce global filter for performance (300ms delay)
+  const debouncedGlobalFilter = useDebounce(globalFilter, 300);
 
   // Dialog state
   const [editingTransaction, setEditingTransaction] = React.useState<Transaction | null>(null);
@@ -236,7 +240,7 @@ const TransactionsView = () => {
       columnFilters,
       columnVisibility,
       rowSelection,
-      globalFilter,
+      globalFilter: debouncedGlobalFilter, // Use debounced value for filtering
     },
   });
 

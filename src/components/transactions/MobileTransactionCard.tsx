@@ -1,11 +1,12 @@
 /**
- * MobileTransactionCard - Mobile-optimized transaction card
- * 
+ * MobileTransactionCard - Mobile-optimized transaction card with notebook design
+ *
  * Features:
+ * - Paper white background (notebook style)
  * - Touch-friendly 64px minimum height
  * - Tap to view details
- * - Swipe actions for quick edit/delete
- * - Status badges and category tags
+ * - Status badges with emojis
+ * - Emoji actions in dropdown menu
  */
 
 import React from 'react';
@@ -18,7 +19,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Eye, Edit, Trash2, MoreVertical } from 'lucide-react';
+import { MoreVertical } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Transaction } from '@/types/financial';
 import { cn } from '@/lib/utils';
@@ -42,18 +43,20 @@ export function MobileTransactionCard({
 }: MobileTransactionCardProps) {
   const isIncome = transaction.amount >= 0;
   const amountColor = isIncome ? 'text-green-600' : 'text-red-600';
-  
+
   const getStatusBadge = () => {
-    const statusColors = {
-      'unreconciled': 'bg-red-100 text-red-700',
-      'matched': 'bg-yellow-100 text-yellow-700',
-      'approved': 'bg-green-100 text-green-700',
-      'rejected': 'bg-gray-100 text-gray-700',
+    const statusConfig = {
+      'unreconciled': { emoji: '📝', class: 'bg-red-100 text-red-700' },
+      'matched': { emoji: '⚠️', class: 'bg-yellow-100 text-yellow-700' },
+      'approved': { emoji: '✅', class: 'bg-green-100 text-green-700' },
+      'rejected': { emoji: '❌', class: 'bg-gray-100 text-gray-700' },
     };
-    
+
+    const config = statusConfig[transaction.status as keyof typeof statusConfig] || { emoji: '', class: 'bg-gray-100' };
+
     return (
-      <Badge className={cn('text-xs', statusColors[transaction.status as keyof typeof statusColors] || 'bg-gray-100')}>
-        {transaction.status}
+      <Badge className={cn('text-xs', config.class)}>
+        {config.emoji} {transaction.status}
       </Badge>
     );
   };
@@ -61,13 +64,13 @@ export function MobileTransactionCard({
   return (
     <Card
       className={cn(
-        'bg-card border-previa-stone/20 hover:border-previa-sand transition-all',
+        'bg-white border-previa-stone/20 hover:border-previa-sand hover:bg-previa-sand/10 transition-all',
         'min-h-[64px] cursor-pointer',
         isSelected && 'ring-2 ring-sand'
       )}
       onClick={() => onView(transaction)}
     >
-      <CardContent className="p-4">
+      <CardContent className="p-4 border-b border-charcoal/10">
         <div className="flex items-start justify-between gap-3">
           {/* Left: Date, Description, Category */}
           <div className="flex-1 min-w-0 space-y-1">
@@ -118,7 +121,7 @@ export function MobileTransactionCard({
                   }}
                   className="hover:bg-sand/20"
                 >
-                  <Eye className="mr-2 h-4 w-4" />
+                  <span className="mr-2">👁️</span>
                   View Details
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -128,7 +131,7 @@ export function MobileTransactionCard({
                   }}
                   className="hover:bg-sand/20"
                 >
-                  <Edit className="mr-2 h-4 w-4" />
+                  <span className="mr-2">✏️</span>
                   Edit
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -138,7 +141,7 @@ export function MobileTransactionCard({
                   }}
                   className="text-red-600 hover:bg-red-50"
                 >
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <span className="mr-2">🗑️</span>
                   Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>

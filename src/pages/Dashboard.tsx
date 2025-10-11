@@ -1,11 +1,11 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, lazy, Suspense } from 'react';
 import { Sidebar, TopBar } from '@/components/layout';
-import { 
-  UserGreetingCard, 
-  FinancialOverviewCards, 
+import {
+  UserGreetingCard,
+  FinancialOverviewCards,
   RecentTransactionsList,
-  BankAccountsList 
+  BankAccountsList
 } from '@/components/dashboard';
 import { TierDisplay } from '@/components/auth/TierDisplay';
 import { UpgradePrompt } from '@/components/auth/UpgradePrompt';
@@ -13,8 +13,13 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useBankAccounts, useTransactions, useReceipts } from '@/hooks/financial';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MonthlySpendingChart, IncomeVsExpensesChart, UnreconciledAlert } from '@/components/widgets';
+import { Skeleton } from '@/components/ui/skeleton';
 import type { UserTierData, Transaction } from '@/types/financial';
+
+// Lazy load chart components to reduce initial bundle size
+const MonthlySpendingChart = lazy(() => import('@/components/widgets/MonthlySpendingChart').then(module => ({ default: module.MonthlySpendingChart })));
+const IncomeVsExpensesChart = lazy(() => import('@/components/widgets/IncomeVsExpensesChart').then(module => ({ default: module.IncomeVsExpensesChart })));
+const UnreconciledAlert = lazy(() => import('@/components/widgets/UnreconciledAlert').then(module => ({ default: module.UnreconciledAlert })));
 
 const Dashboard = () => {
   const { user, loading: authLoading, error: authError, userTier } = useAuth();
@@ -131,21 +136,27 @@ const Dashboard = () => {
               {transactionsLoading ? (
                 <div className="h-[400px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
               ) : (
-                <MonthlySpendingChart transactions={transactions} />
+                <Suspense fallback={<Card className="h-[400px] flex items-center justify-center"><Skeleton className="h-[360px] w-full" /></Card>}>
+                  <MonthlySpendingChart transactions={transactions} />
+                </Suspense>
               )}
 
               {/* Income vs Expenses Chart */}
               {transactionsLoading ? (
                 <div className="h-[400px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
               ) : (
-                <IncomeVsExpensesChart transactions={transactions} />
+                <Suspense fallback={<Card className="h-[400px] flex items-center justify-center"><Skeleton className="h-[360px] w-full" /></Card>}>
+                  <IncomeVsExpensesChart transactions={transactions} />
+                </Suspense>
               )}
 
               {/* Unreconciled Alert */}
               {transactionsLoading ? (
                 <div className="h-[200px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
               ) : (
-                <UnreconciledAlert transactions={transactions} />
+                <Suspense fallback={<Card className="h-[200px] flex items-center justify-center"><Skeleton className="h-[160px] w-full" /></Card>}>
+                  <UnreconciledAlert transactions={transactions} />
+                </Suspense>
               )}
 
               {/* Recent Transactions */}

@@ -39,19 +39,23 @@ export const FinancialOverviewCards: React.FC<FinancialOverviewCardsProps> = ({
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {/* Bank Accounts Card */}
-      <Card className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default">
+      <Card
+        className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default"
+        role="region"
+        aria-label="Bank accounts overview"
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Bank Accounts
           </CardTitle>
-          <CreditCard className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" />
+          <CreditCard className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
         </CardHeader>
         <CardContent>
           {loading.accounts ? (
-            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded"></div>
+            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded" aria-label="Loading bank accounts"></div>
           ) : (
             <>
-              <div className="text-2xl font-bold text-previa-charcoal">
+              <div className="text-2xl font-bold text-previa-charcoal" aria-live="polite">
                 {accountsCount}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
@@ -63,19 +67,23 @@ export const FinancialOverviewCards: React.FC<FinancialOverviewCardsProps> = ({
       </Card>
 
       {/* Transactions Card */}
-      <Card className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default">
+      <Card
+        className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default"
+        role="region"
+        aria-label="Transactions overview"
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Transactions
           </CardTitle>
-          <TrendingUp className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" />
+          <TrendingUp className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
         </CardHeader>
         <CardContent>
           {loading.transactions ? (
-            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded"></div>
+            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded" aria-label="Loading transactions"></div>
           ) : (
             <>
-              <div className="text-2xl font-bold text-previa-charcoal">
+              <div className="text-2xl font-bold text-previa-charcoal" aria-live="polite">
                 {transactionsThisMonth}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
@@ -87,19 +95,23 @@ export const FinancialOverviewCards: React.FC<FinancialOverviewCardsProps> = ({
       </Card>
 
       {/* Receipts Card */}
-      <Card className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default">
+      <Card
+        className="border-previa-stone/20 hover:border-previa-sand hover:shadow-md transition-all duration-200 ease-out cursor-default"
+        role="region"
+        aria-label="Receipts overview"
+      >
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium text-muted-foreground">
             Receipts
           </CardTitle>
-          <Receipt className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" />
+          <Receipt className="h-4 w-4 text-previa-sand transition-transform duration-200 group-hover:scale-110" aria-hidden="true" />
         </CardHeader>
         <CardContent>
           {loading.receipts ? (
-            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded"></div>
+            <div className="h-8 w-16 animate-pulse bg-previa-sand/20 rounded" aria-label="Loading receipts"></div>
           ) : (
             <>
-              <div className="text-2xl font-bold text-previa-charcoal">
+              <div className="text-2xl font-bold text-previa-charcoal" aria-live="polite">
                 {receiptsThisMonth}
               </div>
               <p className="text-xs text-muted-foreground mt-1">
