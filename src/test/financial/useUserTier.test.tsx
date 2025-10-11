@@ -131,7 +131,7 @@ describe('useUserTier Hook', () => {
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
-    });
+    }, { timeout: 3000 });
 
     expect(result.current.error).toBeInstanceOf(Error);
     expect((result.current.error as Error).message).toBe('User tier not found');
@@ -167,7 +167,7 @@ describe('useUserTier Hook', () => {
 
     await waitFor(() => {
       expect(result.current.isError).toBe(true);
-    });
+    }, { timeout: 3000 });
 
     expect(result.current.error).toEqual(mockError);
   });

@@ -18,10 +18,10 @@ interface N8nMessageFormat {
     segments: Array<{ text: string; citation_id?: number }>;
     citations: Array<Citation>;
   };
-  additional_kwargs?: any;
-  response_metadata?: any;
-  tool_calls?: any[];
-  invalid_tool_calls?: any[];
+  additional_kwargs?: Record<string, unknown>;
+  response_metadata?: Record<string, unknown>;
+  tool_calls?: Array<Record<string, unknown>>;
+  invalid_tool_calls?: Array<Record<string, unknown>>;
 }
 
 // Type for AI response structure from n8n
@@ -41,9 +41,15 @@ interface N8nAiResponseContent {
   }>;
 }
 
-const transformMessage = (item: any): EnhancedChatMessage => {
+interface ChatHistoryItem {
+  id: number;
+  session_id: string;
+  message: unknown;
+}
+
+const transformMessage = (item: ChatHistoryItem): EnhancedChatMessage => {
   console.log('Processing financial chat message:', item);
-  
+
   let transformedMessage: EnhancedChatMessage['message'];
   
   if (item.message && 
@@ -209,8 +215,8 @@ export const useFinancialChat = (sessionId: string = 'default-financial-chat') =
         },
         async (payload) => {
           console.log('Realtime: New financial message received:', payload);
-          
-          const newMessage = transformMessage(payload.new);
+
+          const newMessage = transformMessage(payload.new as ChatHistoryItem);
           
           queryClient.setQueryData(['financial-chat-messages', sessionId], (oldMessages: EnhancedChatMessage[] = []) => {
             const messageExists = oldMessages.some(msg => msg.id === newMessage.id);

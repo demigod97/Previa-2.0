@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import type { Json } from '@/integrations/supabase/types';
 
 export interface Receipt {
   id: string;
@@ -12,7 +13,7 @@ export interface Receipt {
   file_size: number | null;
   processing_status: string | null;
   confidence_score: number | null;
-  ocr_data: any;
+  ocr_data: Json | null;
   created_at: string;
 }
 

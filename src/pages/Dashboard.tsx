@@ -1,15 +1,18 @@
 
 import React, { useState, useMemo } from 'react';
 import { Sidebar, TopBar } from '@/components/layout';
-import UserGreetingCard from '@/components/dashboard/UserGreetingCard';
+import { 
+  UserGreetingCard, 
+  FinancialOverviewCards, 
+  RecentTransactionsList,
+  BankAccountsList 
+} from '@/components/dashboard';
 import { TierDisplay } from '@/components/auth/TierDisplay';
 import { UpgradePrompt } from '@/components/auth/UpgradePrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBankAccounts, useTransactions, useReceipts } from '@/hooks/financial';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { TrendingUp, CreditCard, Receipt, Calendar } from 'lucide-react';
 import { MonthlySpendingChart, IncomeVsExpensesChart, UnreconciledAlert } from '@/components/widgets';
 import type { UserTierData, Transaction } from '@/types/financial';
 
@@ -145,134 +148,46 @@ const Dashboard = () => {
                 <UnreconciledAlert transactions={transactions} />
               )}
 
-              {/* Recent Transactions - moved here */}
-              <Card className="bg-white">
-                <CardHeader>
-                  <CardTitle className="text-lg" style={{ color: '#403B31' }}>Recent Transactions</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {transactionsLoading ? (
-                    <div className="space-y-2">
-                      {[1, 2, 3].map(i => (
-                        <div key={i} className="h-12 animate-pulse rounded" style={{ backgroundColor: '#F2E9D8' }}></div>
-                      ))}
-                    </div>
-                  ) : transactions.length === 0 ? (
-                    <p className="text-sm text-center py-8" style={{ color: '#8C877D' }}>
-                      No transactions yet. Upload your first bank statement to get started!
-                    </p>
-                  ) : (
-                    <div className="space-y-2">
-                      {transactions.slice(0, 5).map((transaction) => (
-                        <div
-                          key={transaction.id}
-                          className="flex items-center justify-between p-3 rounded hover:bg-cream transition"
-                          style={{ border: '1px solid #D9C8B4' }}
-                        >
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <p className="font-medium" style={{ color: '#403B31' }}>{transaction.description || 'Unknown'}</p>
-                              {transaction.category && (
-                                <Badge variant="outline" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
-                                  {transaction.category}
-                                </Badge>
-                              )}
-                            </div>
-                            <p className="text-xs" style={{ color: '#8C877D' }}>
-                              <Calendar className="inline h-3 w-3 mr-1" />
-                              {new Date(transaction.transaction_date).toLocaleDateString()}
-                            </p>
-                          </div>
-                          <div className={`text-lg font-semibold font-mono ${transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {transaction.amount >= 0 ? '+' : ''}{transaction.amount.toLocaleString('en-AU', { style: 'currency', currency: 'AUD' })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+              {/* Recent Transactions */}
+              <RecentTransactionsList
+                transactions={transactions}
+                loading={transactionsLoading}
+                limit={5}
+              />
             </div>
 
             {/* Financial Overview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-white">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Bank Accounts
-                  </CardTitle>
-                  <CreditCard className="h-4 w-4 text-sand" />
-                </CardHeader>
-                <CardContent>
-                  {accountsLoading ? (
-                    <div className="h-8 w-16 animate-pulse rounded" style={{ backgroundColor: '#D9C8B4' }}></div>
-                  ) : (
-                    <>
-                      <div className="text-2xl font-bold text-charcoal">
-                        {currentUsage.accounts}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        of {displayTier.accounts_limit === 999999 ? 'unlimited' : displayTier.accounts_limit} available
-                      </p>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Transactions
-                  </CardTitle>
-                  <TrendingUp className="h-4 w-4 text-sand" />
-                </CardHeader>
-                <CardContent>
-                  {transactionsLoading ? (
-                    <div className="h-8 w-16 animate-pulse rounded" style={{ backgroundColor: '#D9C8B4' }}></div>
-                  ) : (
-                    <>
-                      <div className="text-2xl font-bold text-charcoal">
-                        {currentUsage.transactionsThisMonth}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        this month ({transactions.length} total)
-                      </p>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card className="bg-white">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium text-muted-foreground">
-                    Receipts
-                  </CardTitle>
-                  <Receipt className="h-4 w-4 text-sand" />
-                </CardHeader>
-                <CardContent>
-                  {receiptsLoading ? (
-                    <div className="h-8 w-16 animate-pulse rounded" style={{ backgroundColor: '#D9C8B4' }}></div>
-                  ) : (
-                    <>
-                      <div className="text-2xl font-bold text-charcoal">
-                        {currentUsage.receiptsThisMonth}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        this month ({receipts.length} total)
-                      </p>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+            <FinancialOverviewCards
+              accountsCount={currentUsage.accounts}
+              transactionsThisMonth={currentUsage.transactionsThisMonth}
+              transactionsTotal={transactions.length}
+              receiptsThisMonth={currentUsage.receiptsThisMonth}
+              receiptsTotal={receipts.length}
+              tier={displayTier}
+              loading={{
+                accounts: accountsLoading,
+                transactions: transactionsLoading,
+                receipts: receiptsLoading,
+              }}
+            />
 
           </div>
 
-          {/* Right Column - Tier Display */}
+          {/* Right Column - Tier Display & Bank Accounts */}
           <div className="space-y-6">
             <TierDisplay
               tier={displayTier}
               currentUsage={currentUsage}
+            />
+
+            {/* Bank Accounts List */}
+            <BankAccountsList
+              accounts={bankAccounts}
+              loading={accountsLoading}
+              onAddAccount={() => {
+                // TODO: Implement add account flow in future story
+                console.log('Add account clicked - feature coming soon');
+              }}
             />
 
             {/* Show upgrade CTA for free tier */}

@@ -10,16 +10,17 @@ import { cn } from '@/lib/utils';
 
 interface NavigationItem {
   label: string;
+  emoji: string;
   icon: React.ElementType;
   path: string;
 }
 
 const navigationItems: NavigationItem[] = [
-  { label: 'Home', icon: Home, path: '/' },
-  { label: 'Reconciliation', icon: ArrowLeftRight, path: '/reconciliation' },
-  { label: 'Transactions', icon: Receipt, path: '/transactions' },
-  { label: 'Chat', icon: MessageSquare, path: '/chat' },
-  { label: 'Settings', icon: Settings, path: '/settings' },
+  { label: 'Home', emoji: '🏠', icon: Home, path: '/' },
+  { label: 'Reconciliation', emoji: '🔄', icon: ArrowLeftRight, path: '/reconciliation' },
+  { label: 'Transactions', emoji: '📊', icon: Receipt, path: '/transactions' },
+  { label: 'Chat', emoji: '💬', icon: MessageSquare, path: '/chat' },
+  { label: 'Settings', emoji: '⚙️', icon: Settings, path: '/settings' },
 ];
 
 /**
@@ -77,7 +78,6 @@ export function Sidebar() {
         {/* Navigation Items */}
         <nav className="flex-1 px-4 py-6 space-y-2">
           {navigationItems.map((item) => {
-            const Icon = item.icon;
             const active = isActive(item.path);
 
             return (
@@ -92,7 +92,7 @@ export function Sidebar() {
                     : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <span className="text-lg">{item.emoji}</span>
                 <span>{item.label}</span>
               </Link>
             );

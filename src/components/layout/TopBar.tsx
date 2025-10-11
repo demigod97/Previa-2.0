@@ -43,7 +43,7 @@ export function TopBar() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-sand">
+    <header className="sticky top-0 z-40 bg-card border-b border-previa-sand">
       <div className="flex items-center justify-between px-6 py-4">
         {/* Left side - Could add breadcrumbs or page title here */}
         <div className="flex-1">

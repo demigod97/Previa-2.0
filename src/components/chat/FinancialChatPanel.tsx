@@ -102,9 +102,9 @@ const FinancialChatPanel = ({
   const shouldShowRefreshButton = messages.length > 0;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-cream">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-previa-cream">
       {/* Chat Header */}
-      <div className="p-4 border-b border-sand flex-shrink-0 bg-white">
+      <div className="p-4 border-b border-previa-sand flex-shrink-0 bg-card">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-sand" />
@@ -131,7 +131,7 @@ const FinancialChatPanel = ({
           <div className="max-w-4xl mx-auto">
             {/* Welcome message */}
             {messages.length === 0 && !pendingUserMessage && (
-              <Card className="bg-white border-sand mb-6">
+              <Card className="border-previa-sand mb-6">
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full bg-sand flex items-center justify-center">
@@ -189,7 +189,7 @@ const FinancialChatPanel = ({
       </ScrollArea>
 
       {/* Chat Input - Fixed at bottom */}
-      <div className="p-6 border-t border-sand flex-shrink-0 bg-white">
+      <div className="p-6 border-t border-previa-sand flex-shrink-0 bg-card">
         <div className="max-w-4xl mx-auto">
           <ChatInput
             onSendMessage={handleSendMessage}

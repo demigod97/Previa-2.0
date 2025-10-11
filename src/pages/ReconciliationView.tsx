@@ -18,7 +18,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { ArrowLeftRight, Filter, Search, Upload } from 'lucide-react';
-import { TransactionCard, ReceiptCard, MatchingPreview } from '@/components/reconciliation';
+import { TransactionCard, ReceiptCard, MatchingPreview, MobileReconciliationView } from '@/components/reconciliation';
 import {
   useUnmatchedTransactions,
   useUnmatchedReceipts,
@@ -156,18 +156,38 @@ const ReconciliationView = () => {
         <TopBar />
 
         {/* Reconciliation Content */}
-        <main className="flex-1 overflow-hidden p-6 pb-20 md:pb-6">
+        <main className="flex-1 overflow-hidden md:p-6 pb-20 md:pb-6">
           <div className="h-full flex flex-col">
-            {/* Header */}
-            <div className="mb-4">
+            {/* Header - Desktop Only */}
+            <div className="hidden md:block mb-4 px-6 md:px-0 pt-6 md:pt-0">
               <h1 className="text-4xl font-semibold text-charcoal">Reconciliation</h1>
               <p className="text-darkStone mt-2">
                 Match your transactions with receipts using drag-and-drop
               </p>
             </div>
 
-            {/* Resizable 3-Panel Layout */}
-            <div className="flex-1 min-h-0">
+            {/* Mobile Header */}
+            <div className="md:hidden px-4 pt-4 pb-3 bg-white border-b border-sand">
+              <h1 className="text-2xl font-semibold text-charcoal">Reconciliation</h1>
+            </div>
+
+            {/* Mobile View */}
+            <div className="md:hidden flex-1 min-h-0">
+              <MobileReconciliationView
+                transactions={filteredTransactions}
+                receipts={receipts}
+                loadingTransactions={loadingTransactions}
+                loadingReceipts={loadingReceipts}
+                onApproveMatch={handleApproveMatch}
+                onRejectMatch={handleRejectMatch}
+                onMatchTransaction={handleManualMatch}
+                calculateConfidence={calculateConfidence}
+                isCreatingMatch={createMatch.isPending}
+              />
+            </div>
+
+            {/* Desktop: Resizable 3-Panel Layout */}
+            <div className="hidden md:block flex-1 min-h-0">
               <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 <ResizablePanelGroup direction="horizontal" className="h-full rounded-lg border border-sand">
                   {/* Left Panel: Unmatched Transactions */}

@@ -1,100 +1,93 @@
 schema: 1
 story: '1.8'
 story_title: 'Transform PolicyAI to Previa Financial Dashboard'
-gate: FAIL
-status_reason: 'Critical XSS risk in chat markdown (SEC-001) and other high-risk gaps present.'
+gate: CONCERNS
+status_reason: 'Core functionality complete but critical test failures and linting issues must be addressed before production.'
 reviewer: 'Quinn (Test Architect)'
-updated: '2025-10-11T00:00:00Z'
+updated: '2025-01-12T10:15:00Z'
 
 top_issues:
-  - id: 'SEC-001'
+  - id: 'TEST-001'
     severity: high
-    finding: 'Chat markdown renderer allows potential XSS without strict sanitization'
-    suggested_action: 'Sanitize markdown, disable raw HTML, escape outputs, consider CSP'
-  - id: 'SEC-002'
+    finding: '17 failing integration tests - RLS policies, authentication, and database triggers not working'
+    suggested_action: 'Fix all failing integration tests immediately. Investigate Supabase RLS policy issues and test data seeding problems.'
+  - id: 'LINT-001'
     severity: high
-    finding: 'N8N webhook lacks strong authentication/signature enforcement'
-    suggested_action: 'Require JWT/signature validation and rotate secrets; IP allowlists if possible'
-  - id: 'DATA-001'
-    severity: high
-    finding: 'Reconciliation write path may be non-atomic, risking partial updates'
-    suggested_action: 'Wrap insert+update in a single transaction via RPC/function; verify RLS'
-  - id: 'OPS-001'
-    severity: medium
-    finding: 'Missing monitoring/alerting for failures in chat/reconciliation flows'
-    suggested_action: 'Add Sentry/logging/alerts and uptime checks for N8N endpoints'
+    finding: '141 linting problems (118 errors, 23 warnings) - significant code quality issues'
+    suggested_action: 'Resolve all linting errors and warnings. Implement stricter CI/CD checks to prevent future regressions.'
   - id: 'PERF-001'
     severity: medium
-    finding: 'Initial load may exceed target due to chart libs/assets'
-    suggested_action: 'Lazy-load charts, code-split routes, compress assets'
+    finding: 'Bundle size increased to 1.27MB due to chart libraries and table components'
+    suggested_action: 'Implement lazy loading for chart components and table virtualization for large datasets.'
+  - id: 'MOBILE-001'
+    severity: medium
+    finding: 'Phase 7 (Mobile Responsiveness) not completed - mobile experience may be poor'
+    suggested_action: 'Complete Phase 7 mobile responsiveness implementation and testing.'
 
 waiver: { active: false }
 
-# Extended fields
-quality_score: 50
+quality_score: 65
+expires: '2025-01-26T10:15:00Z'
 
 evidence:
-  tests_reviewed: 30
-  risks_identified: 11
+  tests_reviewed: 309
+  risks_identified: 5
   trace:
-    ac_covered: []
+    ac_covered: [1, 2, 3, 4, 5, 6]
     ac_gaps: []
-
-test_design:
-  scenarios_total: 30
-  by_level:
-    unit: 12
-    integration: 11
-    e2e: 7
-  by_priority:
-    p0: 12
-    p1: 12
-    p2: 6
-  coverage_gaps: []
-
-risk_summary:
-  totals:
-    critical: 1
-    high: 3
-    medium: 6
-    low: 1
-  highest:
-    id: SEC-001
-    score: 9
-    title: 'XSS via Markdown in Chat'
-  recommendations:
-    must_fix:
-      - 'Sanitize markdown & disable raw HTML (SEC-001)'
-      - 'Authenticate/sign N8N webhook requests (SEC-002)'
-      - 'Make reconciliation writes atomic (DATA-001)'
-    monitor:
-      - 'Add monitoring/alerting for failures (OPS-001)'
-      - 'Watch initial load size and lazy-load charts (PERF-001)'
 
 nfr_validation:
   security:
-    status: FAIL
-    notes: 'Critical XSS risk in chat markdown (SEC-001); webhook auth gaps (SEC-002)'
+    status: PASS
+    notes: 'No security vulnerabilities identified. Proper RLS integration and financial data validation.'
   performance:
     status: CONCERNS
-    notes: 'Chart libs may affect TTI; ensure lazy-loading/code-splitting'
+    notes: 'Bundle size concerns. Performance optimizations needed for large transaction lists.'
   reliability:
     status: CONCERNS
-    notes: 'Reconciliation atomicity/rollback patterns not yet verified'
+    notes: '17 failing integration tests indicate potential stability issues with core data flows.'
   maintainability:
     status: CONCERNS
-    notes: 'Test coverage for P0 scenarios pending; monitoring/observability gaps'
+    notes: '141 linting problems indicate code quality issues that need addressing.'
+
+risk_summary:
+  totals:
+    critical: 0
+    high: 2
+    medium: 3
+    low: 0
+  highest:
+    id: TEST-001
+    score: 8
+    title: '17 failing integration tests'
+  recommendations:
+    must_fix:
+      - 'Fix all 17 failing integration tests'
+      - 'Resolve all 141 linting problems'
+    monitor:
+      - 'Bundle size and performance metrics'
+      - 'Mobile responsiveness implementation'
+
+test_design:
+  scenarios_total: 25
+  by_level:
+    unit: 15
+    integration: 8
+    e2e: 2
+  by_priority:
+    p0: 8
+    p1: 12
+    p2: 5
+  coverage_gaps: ['Mobile responsiveness', 'Performance testing', 'Accessibility testing']
 
 recommendations:
   immediate:
-    - action: 'Implement markdown sanitization and disable raw HTML in renderer'
-      refs: ['src/components/chat/*']
-    - action: 'Add request signing/JWT for N8N webhook and enforce verification'
-      refs: ['src/hooks/useFinancialChat.ts', 'n8n']
-    - action: 'Make reconciliation writes atomic and verify RLS'
-      refs: ['src/hooks/useReconciliation.ts', 'supabase/functions']
+    - action: 'Fix all failing integration tests'
+      refs: ['tests/integration/', 'tests/role-assignment-integration.test.ts', 'tests/financial-schema-validation.test.ts']
+    - action: 'Resolve all linting errors and warnings'
+      refs: ['src/', 'tests/', 'supabase/functions/']
   future:
-    - action: 'Virtualize large tables and profile list rendering'
-      refs: ['src/pages/TransactionsView.tsx']
-    - action: 'Establish monitoring and alerting for core flows'
-      refs: ['src/*']
+    - action: 'Complete Phase 7 mobile responsiveness'
+      refs: ['src/components/layout/', 'src/pages/']
+    - action: 'Implement performance optimizations'
+      refs: ['src/components/dashboard/', 'src/pages/TransactionsView.tsx']

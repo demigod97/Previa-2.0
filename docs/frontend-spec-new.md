@@ -20,22 +20,75 @@ const colors = {
     sand: '#D9C8B4',       // Accent elements, hover states
     charcoal: '#403B31',   // Primary text, headings
     darkStone: '#595347',  // Secondary headings, icons
+    paperWhite: '#FFFFFF', // 🆕 Data surfaces, tables, transaction cards (notebook paper)
   }
 }
 ```
 
 **Semantic Color Mapping:**
-- **Background:** `cream` (#F2E9D8)
+- **Background:** `cream` (#F2E9D8) - Navigation, page backgrounds, surrounding areas
 - **Primary Text:** `charcoal` (#403B31)
 - **Secondary Text:** `stone` (#8C877D)
 - **Accent/Interactive:** `sand` (#D9C8B4)
 - **Emphasis:** `darkStone` (#595347)
+- **Data Surfaces:** `paperWhite` (#FFFFFF) - 🆕 Tables, transaction cards, financial data displays
 
 **Status Colors:**
 - **Success/Approved:** Green (#10B981)
 - **Warning/Matched:** Amber (#F59E0B)
 - **Error/Rejected:** Red (#EF4444)
 - **Processing:** Blue (#3B82F6)
+
+### 1.2 Physical Notebook Design Theme
+
+**Design Philosophy:**
+Previa's UI imitates the feel of a physical notebook to create a familiar, user-friendly experience. Financial data is displayed on paper-white surfaces with ruled lines, while navigation and surrounding areas maintain the warm ivory/cream aesthetic.
+
+**Notebook Design Elements:**
+
+1. **Paper White Data Surfaces**
+   - All transaction tables, financial data grids, and content cards use `bg-white` (paper white)
+   - Creates contrast with cream background for visual hierarchy
+   - Mimics writing on notebook paper
+
+2. **Ruled Lines (Notebook Lines)**
+   - Horizontal lines between table rows: `border-b border-charcoal/10`
+   - Subtle, like ruled notebook paper
+   - Applied to:
+     - Transaction table rows
+     - Transaction card lists
+     - Bank account lists
+     - Receipt lists in reconciliation view
+
+3. **Emoji + Icon Blending**
+   - Blend emojis with Lucide icons for a friendly, approachable feel
+   - **Navigation**: 🏠 Home, 🔄 Reconciliation, 📊 Transactions, 💬 Chat, ⚙️ Settings
+   - **Status Indicators**: ✅ Approved, ⚠️ Matched, ❌ Rejected, 📝 Unreconciled
+   - **Empty States**: 📭 No transactions, 💰 Add account, 📸 Upload receipt
+   - **Success Messages**: 🎉 Match approved, ✨ Transaction saved, 🎊 Account connected
+   - **Actions**: 🗑️ Delete, ✏️ Edit, 👁️ View, 📤 Export
+
+4. **Cream/Ivory Surrounding Areas (Keep)**
+   - Sidebar navigation: `bg-previa-cream`
+   - Top bar: `bg-previa-cream`
+   - Page backgrounds: `bg-previa-cream`
+   - Widget borders and containers
+   - Modal/dialog overlays
+
+**Component Application:**
+```typescript
+// Paper white data surfaces
+<Card className="bg-white border-stone/20"> {/* Transaction card */}
+  <CardContent className="border-b border-charcoal/10"> {/* Ruled line */}
+    {/* Financial data here */}
+  </CardContent>
+</Card>
+
+// Cream surrounding areas
+<div className="bg-previa-cream"> {/* Sidebar, page background */}
+  {/* Navigation here */}
+</div>
+```
 
 ### 1.2 Typography
 

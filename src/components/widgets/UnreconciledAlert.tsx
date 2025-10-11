@@ -24,9 +24,9 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
 
   if (unreconciledCount === 0) {
     return (
-      <Card className="bg-white border-sand">
+      <Card className="border-previa-sand">
         <CardHeader>
-          <CardTitle className="text-charcoal font-semibold flex items-center gap-2">
+          <CardTitle className="text-previa-charcoal font-semibold flex items-center gap-2">
             <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
               <svg
                 className="h-5 w-5 text-green-600"
@@ -46,7 +46,7 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-stone text-sm">
+          <p className="text-previa-stone text-sm">
             Great job! All your transactions are reconciled.
           </p>
         </CardContent>
@@ -55,9 +55,9 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
   }
 
   return (
-    <Card className="bg-amber-50 border-amber-200">
+    <Card className="border-amber-200">
       <CardHeader>
-        <CardTitle className="text-charcoal font-semibold flex items-center gap-2">
+        <CardTitle className="text-previa-charcoal font-semibold flex items-center gap-2">
           <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center">
             <AlertTriangle className="h-5 w-5 text-amber-600" />
           </div>
@@ -66,11 +66,11 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <p className="text-sm text-stone mb-1">Items Pending Review</p>
-          <p className="text-3xl font-bold text-charcoal">{unreconciledCount}</p>
-          <p className="text-sm text-stone mt-1">
+          <p className="text-sm text-previa-stone mb-1">Items Pending Review</p>
+          <p className="text-3xl font-bold text-previa-charcoal">{unreconciledCount}</p>
+          <p className="text-sm text-previa-stone mt-1">
             Total Amount:{" "}
-            <span className="font-mono font-semibold text-charcoal">
+            <span className="font-mono font-semibold text-previa-charcoal">
               ${unreconciledAmount.toFixed(2)}
             </span>
           </p>

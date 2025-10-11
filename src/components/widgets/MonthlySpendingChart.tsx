@@ -92,9 +92,9 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
   }, [chartData]);
 
   return (
-    <Card className="bg-white border-sand">
+    <Card className="border-previa-sand">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-charcoal font-semibold">Monthly Spending</CardTitle>
+        <CardTitle className="text-previa-charcoal font-semibold">Monthly Spending</CardTitle>
         <Select value={period} onValueChange={(value) => setPeriod(value as Period)}>
           <SelectTrigger className="w-[140px] border-sand focus:ring-sand">
             <SelectValue />

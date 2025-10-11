@@ -94,7 +94,7 @@ export interface Receipt {
   merchant: string | null;
   amount: number | null;
   tax: number | null;
-  ocr_data: any | null;
+  ocr_data: Record<string, unknown> | null;
   confidence_score: number | null;
   processing_status: string | null;
   file_size: number | null;

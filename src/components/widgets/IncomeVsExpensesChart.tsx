@@ -66,9 +66,9 @@ export function IncomeVsExpensesChart({ transactions }: IncomeVsExpensesChartPro
   }, [chartData]);
 
   return (
-    <Card className="bg-white border-sand">
+    <Card className="border-previa-sand">
       <CardHeader>
-        <CardTitle className="text-charcoal font-semibold">Income vs Expenses</CardTitle>
+        <CardTitle className="text-previa-charcoal font-semibold">Income vs Expenses</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="mb-4">
