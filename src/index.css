@@ -1,92 +1,111 @@
+/* Import Google Fonts: Inter and JetBrains Mono */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Previa Color System - Light Mode */
+    /* Using HSL values for shadcn/ui compatibility */
+    
+    /* Primary Colors - Cream Background */
+    --background: 37 27% 85%;           /* cream #F2E9D8 */
+    --foreground: 30 12% 23%;           /* charcoal #403B31 */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card Colors */
+    --card: 37 27% 85%;                 /* cream #F2E9D8 */
+    --card-foreground: 30 12% 23%;      /* charcoal #403B31 */
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    /* Popover Colors */
+    --popover: 37 27% 85%;              /* cream #F2E9D8 */
+    --popover-foreground: 30 12% 23%;   /* charcoal #403B31 */
 
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
+    /* Primary - DarkStone for emphasis */
+    --primary: 30 13% 30%;              /* darkStone #595347 */
+    --primary-foreground: 37 27% 85%;   /* cream #F2E9D8 */
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 221 83% 53%;
+    /* Secondary - Stone for secondary text */
+    --secondary: 35 7% 52%;             /* stone #8C877D */
+    --secondary-foreground: 30 12% 23%; /* charcoal #403B31 */
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - Lighter stone for subtle elements */
+    --muted: 35 18% 80%;                /* lighter sand variant */
+    --muted-foreground: 30 13% 30%;     /* darkStone #595347 */
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 221 83% 53%;
+    /* Accent - Sand for interactive elements */
+    --accent: 37 24% 77%;               /* sand #D9C8B4 */
+    --accent-foreground: 30 12% 23%;    /* charcoal #403B31 */
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Destructive - Error state */
+    --destructive: 0 72% 51%;           /* error red #EF4444 */
+    --destructive-foreground: 37 27% 85%; /* cream #F2E9D8 */
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221 83% 53%;
+    /* Borders and Inputs */
+    --border: 35 7% 52%;                /* stone #8C877D */
+    --input: 35 7% 52%;                 /* stone #8C877D */
+    --ring: 37 24% 77%;                 /* sand #D9C8B4 */
+
+    /* Financial Status Colors */
+    --success: 152 69% 35%;             /* green #10B981 */
+    --warning: 38 92% 50%;              /* amber #F59E0B */
+    --error: 0 72% 51%;                 /* red #EF4444 */
+    --processing: 217 91% 60%;          /* blue #3B82F6 */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 221 83% 53%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 221 83% 53%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Sidebar Colors - Using Previa palette */
+    --sidebar-background: 37 27% 85%;   /* cream #F2E9D8 */
+    --sidebar-foreground: 30 12% 23%;   /* charcoal #403B31 */
+    --sidebar-primary: 30 13% 30%;      /* darkStone #595347 */
+    --sidebar-primary-foreground: 37 27% 85%; /* cream #F2E9D8 */
+    --sidebar-accent: 37 24% 77%;       /* sand #D9C8B4 */
+    --sidebar-accent-foreground: 30 12% 23%; /* charcoal #403B31 */
+    --sidebar-border: 35 7% 52%;        /* stone #8C877D */
+    --sidebar-ring: 37 24% 77%;         /* sand #D9C8B4 */
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    /* Previa Dark Mode - Future Implementation */
+    /* Inverted color scheme with darker tones */
+    --background: 30 12% 23%;           /* charcoal background */
+    --foreground: 37 27% 85%;           /* cream text */
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 30 13% 30%;                 /* darkStone cards */
+    --card-foreground: 37 27% 85%;      /* cream text */
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: 30 13% 30%;              /* darkStone */
+    --popover-foreground: 37 27% 85%;   /* cream */
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 37 27% 85%;              /* cream for primary */
+    --primary-foreground: 30 12% 23%;   /* charcoal text */
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 30 13% 30%;            /* darkStone */
+    --secondary-foreground: 37 27% 85%; /* cream text */
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 35 7% 52%;                 /* stone for muted */
+    --muted-foreground: 37 24% 77%;     /* sand text */
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 37 24% 77%;               /* sand accent */
+    --accent-foreground: 30 12% 23%;    /* charcoal text */
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 72% 51%;           /* error red */
+    --destructive-foreground: 37 27% 85%; /* cream text */
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --border: 35 7% 52%;                /* stone borders */
+    --input: 35 7% 52%;                 /* stone inputs */
+    --ring: 37 24% 77%;                 /* sand ring */
+
+    /* Sidebar Dark Mode */
+    --sidebar-background: 30 12% 23%;   /* charcoal */
+    --sidebar-foreground: 37 27% 85%;   /* cream */
+    --sidebar-primary: 37 27% 85%;      /* cream */
+    --sidebar-primary-foreground: 30 12% 23%; /* charcoal */
+    --sidebar-accent: 37 24% 77%;       /* sand */
+    --sidebar-accent-foreground: 30 12% 23%; /* charcoal */
+    --sidebar-border: 35 7% 52%;        /* stone */
+    --sidebar-ring: 37 24% 77%;         /* sand */
   }
 }
 
@@ -97,5 +116,104 @@
 
   body {
     @apply bg-background text-foreground;
+  }
+}
+/* Financial-Specific Utility Classes */
+@layer components {
+  /* Currency amount display */
+  .financial-amount {
+    @apply font-financial tabular-nums;
+  }
+
+  /* Transaction status badges */
+  .status-approved {
+    @apply bg-success/10 text-success border-success/20;
+  }
+
+  .status-matched {
+    @apply bg-warning/10 text-warning border-warning/20;
+  }
+
+  .status-rejected {
+    @apply bg-error/10 text-error border-error/20;
+  }
+
+  .status-processing {
+    @apply bg-processing/10 text-processing border-processing/20;
+  }
+
+  /* Reconciliation confidence indicators */
+  .confidence-high {
+    @apply text-success;
+  }
+
+  .confidence-medium {
+    @apply text-warning;
+  }
+
+  .confidence-low {
+    @apply text-error;
+  }
+
+  /* File upload states */
+  .upload-zone {
+    @apply border-2 border-dashed border-previa-sand rounded-lg bg-previa-cream/50 transition-colors;
+  }
+
+  .upload-zone:hover {
+    @apply border-previa-sand bg-previa-sand/10;
+  }
+
+  .upload-zone.active {
+    @apply border-previa-darkStone bg-previa-sand/20;
+  }
+
+  /* Table financial styling */
+  .financial-table tbody tr:nth-child(odd) {
+    @apply bg-previa-cream/30;
+  }
+
+  .financial-table tbody tr:hover {
+    @apply bg-previa-sand/20 transition-colors;
+  }
+
+  .financial-table td.amount {
+    @apply text-right font-financial tabular-nums;
+  }
+
+  /* Gamification badges */
+  .badge-reward {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full bg-success/10 text-success text-sm font-medium;
+  }
+
+  .badge-milestone {
+    @apply inline-flex items-center gap-1 px-2 py-1 rounded-full bg-warning/10 text-warning text-sm font-medium;
+  }
+}
+
+/* Typography scale with Previa fonts */
+@layer components {
+  h1 {
+    @apply font-heading text-4xl font-semibold text-previa-charcoal;
+  }
+
+  h2 {
+    @apply font-heading text-3xl font-semibold text-previa-charcoal;
+  }
+
+  h3 {
+    @apply font-heading text-2xl font-semibold text-previa-darkStone;
+  }
+
+  h4 {
+    @apply font-heading text-xl font-semibold text-previa-darkStone;
+  }
+
+  .body-text {
+    @apply font-sans text-base text-previa-charcoal;
+  }
+
+  .small-text {
+    @apply font-sans text-sm text-previa-stone;
   }
 }

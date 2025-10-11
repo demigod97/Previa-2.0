@@ -7,6 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ReconciliationView from "./pages/ReconciliationView";
+import TransactionsView from "./pages/TransactionsView";
+import ChatView from "./pages/ChatView";
+import Settings from "./pages/Settings";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -20,6 +24,38 @@ const AppContent = () => {
         element={
           <ProtectedRoute fallback={<Auth />}>
             <Dashboard />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/reconciliation" 
+        element={
+          <ProtectedRoute fallback={<Auth />}>
+            <ReconciliationView />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/transactions" 
+        element={
+          <ProtectedRoute fallback={<Auth />}>
+            <TransactionsView />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/chat" 
+        element={
+          <ProtectedRoute fallback={<Auth />}>
+            <ChatView />
+          </ProtectedRoute>
+        } 
+      />
+      <Route 
+        path="/settings" 
+        element={
+          <ProtectedRoute fallback={<Auth />}>
+            <Settings />
           </ProtectedRoute>
         } 
       />

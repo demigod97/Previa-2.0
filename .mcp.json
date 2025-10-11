@@ -7,16 +7,17 @@
         "npx",
         "-y",
         "@supabase/mcp-server-supabase",
-        "--read-only",
-        "--project-ref=vnmsyofypuhxjlzwnuhh"
+        "--project-ref=clfdfkkyurghuohjnryy"
       ],
       "env": {
-        "SUPABASE_ACCESS_TOKEN": "sbp_fc634db7cf3496f56ee8b82b4232395a2381007d"
+        "SUPABASE_ACCESS_TOKEN": "sbp_43cc3937d4504ffbddeb4a767d457aa102c85854"
       }
     },
    "playwright": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "@playwright/mcp@latest"
       ]
     }

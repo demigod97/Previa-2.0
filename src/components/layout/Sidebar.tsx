@@ -1,0 +1,207 @@
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Home, ArrowLeftRight, Receipt, MessageSquare, Settings, LogOut } from 'lucide-react';
+import Logo from '@/components/ui/Logo';
+import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
+
+interface NavigationItem {
+  label: string;
+  icon: React.ElementType;
+  path: string;
+}
+
+const navigationItems: NavigationItem[] = [
+  { label: 'Home', icon: Home, path: '/' },
+  { label: 'Reconciliation', icon: ArrowLeftRight, path: '/reconciliation' },
+  { label: 'Transactions', icon: Receipt, path: '/transactions' },
+  { label: 'Chat', icon: MessageSquare, path: '/chat' },
+  { label: 'Settings', icon: Settings, path: '/settings' },
+];
+
+/**
+ * Sidebar - Persistent navigation sidebar for Previa dashboard
+ *
+ * Features:
+ * - Previa logo at top
+ * - Main navigation items with active state
+ * - User menu at bottom with avatar, email, tier, and sign out
+ * - Responsive: collapsible on tablet, bottom nav on mobile
+ */
+export function Sidebar() {
+  const { user, userTier, signOut } = useAuth();
+  const location = useLocation();
+
+  const getTierBadge = () => {
+    if (!userTier) return null;
+    const isPremium = userTier.tier === 'premium_user';
+    const tierLabel = isPremium ? '👑 Premium' : '✨ Free';
+    const tierColor = isPremium ? 'bg-sand text-charcoal' : 'bg-stone-200 text-charcoal';
+
+    return (
+      <Badge className={tierColor} variant="secondary">
+        {tierLabel}
+      </Badge>
+    );
+  };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
+  const getUserInitials = () => {
+    if (!user?.email) return 'U';
+    return user.email.charAt(0).toUpperCase();
+  };
+
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  return (
+    <>
+      {/* Desktop Sidebar (≥1024px) */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-cream lg:border-r lg:border-sand">
+        {/* Logo Section */}
+        <div className="flex items-center gap-3 px-6 py-6 border-b border-sand">
+          <Logo size="md" />
+          <span className="text-xl font-semibold text-charcoal">Previa</span>
+        </div>
+
+        {/* Navigation Items */}
+        <nav className="flex-1 px-4 py-6 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                  'text-sm font-medium',
+                  active
+                    ? 'bg-sand text-charcoal'
+                    : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                )}
+              >
+                <Icon className="h-5 w-5" />
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* User Menu Section */}
+        <div className="px-4 py-4 border-t border-sand space-y-3">
+          {/* User Info */}
+          <div className="flex items-center gap-3 px-2">
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className="bg-sand text-charcoal text-sm">
+                {getUserInitials()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-charcoal truncate">
+                {user?.email}
+              </p>
+              <div className="mt-1">
+                {getTierBadge()}
+              </div>
+            </div>
+          </div>
+
+          {/* Sign Out Button */}
+          <Button
+            variant="ghost"
+            onClick={handleSignOut}
+            className="w-full justify-start text-darkStone hover:text-charcoal hover:bg-sand/50"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </Button>
+        </div>
+      </aside>
+
+      {/* Tablet Sidebar (768px - 1023px) - Collapsible Icons Only */}
+      <aside className="hidden md:flex lg:hidden md:flex-col md:w-20 md:fixed md:inset-y-0 md:bg-cream md:border-r md:border-sand">
+        {/* Logo Section */}
+        <div className="flex items-center justify-center px-2 py-6 border-b border-sand">
+          <Logo size="md" />
+        </div>
+
+        {/* Navigation Items - Icons Only */}
+        <nav className="flex-1 px-2 py-6 space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                title={item.label}
+                className={cn(
+                  'flex items-center justify-center p-3 rounded-lg transition-colors',
+                  active
+                    ? 'bg-sand text-charcoal'
+                    : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                )}
+              >
+                <Icon className="h-5 w-5" />
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* User Avatar */}
+        <div className="px-2 py-4 border-t border-sand">
+          <Link
+            to="/settings"
+            className="flex items-center justify-center"
+          >
+            <Avatar className="h-9 w-9">
+              <AvatarFallback className="bg-sand text-charcoal text-sm">
+                {getUserInitials()}
+              </AvatarFallback>
+            </Avatar>
+          </Link>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Navigation (<768px) */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-cream border-t border-sand z-50">
+        <div className="flex items-center justify-around px-2 py-3">
+          {navigationItems.slice(0, 5).map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  'flex flex-col items-center gap-1 px-3 py-2 rounded-lg transition-colors',
+                  active
+                    ? 'text-charcoal'
+                    : 'text-darkStone'
+                )}
+              >
+                <Icon className={cn('h-5 w-5', active && 'text-charcoal')} />
+                <span className="text-xs font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+    </>
+  );
+}
+

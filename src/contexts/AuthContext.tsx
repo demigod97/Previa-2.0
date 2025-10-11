@@ -2,6 +2,8 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { useUserTier } from '@/hooks/financial/useUserTier';
+import type { UserTierData } from '@/types/financial';
 
 interface AuthContextType {
   user: User | null;
@@ -9,6 +11,9 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   isAuthenticated: boolean;
+  userTier: UserTierData | null;
+  tierLoading: boolean;
+  tierError: Error | null;
   signOut: () => Promise<void>;
 }
 
@@ -31,6 +36,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch user tier data
+  const {
+    data: tierData,
+    isLoading: tierLoading,
+    error: tierError,
+  } = useUserTier({
+    userId: user?.id,
+    enabled: !!user,
+  });
 
   const updateAuthState = (newSession: Session | null) => {
     console.log('AuthContext: Updating auth state:', newSession?.user?.email || 'No session');
@@ -179,6 +194,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     error,
     isAuthenticated: !!user && !!session,
+    userTier: tierData ?? null,
+    tierLoading,
+    tierError: tierError as Error | null,
     signOut,
   };
 

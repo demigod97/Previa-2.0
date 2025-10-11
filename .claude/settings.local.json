@@ -10,7 +10,12 @@
       "mcp__playwright__browser_wait_for",
       "mcp__playwright__browser_navigate",
       "mcp__playwright__browser_file_upload",
-      "mcp__playwright__browser_snapshot"
+      "mcp__playwright__browser_snapshot",
+      "Bash(npm audit:*)",
+      "Bash(npm run build:*)",
+      "Read(//d/c/**)",
+      "Bash(npm test:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []

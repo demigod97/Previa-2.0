@@ -11,21 +11,6 @@ export default {
 		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
-	safelist: [
-		// Background colors for notebook cards
-		'bg-red-100', 'bg-blue-100', 'bg-green-100', 'bg-yellow-100', 'bg-purple-100', 
-		'bg-pink-100', 'bg-indigo-100', 'bg-gray-100', 'bg-orange-100', 'bg-teal-100',
-		'bg-cyan-100', 'bg-emerald-100', 'bg-lime-100', 'bg-amber-100', 'bg-violet-100',
-		'bg-fuchsia-100', 'bg-rose-100', 'bg-sky-100', 'bg-slate-100', 'bg-zinc-100',
-		'bg-neutral-100', 'bg-stone-100',
-		// Border colors for notebook cards
-		'border-red-200', 'border-blue-200', 'border-green-200', 'border-yellow-200', 
-		'border-purple-200', 'border-pink-200', 'border-indigo-200', 'border-gray-200', 
-		'border-orange-200', 'border-teal-200', 'border-cyan-200', 'border-emerald-200', 
-		'border-lime-200', 'border-amber-200', 'border-violet-200', 'border-fuchsia-200', 
-		'border-rose-200', 'border-sky-200', 'border-slate-200', 'border-zinc-200',
-		'border-neutral-200', 'border-stone-200',
-	],
 	theme: {
 		container: {
 			center: true,
@@ -36,6 +21,20 @@ export default {
 		},
 		extend: {
 			colors: {
+				// Previa Brand Colors
+				previa: {
+					cream: '#F2E9D8',      // Primary background, light surfaces
+					stone: '#8C877D',      // Secondary text, borders
+					sand: '#D9C8B4',       // Accent elements, hover states
+					charcoal: '#403B31',   // Primary text, headings
+					darkStone: '#595347',  // Secondary headings, icons
+				},
+				// Financial Status Colors
+				success: '#10B981',      // Approved transactions
+				warning: '#F59E0B',      // Matched/pending transactions
+				error: '#EF4444',        // Rejected transactions
+				processing: '#3B82F6',   // Processing status
+				// shadcn/ui semantic colors
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -79,6 +78,12 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				}
+			},
+			fontFamily: {
+				sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+				heading: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+				mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+				financial: ['JetBrains Mono', 'ui-monospace', 'monospace'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
