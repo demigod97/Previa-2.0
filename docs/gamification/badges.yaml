@@ -1,0 +1,631 @@
+# Australian Financial Literacy Badges
+# Total: 30+ badges across 5 categories
+# Version: 1.0
+# Date: 2025-10-13
+
+badges:
+  # ============================================
+  # CATEGORY 1: ONBOARDING & FOUNDATION (4 badges)
+  # Theme Color: Green (#10B981)
+  # ============================================
+
+  - badge_id: first_steps
+    badge_name: "First Steps"
+    badge_description: "Welcome to Previa! You've taken the first step towards better financial management."
+    badge_category: onboarding
+    badge_theme: green
+    badge_icon: Trophy
+    badge_color: "#10B981"
+    unlock_criteria: "Sign up and complete profile"
+    unlock_logic: |
+      {
+        "trigger": "user_signup_complete",
+        "conditions": {
+          "profile_complete": true
+        }
+      }
+    reward_points: 10
+    rarity: common
+    australian_context: "Start your Australian financial literacy journey with Previa"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 1
+
+  - badge_id: account_creator
+    badge_name: "Account Creator"
+    badge_description: "You've connected your first Australian bank account. Time to get reconciling!"
+    badge_category: onboarding
+    badge_theme: green
+    badge_icon: Building
+    badge_color: "#10B981"
+    unlock_criteria: "Connect first bank account"
+    unlock_logic: |
+      {
+        "trigger": "bank_account_created",
+        "conditions": {
+          "account_count": 1
+        }
+      }
+    reward_points: 25
+    rarity: common
+    australian_context: "Whether it's Big Four or a regional bank, you're connected and ready"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 2
+
+  - badge_id: onboarding_complete
+    badge_name: "Onboarding Complete"
+    badge_description: "You've completed the Previa onboarding process. Ready to tackle your finances!"
+    badge_category: onboarding
+    badge_theme: green
+    badge_icon: CheckCircle
+    badge_color: "#10B981"
+    unlock_criteria: "Finish onboarding flow"
+    unlock_logic: |
+      {
+        "trigger": "onboarding_completed",
+        "conditions": {
+          "all_steps_complete": true
+        }
+      }
+    reward_points: 50
+    rarity: common
+    australian_context: "Onboarding complete - now let's build those financial habits"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 3
+
+  - badge_id: receipt_rookie
+    badge_name: "Receipt Rookie"
+    badge_description: "First receipt uploaded! Keep those GST-compliant records coming."
+    badge_category: onboarding
+    badge_theme: green
+    badge_icon: Camera
+    badge_color: "#10B981"
+    unlock_criteria: "Upload first receipt"
+    unlock_logic: |
+      {
+        "trigger": "receipt_uploaded",
+        "conditions": {
+          "receipt_count": 1
+        }
+      }
+    reward_points: 15
+    rarity: common
+    australian_context: "Record-keeping is essential for ATO compliance and tax deductions"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/business/records-for-business"
+    sort_order: 4
+
+  # ============================================
+  # CATEGORY 2: TRANSACTION MANAGEMENT (4 badges)
+  # Theme Color: Blue (#3B82F6)
+  # ============================================
+
+  - badge_id: reconciliation_starter
+    badge_name: "Reconciliation Starter"
+    badge_description: "10 transactions reconciled! You're building good bookkeeping habits."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: RefreshCw
+    badge_color: "#3B82F6"
+    unlock_criteria: "Reconcile 10 transactions"
+    unlock_logic: |
+      {
+        "trigger": "transaction_reconciled",
+        "conditions": {
+          "total_reconciled": 10
+        }
+      }
+    reward_points: 30
+    rarity: common
+    australian_context: "ATO record-keeping basics - maintain records for 5 years"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/business/records-for-business/keeping-your-records"
+    sort_order: 5
+
+  - badge_id: reconciliation_pro
+    badge_name: "Reconciliation Pro"
+    badge_description: "50 transactions reconciled! Your books are looking professional."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: Medal
+    badge_color: "#3B82F6"
+    unlock_criteria: "Reconcile 50 transactions"
+    unlock_logic: |
+      {
+        "trigger": "transaction_reconciled",
+        "conditions": {
+          "total_reconciled": 50
+        }
+      }
+    reward_points: 100
+    rarity: rare
+    australian_context: "Tax-ready bookkeeping - you're prepared for EOFY"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 6
+
+  - badge_id: reconciliation_expert
+    badge_name: "Reconciliation Expert"
+    badge_description: "100 transactions reconciled! You're a reconciliation master."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: Award
+    badge_color: "#3B82F6"
+    unlock_criteria: "Reconcile 100 transactions"
+    unlock_logic: |
+      {
+        "trigger": "transaction_reconciled",
+        "conditions": {
+          "total_reconciled": 100
+        }
+      }
+    reward_points: 250
+    rarity: epic
+    australian_context: "Professional-grade records that would make any accountant proud"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 7
+
+  - badge_id: category_master
+    badge_name: "Category Master"
+    badge_description: "100 transactions categorized! Tax deduction optimization unlocked."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: PieChart
+    badge_color: "#3B82F6"
+    unlock_criteria: "Categorize 100 transactions"
+    unlock_logic: |
+      {
+        "trigger": "transaction_categorized",
+        "conditions": {
+          "total_categorized": 100
+        }
+      }
+    reward_points: 150
+    rarity: rare
+    australian_context: "Proper categorization helps maximize tax deductions"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/individuals-and-families/income-deductions-offsets-and-records/deductions-you-can-claim"
+    sort_order: 8
+
+  # ============================================
+  # CATEGORY 3: AUSTRALIAN FINANCIAL LITERACY (5 badges)
+  # Theme Color: Gold (#FFD700)
+  # ============================================
+
+  - badge_id: aussie_super_star
+    badge_name: "🇦🇺 Aussie Super Star"
+    badge_description: "Completed the Australian Superannuation module! You understand SG rates, concessional caps, and fund types."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: Star
+    badge_color: "#FFD700"
+    unlock_criteria: "Complete superannuation education module"
+    unlock_logic: |
+      {
+        "trigger": "educational_module_completed",
+        "conditions": {
+          "module_id": "australian_superannuation",
+          "quiz_score_min": 80
+        }
+      }
+    reward_points: 200
+    rarity: epic
+    australian_context: "Master the 11.5% SG rate, $30k concessional caps, and fund comparison"
+    asic_reference: "https://moneysmart.gov.au/how-super-works"
+    ato_reference: "https://www.ato.gov.au/individuals-and-families/super-for-individuals-and-families"
+    sort_order: 9
+
+  - badge_id: tax_ninja
+    badge_name: "🧾 Tax Ninja"
+    badge_description: "Completed the Australian Taxation module! PAYG, GST, and deductions mastered."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: FileText
+    badge_color: "#FFD700"
+    unlock_criteria: "Complete tax basics education module"
+    unlock_logic: |
+      {
+        "trigger": "educational_module_completed",
+        "conditions": {
+          "module_id": "australian_taxation",
+          "quiz_score_min": 80
+        }
+      }
+    reward_points: 200
+    rarity: epic
+    australian_context: "Navigate tax brackets (0%, 16%, 30%, 37%, 45%) and maximize deductions"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/rates-and-codes/tax-rates-australian-residents"
+    sort_order: 10
+
+  - badge_id: banking_pro
+    badge_name: "🏦 Banking Pro"
+    badge_description: "Completed the Australian Banking module! Big Four comparison and fee reduction expertise."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: Landmark
+    badge_color: "#FFD700"
+    unlock_criteria: "Complete banking education module"
+    unlock_logic: |
+      {
+        "trigger": "educational_module_completed",
+        "conditions": {
+          "module_id": "australian_banking",
+          "quiz_score_min": 80
+        }
+      }
+    reward_points: 150
+    rarity: rare
+    australian_context: "Master CBA, ANZ, Westpac, NAB comparison and fee optimization"
+    asic_reference: "https://moneysmart.gov.au/banking"
+    ato_reference: null
+    sort_order: 11
+
+  - badge_id: consumer_champion
+    badge_name: "🛡️ Consumer Champion"
+    badge_description: "Completed the Consumer Rights module! ACL and AFCA expert."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: Shield
+    badge_color: "#FFD700"
+    unlock_criteria: "Complete consumer rights education module"
+    unlock_logic: |
+      {
+        "trigger": "educational_module_completed",
+        "conditions": {
+          "module_id": "consumer_rights",
+          "quiz_score_min": 80
+        }
+      }
+    reward_points: 150
+    rarity: rare
+    australian_context: "Know your rights under Australian Consumer Law and AFCA processes"
+    asic_reference: "https://moneysmart.gov.au/consumer-protection"
+    ato_reference: null
+    sort_order: 12
+
+  - badge_id: scam_spotter
+    badge_name: "🚨 Scam Spotter"
+    badge_description: "Completed the Scam Prevention module! ATO scam and phishing detection master."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: AlertTriangle
+    badge_color: "#FFD700"
+    unlock_criteria: "Complete scam prevention education module"
+    unlock_logic: |
+      {
+        "trigger": "educational_module_completed",
+        "conditions": {
+          "module_id": "scam_prevention",
+          "quiz_score_min": 80
+        }
+      }
+    reward_points: 100
+    rarity: rare
+    australian_context: "Identify ATO scams, phishing, and protect your identity"
+    asic_reference: "https://moneysmart.gov.au/scams"
+    ato_reference: "https://www.ato.gov.au/about-ato/managing-the-tax-and-super-system/how-we-fight-fraud"
+    sort_order: 13
+
+  # ============================================
+  # CATEGORY 4: DATA-DRIVEN ACHIEVEMENTS (5 badges)
+  # Theme Color: Purple (#9333EA)
+  # ============================================
+
+  - badge_id: duplicate_detective
+    badge_name: "🔍 Duplicate Detective"
+    badge_description: "Identified subscription duplicates! Potential savings unlocked."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: Search
+    badge_color: "#9333EA"
+    unlock_criteria: "Identify 2+ duplicate subscriptions"
+    unlock_logic: |
+      {
+        "trigger": "transaction_analysis",
+        "conditions": {
+          "duplicate_subscriptions_found": 2,
+          "analysis_type": "subscription_duplicate_detection"
+        }
+      }
+    reward_points: 75
+    rarity: rare
+    australian_context: "Average Australian has duplicate subscriptions costing $200+/month"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 14
+
+  - badge_id: budget_master
+    badge_name: "💰 Budget Master"
+    badge_description: "Stayed under budget in 3+ categories for a month! Financial discipline achieved."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: DollarSign
+    badge_color: "#9333EA"
+    unlock_criteria: "Stay under budget in 3+ categories for 1 month"
+    unlock_logic: |
+      {
+        "trigger": "monthly_budget_analysis",
+        "conditions": {
+          "categories_under_budget": 3,
+          "consecutive_months": 1
+        }
+      }
+    reward_points: 300
+    rarity: epic
+    australian_context: "Category-level spending mastery - 50/30/20 rule in action"
+    asic_reference: "https://moneysmart.gov.au/budgeting"
+    ato_reference: null
+    sort_order: 15
+
+  - badge_id: tax_time_hero
+    badge_name: "📈 Tax Time Hero"
+    badge_description: "Tagged 50+ work-related expenses! EOFY ready status achieved."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: TrendingUp
+    badge_color: "#9333EA"
+    unlock_criteria: "Tag 50+ work-related expenses"
+    unlock_logic: |
+      {
+        "trigger": "transaction_analysis",
+        "conditions": {
+          "work_expenses_tagged": 50,
+          "analysis_type": "tax_readiness"
+        }
+      }
+    reward_points: 200
+    rarity: epic
+    australian_context: "EOFY readiness - maximize deductions within ATO guidelines"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/individuals-and-families/income-deductions-offsets-and-records/deductions-you-can-claim/work-related-expenses"
+    sort_order: 16
+
+  - badge_id: savings_streak
+    badge_name: "🎯 Savings Streak"
+    badge_description: "4 consecutive weeks of positive cash flow! Building that emergency fund."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: Target
+    badge_color: "#9333EA"
+    unlock_criteria: "Achieve 4 weeks of positive cash flow"
+    unlock_logic: |
+      {
+        "trigger": "weekly_cash_flow_analysis",
+        "conditions": {
+          "consecutive_positive_weeks": 4,
+          "analysis_type": "cash_flow_tracking"
+        }
+      }
+    reward_points: 150
+    rarity: rare
+    australian_context: "Emergency fund target: 3-6 months of expenses in high-interest savings"
+    asic_reference: "https://moneysmart.gov.au/saving/emergency-fund"
+    ato_reference: null
+    sort_order: 17
+
+  - badge_id: spending_analyzer
+    badge_name: "🧮 Spending Analyzer"
+    badge_description: "Reviewed 90 days of spending trends! Pattern recognition unlocked."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: Calculator
+    badge_color: "#9333EA"
+    unlock_criteria: "Review 90 days of transaction trends"
+    unlock_logic: |
+      {
+        "trigger": "transaction_analysis",
+        "conditions": {
+          "days_analyzed": 90,
+          "analysis_type": "spending_pattern_review"
+        }
+      }
+    reward_points: 100
+    rarity: rare
+    australian_context: "Identify spending patterns and optimize across categories"
+    asic_reference: "https://moneysmart.gov.au/managing-your-money/tracking-your-spending"
+    ato_reference: null
+    sort_order: 18
+
+  # ============================================
+  # CATEGORY 5: MILESTONE ACHIEVEMENTS (3 badges)
+  # Theme Color: Platinum (#E5E4E2)
+  # ============================================
+
+  - badge_id: six_month_veteran
+    badge_name: "🌟 6-Month Veteran"
+    badge_description: "Active for 6 months! Financial habit formation achieved."
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: Sparkles
+    badge_color: "#E5E4E2"
+    unlock_criteria: "Active for 6 months"
+    unlock_logic: |
+      {
+        "trigger": "account_age_check",
+        "conditions": {
+          "months_active": 6,
+          "min_activity_per_month": 5
+        }
+      }
+    reward_points: 500
+    rarity: legendary
+    australian_context: "6 months of consistent financial management - habit formed!"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 19
+
+  - badge_id: year_in_review
+    badge_name: "💎 Year in Review"
+    badge_description: "Complete annual financial summary! Full financial year tracked."
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: Gem
+    badge_color: "#E5E4E2"
+    unlock_criteria: "Complete annual summary"
+    unlock_logic: |
+      {
+        "trigger": "annual_summary_completed",
+        "conditions": {
+          "financial_year_complete": true,
+          "reconciliation_rate_min": 80
+        }
+      }
+    reward_points: 1000
+    rarity: legendary
+    australian_context: "Full FY tracked from July 1 to June 30 - accountant ready!"
+    asic_reference: null
+    ato_reference: null
+    sort_order: 20
+
+  - badge_id: tax_ready
+    badge_name: "🎊 Tax Ready"
+    badge_description: "Exported EOFY data for your accountant! Tax time preparation complete."
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: PartyPopper
+    badge_color: "#E5E4E2"
+    unlock_criteria: "Export EOFY data package"
+    unlock_logic: |
+      {
+        "trigger": "eofy_export_completed",
+        "conditions": {
+          "export_format": "tax_package",
+          "data_completeness_min": 90
+        }
+      }
+    reward_points: 750
+    rarity: legendary
+    australian_context: "Accountant-ready documentation with all deductions tracked"
+    asic_reference: null
+    ato_reference: "https://www.ato.gov.au/individuals-and-families/your-tax-return"
+    sort_order: 21
+
+  # ============================================
+  # BONUS BADGES (9 additional)
+  # ============================================
+
+  - badge_id: receipt_hunter_bronze
+    badge_name: "Receipt Hunter (Bronze)"
+    badge_description: "10 receipts uploaded! Keep building that paper trail."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: Camera
+    badge_color: "#CD7F32"
+    unlock_criteria: "Upload 10 receipts"
+    reward_points: 40
+    rarity: common
+    australian_context: "GST-compliant record keeping in progress"
+    sort_order: 22
+
+  - badge_id: receipt_hunter_silver
+    badge_name: "Receipt Hunter (Silver)"
+    badge_description: "50 receipts uploaded! Professional record keeping."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: Camera
+    badge_color: "#C0C0C0"
+    unlock_criteria: "Upload 50 receipts"
+    reward_points: 120
+    rarity: rare
+    australian_context: "Comprehensive expense documentation"
+    sort_order: 23
+
+  - badge_id: receipt_hunter_gold
+    badge_name: "Receipt Hunter (Gold)"
+    badge_description: "100 receipts uploaded! Master record keeper."
+    badge_category: transaction
+    badge_theme: blue
+    badge_icon: Camera
+    badge_color: "#FFD700"
+    unlock_criteria: "Upload 100 receipts"
+    reward_points: 300
+    rarity: epic
+    australian_context: "ATO-compliant record keeping champion"
+    sort_order: 24
+
+  - badge_id: weekly_warrior
+    badge_name: "📅 Weekly Warrior"
+    badge_description: "Used app 7 days in a row! Consistency is key."
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: Calendar
+    badge_color: "#3B82F6"
+    unlock_criteria: "7-day login streak"
+    reward_points: 80
+    rarity: rare
+    australian_context: "Weekly financial habits lead to long-term success"
+    sort_order: 25
+
+  - badge_id: monthly_champion
+    badge_name: "🔥 Monthly Champion"
+    badge_description: "Completed all monthly tasks! Financial discipline master."
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: Flame
+    badge_color: "#FF6B6B"
+    unlock_criteria: "Complete all monthly tasks"
+    reward_points: 400
+    rarity: epic
+    australian_context: "Monthly financial review completed"
+    sort_order: 26
+
+  - badge_id: goal_setter
+    badge_name: "🎯 Goal Setter"
+    badge_description: "Created your first financial goal! Vision established."
+    badge_category: education
+    badge_theme: gold
+    badge_icon: Target
+    badge_color: "#FFD700"
+    unlock_criteria: "Create first financial goal"
+    reward_points: 60
+    rarity: common
+    australian_context: "SMART financial goals for Australian context"
+    sort_order: 27
+
+  - badge_id: trend_watcher
+    badge_name: "📊 Trend Watcher"
+    badge_description: "Reviewed spending trends 5 times! Data-driven decisions."
+    badge_category: data_driven
+    badge_theme: purple
+    badge_icon: TrendingUp
+    badge_color: "#9333EA"
+    unlock_criteria: "Review spending trends 5 times"
+    reward_points: 90
+    rarity: rare
+    australian_context: "Identify Australian cost of living trends"
+    sort_order: 28
+
+  - badge_id: gst_guru
+    badge_name: "🧮 GST Guru"
+    badge_description: "Correctly identified 20 GST-applicable transactions!"
+    badge_category: education
+    badge_theme: gold
+    badge_icon: Calculator
+    badge_color: "#FFD700"
+    unlock_criteria: "Tag 20 GST transactions"
+    reward_points: 110
+    rarity: rare
+    australian_context: "Master 10% GST identification for business claims"
+    sort_order: 29
+
+  - badge_id: first_financial_year
+    badge_name: "📅 First Financial Year"
+    badge_description: "Completed your first July-June financial year with Previa!"
+    badge_category: milestone
+    badge_theme: platinum
+    badge_icon: Calendar
+    badge_color: "#E5E4E2"
+    unlock_criteria: "Complete first FY (July-June)"
+    reward_points: 800
+    rarity: legendary
+    australian_context: "First Australian financial year (July 1 - June 30) complete"
+    sort_order: 30
+
+# Total Badges: 30
+# Categories: Onboarding (4), Transaction (7), Education (6), Data-Driven (6), Milestone (7)
+# Rarity Distribution: Common (5), Rare (11), Epic (9), Legendary (5)
+# Total Possible Points: 6,950 points

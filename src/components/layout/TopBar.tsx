@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { DiscordIcon } from '@/components/ui/discord-icon';
 import { useNavigate } from 'react-router-dom';
 
 /**
@@ -42,12 +43,24 @@ export function TopBar() {
     return userTier.tier === 'premium_user' ? '👑 Premium' : '✨ Free';
   };
 
+  const handleDiscordClick = () => {
+    window.open('https://discord.gg/P8UWXgyNZJ', '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-card border-b border-previa-sand">
       <div className="flex items-center justify-between px-6 py-4">
-        {/* Left side - Could add breadcrumbs or page title here */}
+        {/* Left side - Discord Community Button */}
         <div className="flex-1">
-          {/* Reserved for future search bar or breadcrumbs */}
+          <Button
+            onClick={handleDiscordClick}
+            className="bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+            title="Join our Discord community for bug reports, announcements, giveaways, and collaborations"
+            aria-label="Join Discord community"
+          >
+            <DiscordIcon className="h-4 w-4" />
+            <span className="text-sm font-medium">Join Our Community</span>
+          </Button>
         </div>
 
         {/* Right side - Notifications & User Menu */}

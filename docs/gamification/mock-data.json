@@ -1,0 +1,245 @@
+{
+  "demo_users": [
+    {
+      "persona": "beginner_betty",
+      "profile": {
+        "name": "Betty Chen",
+        "age": 24,
+        "occupation": "Junior Marketing Coordinator",
+        "income": 58000,
+        "total_points": 120,
+        "current_level": 1,
+        "badges_earned": 2,
+        "days_active": 14
+      },
+      "badges": [
+        "first_steps",
+        "account_creator"
+      ],
+      "educational_progress": {
+        "modules_started": 1,
+        "modules_completed": 0,
+        "quiz_average": 65
+      },
+      "transaction_summary": {
+        "total_transactions": 45,
+        "reconciled": 10,
+        "categorized": 8,
+        "receipts_uploaded": 3
+      }
+    },
+    {
+      "persona": "intermediate_ian",
+      "profile": {
+        "name": "Ian Patel",
+        "age": 31,
+        "occupation": "Software Developer",
+        "income": 105000,
+        "total_points": 2850,
+        "current_level": 5,
+        "badges_earned": 12,
+        "days_active": 89
+      },
+      "badges": [
+        "first_steps",
+        "account_creator",
+        "onboarding_complete",
+        "receipt_rookie",
+        "reconciliation_starter",
+        "reconciliation_pro",
+        "category_master",
+        "aussie_super_star",
+        "tax_ninja",
+        "duplicate_detective",
+        "weekly_warrior",
+        "receipt_hunter_bronze"
+      ],
+      "educational_progress": {
+        "modules_started": 4,
+        "modules_completed": 2,
+        "quiz_average": 87
+      },
+      "transaction_summary": {
+        "total_transactions": 420,
+        "reconciled": 380,
+        "categorized": 360,
+        "receipts_uploaded": 45,
+        "work_expenses_tagged": 32,
+        "duplicate_subscriptions_found": 3
+      }
+    },
+    {
+      "persona": "advanced_alice",
+      "profile": {
+        "name": "Alice Wong",
+        "age": 42,
+        "occupation": "Small Business Owner",
+        "income": 145000,
+        "total_points": 11500,
+        "current_level": 10,
+        "badges_earned": 25,
+        "days_active": 215
+      },
+      "badges": [
+        "first_steps",
+        "account_creator",
+        "onboarding_complete",
+        "receipt_rookie",
+        "reconciliation_starter",
+        "reconciliation_pro",
+        "reconciliation_expert",
+        "category_master",
+        "aussie_super_star",
+        "tax_ninja",
+        "banking_pro",
+        "consumer_champion",
+        "scam_spotter",
+        "duplicate_detective",
+        "budget_master",
+        "tax_time_hero",
+        "savings_streak",
+        "spending_analyzer",
+        "six_month_veteran",
+        "receipt_hunter_bronze",
+        "receipt_hunter_silver",
+        "receipt_hunter_gold",
+        "weekly_warrior",
+        "goal_setter",
+        "gst_guru"
+      ],
+      "educational_progress": {
+        "modules_started": 5,
+        "modules_completed": 5,
+        "quiz_average": 94
+      },
+      "transaction_summary": {
+        "total_transactions": 1840,
+        "reconciled": 1750,
+        "categorized": 1720,
+        "receipts_uploaded": 156,
+        "work_expenses_tagged": 145,
+        "gst_transactions_tagged": 89,
+        "duplicate_subscriptions_found": 5,
+        "budget_months_under": 6
+      }
+    }
+  ],
+  "sample_transaction_patterns": {
+    "monthly_subscriptions": [
+      {"merchant": "Netflix Australia", "amount": 22.99, "frequency": "monthly", "category": "entertainment"},
+      {"merchant": "Spotify Premium", "amount": 12.99, "frequency": "monthly", "category": "entertainment"},
+      {"merchant": "Adobe Creative Cloud", "amount": 76.99, "frequency": "monthly", "category": "software"},
+      {"merchant": "Canva Pro", "amount": 17.99, "frequency": "monthly", "category": "software"},
+      {"merchant": "Apple iCloud Storage", "amount": 4.49, "frequency": "monthly", "category": "storage"}
+    ],
+    "duplicate_scenarios": [
+      {"original": "Netflix via App Store", "duplicate": "Netflix Direct", "monthly_waste": 22.99},
+      {"original": "Spotify Family", "duplicate": "Spotify Individual", "monthly_waste": 12.99}
+    ],
+    "work_expenses": [
+      {"description": "Home office desk", "amount": 450, "date": "2024-09-15", "category": "work_equipment", "tax_deductible": true},
+      {"description": "Professional development course", "amount": 895, "date": "2024-08-22", "category": "education", "tax_deductible": true},
+      {"description": "Client lunch meeting", "amount": 87.50, "date": "2024-10-05", "category": "meals", "tax_deductible": false},
+      {"description": "Laptop for work", "amount": 2100, "date": "2024-07-10", "category": "work_equipment", "tax_deductible": true, "depreciation_required": true},
+      {"description": "Coworking space monthly", "amount": 350, "date": "2024-10-01", "category": "office_rental", "tax_deductible": true}
+    ],
+    "gst_transactions": [
+      {"description": "Business supplies - Officeworks", "amount": 234.50, "gst_amount": 21.32, "gst_applicable": true},
+      {"description": "Fresh groceries - Woolworths", "amount": 156.80, "gst_amount": 0, "gst_applicable": false},
+      {"description": "Cafe coffee", "amount": 5.50, "gst_amount": 0.50, "gst_applicable": true},
+      {"description": "Medical consultation", "amount": 85, "gst_amount": 0, "gst_applicable": false}
+    ]
+  },
+  "achievement_scenarios": {
+    "badge_unlock_moments": [
+      {
+        "badge_id": "duplicate_detective",
+        "trigger_data": {
+          "duplicates_found": 2,
+          "potential_monthly_savings": 35.98,
+          "affected_merchants": ["Netflix", "Spotify"]
+        },
+        "notification_text": "You've identified 2 duplicate subscriptions! Potential savings: $35.98/month"
+      },
+      {
+        "badge_id": "tax_time_hero",
+        "trigger_data": {
+          "work_expenses_tagged": 50,
+          "total_deduction_value": 4250,
+          "eofy_readiness_score": 92
+        },
+        "notification_text": "50 work expenses tagged! Estimated deductions: $4,250"
+      },
+      {
+        "badge_id": "budget_master",
+        "trigger_data": {
+          "categories_under_budget": 5,
+          "months_achieved": 3,
+          "total_saved": 820
+        },
+        "notification_text": "3 months under budget in 5 categories! You've saved $820"
+      }
+    ],
+    "level_up_celebration": {
+      "from_level": 4,
+      "to_level": 5,
+      "level_title": "Financial Wizard",
+      "points_earned": 900,
+      "next_level_threshold": 3600,
+      "unlocked_features": ["Advanced analytics", "Custom export templates"]
+    }
+  },
+  "challenge_examples": {
+    "daily": [
+      {
+        "challenge_id": "daily_receipt_upload",
+        "name": "Receipt Run",
+        "description": "Upload 1 receipt today",
+        "target_count": 1,
+        "reward_points": 10,
+        "current_progress": 0,
+        "expires_at": "2025-10-14T00:00:00Z"
+      },
+      {
+        "challenge_id": "daily_reconcile_3",
+        "name": "Quick Match",
+        "description": "Reconcile 3 transactions today",
+        "target_count": 3,
+        "reward_points": 15,
+        "current_progress": 1,
+        "expires_at": "2025-10-14T00:00:00Z"
+      }
+    ],
+    "weekly": [
+      {
+        "challenge_id": "weekly_banking_review",
+        "name": "Banking Fee Check",
+        "description": "Compare your account fees to market rates",
+        "target_count": 1,
+        "reward_points": 50,
+        "current_progress": 0,
+        "expires_at": "2025-10-20T00:00:00Z"
+      },
+      {
+        "challenge_id": "weekly_tag_work_expenses",
+        "name": "Tax Prep Week",
+        "description": "Tag 10 work-related expenses",
+        "target_count": 10,
+        "reward_points": 100,
+        "current_progress": 6,
+        "expires_at": "2025-10-20T00:00:00Z"
+      }
+    ],
+    "monthly": [
+      {
+        "challenge_id": "monthly_budget_90",
+        "name": "Budget Champion",
+        "description": "Achieve 90% reconciliation rate this month",
+        "target_count": 90,
+        "reward_points": 200,
+        "current_progress": 78,
+        "expires_at": "2025-10-31T00:00:00Z"
+      }
+    ]
+  }
+}

@@ -7,6 +7,7 @@ import React from 'react';
 import { EnhancedChatMessage, Citation } from '@/types/message';
 import MarkdownRenderer from './MarkdownRenderer';
 import { Card } from '@/components/ui/card';
+import { User, Sparkles } from 'lucide-react';
 
 interface ChatMessageProps {
   message: EnhancedChatMessage;
@@ -18,7 +19,17 @@ const ChatMessage = ({ message, onCitationClick }: ChatMessageProps) => {
   const isAiMessage = message.message.type === 'ai' || message.message.type === 'assistant';
 
   return (
-    <div className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'} mb-4`}>
+    <div className={`flex ${isUserMessage ? 'justify-end' : 'justify-start'} mb-4 gap-3`}>
+      {/* AI Avatar - Left side for AI messages */}
+      {!isUserMessage && (
+        <div className="flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-sand flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-charcoal" />
+          </div>
+        </div>
+      )}
+      
+      {/* Message content */}
       <div className={`${isUserMessage ? 'max-w-xs lg:max-w-md' : 'w-full max-w-3xl'}`}>
         {isUserMessage ? (
           // User message - right-aligned, sand background
@@ -48,6 +59,15 @@ const ChatMessage = ({ message, onCitationClick }: ChatMessageProps) => {
           {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </div>
       </div>
+      
+      {/* User Avatar - Right side for user messages */}
+      {isUserMessage && (
+        <div className="flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-charcoal flex items-center justify-center">
+            <User className="h-4 w-4 text-cream" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
