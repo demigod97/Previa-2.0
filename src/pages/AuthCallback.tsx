@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOAuth } from '@/hooks/auth/useOAuth';
 import { useAuth } from '@/contexts/AuthContext';
 import { Card, CardContent } from '@/components/ui/card';
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { handleOAuthCallback } = useOAuth();
   const { isAuthenticated } = useAuth();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -14,15 +15,37 @@ const AuthCallback: React.FC = () => {
   useEffect(() => {
     const handleCallback = async () => {
       try {
+        // Log URL parameters for debugging
+        console.log('OAuth callback initiated', {
+          url: window.location.href,
+          params: Object.fromEntries(searchParams),
+          timestamp: new Date().toISOString()
+        });
+
+        // Check for error from OAuth provider
+        const error = searchParams.get('error');
+        const errorDescription = searchParams.get('error_description');
+
+        if (error) {
+          console.error('OAuth provider error:', { error, errorDescription });
+          setStatus('error');
+          setMessage(errorDescription || `Authentication error: ${error}`);
+
+          setTimeout(() => {
+            navigate('/auth', { replace: true });
+          }, 3000);
+          return;
+        }
+
         setStatus('loading');
         setMessage('Completing authentication...');
-        
+
         const result = await handleOAuthCallback();
-        
+
         if (result.success) {
           setStatus('success');
           setMessage('Authentication successful! Redirecting...');
-          
+
           // Wait a moment to show success message, then redirect
           setTimeout(() => {
             navigate('/', { replace: true });
@@ -30,7 +53,7 @@ const AuthCallback: React.FC = () => {
         } else {
           setStatus('error');
           setMessage(result.error || 'Authentication failed');
-          
+
           // Redirect to login after showing error
           setTimeout(() => {
             navigate('/auth', { replace: true });
@@ -40,7 +63,7 @@ const AuthCallback: React.FC = () => {
         console.error('OAuth callback error:', error);
         setStatus('error');
         setMessage('Authentication failed. Redirecting to login...');
-        
+
         setTimeout(() => {
           navigate('/auth', { replace: true });
         }, 3000);
@@ -48,7 +71,7 @@ const AuthCallback: React.FC = () => {
     };
 
     handleCallback();
-  }, [handleOAuthCallback, navigate]);
+  }, [handleOAuthCallback, navigate, searchParams]);
 
   // If user is already authenticated, redirect immediately
   useEffect(() => {
