@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell } from 'lucide-react';
+import { Bell, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DiscordIcon } from '@/components/ui/discord-icon';
 import { useNavigate } from 'react-router-dom';
+import { useMockDataSeeding } from '@/hooks/useMockDataSeeding';
 
 /**
  * TopBar - Top navigation bar for dashboard views
@@ -27,6 +28,7 @@ import { useNavigate } from 'react-router-dom';
 export function TopBar() {
   const { user, userTier, signOut } = useAuth();
   const navigate = useNavigate();
+  const { seedMockData, isLoading } = useMockDataSeeding();
 
   const handleSignOut = async () => {
     await signOut();
@@ -50,8 +52,8 @@ export function TopBar() {
   return (
     <header className="sticky top-0 z-40 bg-card border-b border-previa-sand">
       <div className="flex items-center justify-between px-6 py-4">
-        {/* Left side - Discord Community Button */}
-        <div className="flex-1">
+        {/* Left side - Discord Community Button & Mock Data Button */}
+        <div className="flex-1 flex gap-3">
           <Button
             onClick={handleDiscordClick}
             className="bg-[#5865F2] hover:bg-[#4752C4] text-white px-4 py-2 rounded-md transition-colors flex items-center gap-2"
@@ -61,6 +63,29 @@ export function TopBar() {
             <DiscordIcon className="h-4 w-4" />
             <span className="text-sm font-medium">Join Our Community</span>
           </Button>
+
+          {/* Mock Data Seeding Button - Only visible to authenticated users */}
+          {user && (
+            <Button
+              onClick={seedMockData}
+              disabled={isLoading}
+              className="bg-sand hover:bg-sand/80 text-charcoal px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+              title="Seed your account with realistic mock financial data to explore features"
+              aria-label="Seed mock data"
+            >
+              {isLoading ? (
+                <>
+                  <div className="h-4 w-4 border-2 border-charcoal border-t-transparent rounded-full animate-spin" />
+                  <span className="text-sm font-medium">Generating...</span>
+                </>
+              ) : (
+                <>
+                  <Sparkles className="h-4 w-4" />
+                  <span className="text-sm font-medium">Seed Mock Data</span>
+                </>
+              )}
+            </Button>
+          )}
         </div>
 
         {/* Right side - Notifications & User Menu */}
