@@ -6,6 +6,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
+import { FeatureStatusIndicator } from '@/components/ui/FeatureStatusIndicator';
+import { APP_FEATURES, getFeatureStatus } from '@/types/featureStatus';
 import { cn } from '@/lib/utils';
 
 interface NavigationItem {
@@ -13,14 +15,17 @@ interface NavigationItem {
   emoji: string;
   icon: React.ElementType;
   path: string;
+  featureId?: string;
 }
 
 const navigationItems: NavigationItem[] = [
   { label: 'Home', emoji: '🏠', icon: Home, path: '/' },
-  { label: 'Reconciliation', emoji: '🔄', icon: ArrowLeftRight, path: '/reconciliation' },
-  { label: 'Transactions', emoji: '📊', icon: Receipt, path: '/transactions' },
-  { label: 'Chat', emoji: '💬', icon: MessageSquare, path: '/chat' },
-  { label: 'Settings', emoji: '⚙️', icon: Settings, path: '/settings' },
+  { label: 'Reconciliation', emoji: '🔄', icon: ArrowLeftRight, path: '/reconciliation', featureId: 'reconciliation' },
+  { label: 'Transactions', emoji: '📊', icon: Receipt, path: '/transactions', featureId: 'transactions' },
+  { label: 'Chat', emoji: '💬', icon: MessageSquare, path: '/chat', featureId: 'chat' },
+  { label: 'Reports', emoji: '📈', icon: Receipt, path: '/reports', featureId: 'reports' },
+  { label: 'Integrations', emoji: '🔗', icon: Settings, path: '/integrations', featureId: 'integrations' },
+  { label: 'Settings', emoji: '⚙️', icon: Settings, path: '/settings', featureId: 'settings' },
 ];
 
 /**
@@ -96,7 +101,14 @@ export function Sidebar() {
                 )}
               >
                 <span className="text-lg" aria-hidden="true">{item.emoji}</span>
-                <span>{item.label}</span>
+                <span className="flex-1">{item.label}</span>
+                {item.featureId && APP_FEATURES[item.featureId] && (
+                  <FeatureStatusIndicator
+                    featureId={item.featureId}
+                    size="sm"
+                    showTooltip={true}
+                  />
+                )}
               </Link>
             );
           })}
