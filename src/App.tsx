@@ -13,6 +13,7 @@ import ReconciliationView from "./pages/ReconciliationView";
 import TransactionsView from "./pages/TransactionsView";
 import ChatView from "./pages/ChatView";
 import Settings from "./pages/Settings";
+import Gamification from "./pages/Gamification";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import NotFound from "./pages/NotFound";
@@ -55,13 +56,21 @@ const AppContent = () => {
             </ProtectedRoute>
           } 
         />
-        <Route 
-          path="/settings" 
+        <Route
+          path="/settings"
           element={
             <ProtectedRoute fallback={<Auth />}>
               <Settings />
             </ProtectedRoute>
-          } 
+          }
+        />
+        <Route
+          path="/gamification"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <Gamification />
+            </ProtectedRoute>
+          }
         />
         <Route path="/auth" element={<Auth />} />
         <Route path="/auth/callback" element={<AuthCallback />} />

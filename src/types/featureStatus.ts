@@ -89,6 +89,12 @@ export const APP_FEATURES: Record<string, FeatureConfig> = {
     description: 'Match transactions with receipts using AI-powered matching',
     expectedRelease: 'Q1 2025'
   },
+  'gamification': {
+    id: 'gamification',
+    name: 'Financial Gamification',
+    status: 'active',
+    description: 'Earn badges, points, and complete challenges while learning Australian financial literacy'
+  },
   'chat': {
     id: 'chat',
     name: 'AI Financial Assistant',
@@ -122,6 +128,19 @@ export const APP_FEATURES: Record<string, FeatureConfig> = {
     status: 'coming-soon',
     description: 'Get notified about important financial events and insights',
     expectedRelease: 'Q2 2025'
+  },
+  'integrations': {
+    id: 'integrations',
+    name: 'Third-Party Integrations',
+    status: 'coming-soon',
+    description: 'Connect with external financial services and tools',
+    expectedRelease: 'Q2 2025'
+  },
+  'settings': {
+    id: 'settings',
+    name: 'Settings',
+    status: 'active',
+    description: 'Manage your account, preferences, and application settings'
   }
 };
 
