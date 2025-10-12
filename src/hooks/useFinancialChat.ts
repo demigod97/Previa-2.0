@@ -166,7 +166,10 @@ const transformMessage = (item: ChatHistoryItem): EnhancedChatMessage => {
   };
 };
 
-export const useFinancialChat = (sessionId: string = 'default-financial-chat') => {
+// Fixed UUID for default financial chat session
+const DEFAULT_SESSION_UUID = '00000000-0000-0000-0000-000000000001';
+
+export const useFinancialChat = (sessionId: string = DEFAULT_SESSION_UUID) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();

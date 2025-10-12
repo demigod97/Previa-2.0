@@ -21,7 +21,7 @@ interface FinancialChatPanelProps {
 
 const FinancialChatPanel = ({ 
   onCitationClick,
-  sessionId = 'default-financial-chat'
+  sessionId = '00000000-0000-0000-0000-000000000001'
 }: FinancialChatPanelProps) => {
   const [pendingUserMessage, setPendingUserMessage] = useState<string | null>(null);
   const [showAiLoading, setShowAiLoading] = useState(false);

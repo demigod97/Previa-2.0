@@ -2,11 +2,12 @@ import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { getFeatureStatus, type FeatureStatus } from '@/types/featureStatus';
+import { CompactStatusBadge } from './CompactStatusBadge';
 
 interface FeatureStatusIndicatorProps {
   featureId: string;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'compact';
   showTooltip?: boolean;
   customTooltip?: string;
 }
@@ -29,6 +30,18 @@ export function FeatureStatusIndicator({
   customTooltip
 }: FeatureStatusIndicatorProps) {
   const statusInfo = getFeatureStatus(featureId);
+  
+  // Use compact badge for compact size
+  if (size === 'compact') {
+    return (
+      <CompactStatusBadge
+        status={statusInfo.status}
+        className={className}
+        showTooltip={showTooltip}
+        tooltipText={customTooltip}
+      />
+    );
+  }
   
   const sizeClasses = {
     sm: 'text-xs px-2 py-1',

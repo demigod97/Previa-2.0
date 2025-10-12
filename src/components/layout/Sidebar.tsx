@@ -93,7 +93,7 @@ export function Sidebar() {
                 aria-current={active ? 'page' : undefined}
                 className={cn(
                   'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
-                  'text-sm font-medium',
+                  'text-sm font-medium min-w-0',
                   'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
                   active
                     ? 'bg-sand text-charcoal'
@@ -105,7 +105,7 @@ export function Sidebar() {
                 {item.featureId && APP_FEATURES[item.featureId] && (
                   <FeatureStatusIndicator
                     featureId={item.featureId}
-                    size="sm"
+                    size="compact"
                     showTooltip={true}
                   />
                 )}

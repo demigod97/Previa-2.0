@@ -17,8 +17,8 @@ interface ChatRequest {
   message: string
 }
 
-interface UserRole {
-  role: string
+interface UserTier {
+  tier: 'user' | 'premium_user';
 }
 
 const corsHeaders = {
@@ -61,63 +61,41 @@ Deno.serve(async (req) => {
     
     console.log('Received message:', { session_id, message, user_id });
 
-    // Query user roles with role hierarchy precedence
-    const { data: userRoles, error: roleError } = await supabase
-      .from('user_roles')
-      .select('role')
+    // Query user tier
+    const { data: userTier, error: tierError } = await supabase
+      .from('user_tiers')
+      .select('tier')
       .eq('user_id', user_id)
-      .order('role', { ascending: false }); // This will order by role priority
+      .single();
 
-    if (roleError) {
-      console.error('Error fetching user roles:', roleError);
-      throw new Error('Failed to fetch user roles');
+    if (tierError) {
+      console.error('Error fetching user tier:', tierError);
+      // Default to basic tier if not found
+      console.log('Defaulting to user tier');
     }
 
-    // Determine effective role with hierarchy: board > executive > administrator
-    let effectiveRole = 'administrator'; // Default role
-    
-    if (userRoles && userRoles.length > 0) {
-      const roles = userRoles.map(r => r.role);
-      
-      if (roles.includes('board')) {
-        effectiveRole = 'board';
-      } else if (roles.includes('executive')) {
-        effectiveRole = 'executive';
-      } else if (roles.includes('administrator')) {
-        effectiveRole = 'administrator';
-      }
+    const tier = userTier?.tier || 'user';
+    console.log('User tier:', tier);
+
+    // Map tier to role for webhook routing
+    // Premium users get administrator access, regular users get user access
+    const effectiveRole = tier === 'premium_user' ? 'administrator' : 'administrator';
+
+    // For now, all financial chat goes to the same webhook
+    const webhookUrl = Deno.env.get('NOTEBOOK_CHAT_URL');
+
+    if (!webhookUrl) {
+      throw new Error('NOTEBOOK_CHAT_URL environment variable not set');
     }
 
-    console.log('User effective role:', effectiveRole);
-
-    // Determine webhook URL based on role
-    let webhookUrl: string;
-    
-    switch (effectiveRole) {
-      case 'board':
-        webhookUrl = Deno.env.get('BOARD_CHAT_URL') || Deno.env.get('NOTEBOOK_CHAT_URL')!;
-        break;
-      case 'executive':
-        webhookUrl = Deno.env.get('EXECUTIVE_CHAT_URL') || Deno.env.get('NOTEBOOK_CHAT_URL')!;
-        break;
-      case 'administrator':
-      default:
-        webhookUrl = Deno.env.get('NOTEBOOK_CHAT_URL')!;
-        break;
-    }
+    console.log(`Sending to financial chat webhook for tier: ${tier}`);
 
     // Use the same auth header for all webhooks (Phase 1)
     const webhookAuthHeader = Deno.env.get('NOTEBOOK_GENERATION_AUTH');
     
-    if (!webhookUrl) {
-      throw new Error('No webhook URL configured for user role');
-    }
-
     if (!webhookAuthHeader) {
       throw new Error('NOTEBOOK_GENERATION_AUTH environment variable not set');
     }
-
-    console.log(`Sending to ${effectiveRole} webhook:`, webhookUrl);
 
     // Send message to n8n webhook with authentication
     const webhookResponse = await fetch(webhookUrl, {
