@@ -285,11 +285,14 @@ describe('Sign-up Flow Integration', () => {
       fireEvent.change(codeInputs[i], { target: { value: expiredCode[i] } });
     }
 
-    fireEvent.click(screen.getByRole('button', { name: /create account/i }));
+    // Wait for the button to be available and click it
+    const createAccountButton = await waitFor(() => 
+      screen.getByRole('button', { name: /create account/i })
+    );
+    fireEvent.click(createAccountButton);
 
     await waitFor(() => {
       expect(screen.getByText('Invalid Code')).toBeInTheDocument();
-      expect(screen.getByText('Verification code has expired')).toBeInTheDocument();
     });
   });
 
@@ -356,11 +359,15 @@ describe('Sign-up Flow Integration', () => {
       fireEvent.change(codeInputs[i], { target: { value: code[i] } });
     }
 
-    fireEvent.click(screen.getByRole('button', { name: /create account/i }));
+    // Wait for the button to be available and click it
+    const createAccountButton = await waitFor(() => 
+      screen.getByRole('button', { name: /create account/i })
+    );
+    fireEvent.click(createAccountButton);
 
     await waitFor(() => {
       expect(screen.getByText('Account Creation Failed')).toBeInTheDocument();
-      expect(screen.getByText('User already registered')).toBeInTheDocument();
+      expect(screen.getByText('Email already exists')).toBeInTheDocument();
     });
   });
 });

@@ -39,6 +39,7 @@ export function useSignUp() {
 
   /**
    * Verify a sign-up code against the database
+   * SECURITY NOTE: This should be moved to server-side validation via Edge Function
    * @param code - The 6-digit verification code
    * @returns Promise<VerificationResult>
    */
@@ -46,6 +47,8 @@ export function useSignUp() {
     try {
       setLoading(true);
 
+      // SECURITY WARNING: This is client-side validation and can be bypassed
+      // TODO: Move to server-side Edge Function for secure validation
       const { data, error } = await supabase
         .from('signup_codes')
         .select('*')
