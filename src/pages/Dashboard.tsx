@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, lazy, Suspense } from 'react';
-import { Sidebar, TopBar } from '@/components/layout';
+import { DashboardLayout } from '@/components/layout';
 import {
   UserGreetingCard,
   FinancialOverviewCards,
@@ -71,56 +71,34 @@ const Dashboard = () => {
   // Show loading while auth is initializing
   if (authLoading) {
     return (
-      <div className="flex h-screen bg-cream">
-        <Sidebar />
-        <div className="flex-1 lg:ml-64 md:ml-20">
-          <TopBar />
-          <main className="p-6">
-            <div className="text-center py-16">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4 border-sand"></div>
-              <p className="text-darkStone">Initializing...</p>
-            </div>
-          </main>
+      <DashboardLayout>
+        <div className="text-center py-16">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4 border-sand"></div>
+          <p className="text-darkStone">Initializing...</p>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   // Show auth error if present
   if (authError) {
     return (
-      <div className="flex h-screen bg-cream">
-        <Sidebar />
-        <div className="flex-1 lg:ml-64 md:ml-20">
-          <TopBar />
-          <main className="p-6">
-            <div className="text-center py-16">
-              <p className="text-red-600">Authentication error: {authError}</p>
-              <Button
-                onClick={() => window.location.reload()}
-                className="mt-4 bg-sand hover:bg-sand/90 text-charcoal"
-              >
-                Retry
-              </Button>
-            </div>
-          </main>
+      <DashboardLayout>
+        <div className="text-center py-16">
+          <p className="text-red-600">Authentication error: {authError}</p>
+          <Button
+            onClick={() => window.location.reload()}
+            className="mt-4 bg-sand hover:bg-sand/90 text-charcoal"
+          >
+            Retry
+          </Button>
         </div>
-      </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="flex h-screen bg-cream">
-      {/* Sidebar Navigation */}
-      <Sidebar />
-
-      {/* Main Content Area */}
-      <div className="flex-1 lg:ml-64 md:ml-20 flex flex-col overflow-hidden">
-        {/* Top Bar */}
-        <TopBar />
-
-        {/* Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-6 pb-20 md:pb-6">
+    <DashboardLayout>
         <div className="mb-8">
           <h1 className="font-medium mb-2 text-5xl" style={{ color: '#403B31' }}>Welcome to Previa</h1>
         </div>
@@ -237,15 +215,12 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        </main>
-
         {/* Upgrade Prompt Modal */}
         <UpgradePrompt
           open={showUpgradePrompt}
           onOpenChange={setShowUpgradePrompt}
         />
-      </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

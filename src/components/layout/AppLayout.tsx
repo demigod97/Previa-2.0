@@ -16,6 +16,7 @@ interface AppLayoutProps {
  * - Previa design system
  */
 export function AppLayout({ children, showFooter = true }: AppLayoutProps) {
+
   return (
     <div className="min-h-screen flex flex-col bg-cream">
       {/* Main content area */}
