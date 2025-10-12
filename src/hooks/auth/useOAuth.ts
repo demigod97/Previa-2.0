@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { getOAuthRedirectUrl } from '@/config/oauth';
 
 export type OAuthProvider = 'google' | 'github' | 'discord';
 
@@ -20,10 +21,14 @@ export const useOAuth = () => {
     try {
       console.log(`Attempting OAuth sign-in with ${provider}`);
       
+      // Get the correct redirect URL based on environment
+      const redirectUrl = getOAuthRedirectUrl();
+      console.log('OAuth redirect URL:', redirectUrl);
+      
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: provider,
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: redirectUrl
         }
       });
 
