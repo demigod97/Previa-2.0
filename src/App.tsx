@@ -8,6 +8,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { ErrorBoundary } from "@/components/error";
 import { AppLayout } from "@/components/layout";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import ReconciliationView from "./pages/ReconciliationView";
 import TransactionsView from "./pages/TransactionsView";
@@ -17,6 +18,9 @@ import Gamification from "./pages/Gamification";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
 import NotFound from "./pages/NotFound";
+import BankStatementUpload from "./pages/onboarding/BankStatementUpload";
+import ProcessingStatus from "./pages/onboarding/ProcessingStatus";
+import ConfirmAccount from "./pages/onboarding/ConfirmAccount";
 
 const queryClient = new QueryClient();
 
@@ -24,13 +28,14 @@ const AppContent = () => {
   return (
     <AppLayout>
       <Routes>
-        <Route 
-          path="/" 
+        <Route path="/welcome" element={<Welcome />} />
+        <Route
+          path="/"
           element={
-            <ProtectedRoute fallback={<Auth />}>
+            <ProtectedRoute fallback={<Welcome />}>
               <Dashboard />
             </ProtectedRoute>
-          } 
+          }
         />
         <Route 
           path="/reconciliation" 
@@ -69,6 +74,31 @@ const AppContent = () => {
           element={
             <ProtectedRoute fallback={<Auth />}>
               <Gamification />
+            </ProtectedRoute>
+          }
+        />
+        {/* Onboarding routes */}
+        <Route
+          path="/onboarding/upload"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <BankStatementUpload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/onboarding/processing/:documentId"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <ProcessingStatus />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/onboarding/confirm-account/:documentId"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <ConfirmAccount />
             </ProtectedRoute>
           }
         />

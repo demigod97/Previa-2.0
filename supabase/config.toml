@@ -63,3 +63,6 @@ verify_jwt = false
 
 [functions.process-additional-sources]
 verify_jwt = true
+
+[functions.delete-mock-data]
+verify_jwt = true

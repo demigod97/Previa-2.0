@@ -295,14 +295,11 @@ export async function fetchTransactionInsights(): Promise<TransactionInsight[]> 
 /**
  * Award points to user (calls RPC function for proper calculation)
  */
-export async function awardPoints(points: number, reason: string): Promise<boolean> {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) throw new Error('User not authenticated');
-
+export async function awardPoints(userId: string, points: number, reason: string): Promise<boolean> {
   const { error } = await supabase
     .from('point_transactions')
     .insert({
-      user_id: user.id,
+      user_id: userId,
       points_earned: points,
       reason,
     });

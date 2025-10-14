@@ -1,5 +1,5 @@
-import React from 'react';
-import { Bell, Sparkles } from 'lucide-react';
+import React, { useState } from 'react';
+import { Bell, Sparkles, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -13,8 +13,10 @@ import {
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DiscordIcon } from '@/components/ui/discord-icon';
+import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog';
 import { useNavigate } from 'react-router-dom';
 import { useMockDataSeeding } from '@/hooks/useMockDataSeeding';
+import { useDeleteMockData } from '@/hooks/useDeleteMockData';
 
 /**
  * TopBar - Top navigation bar for dashboard views
@@ -28,7 +30,9 @@ import { useMockDataSeeding } from '@/hooks/useMockDataSeeding';
 export function TopBar() {
   const { user, userTier, signOut } = useAuth();
   const navigate = useNavigate();
-  const { seedMockData, isLoading } = useMockDataSeeding();
+  const { seedMockData, isLoading: isSeedingLoading } = useMockDataSeeding();
+  const { deleteMockData, isLoading: isDeletingLoading } = useDeleteMockData();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -49,6 +53,15 @@ export function TopBar() {
     window.open('https://discord.gg/P8UWXgyNZJ', '_blank', 'noopener,noreferrer');
   };
 
+  const handleDeleteMockData = () => {
+    setShowDeleteDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    await deleteMockData();
+    setShowDeleteDialog(false);
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-card border-b border-previa-sand">
       <div className="flex items-center justify-between px-6 py-4">
@@ -64,27 +77,49 @@ export function TopBar() {
             <span className="text-sm font-medium">Join Our Community</span>
           </Button>
 
-          {/* Mock Data Seeding Button - Only visible to authenticated users */}
+          {/* Mock Data Buttons - Only visible to authenticated users */}
           {user && (
-            <Button
-              onClick={seedMockData}
-              disabled={isLoading}
-              className="bg-sand hover:bg-sand/80 text-charcoal px-4 py-2 rounded-md transition-colors flex items-center gap-2"
-              title="Seed your account with realistic mock financial data to explore features"
-              aria-label="Seed mock data"
-            >
-              {isLoading ? (
-                <>
-                  <div className="h-4 w-4 border-2 border-charcoal border-t-transparent rounded-full animate-spin" />
-                  <span className="text-sm font-medium">Generating...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="h-4 w-4" />
-                  <span className="text-sm font-medium">Seed Mock Data</span>
-                </>
-              )}
-            </Button>
+            <>
+              <Button
+                onClick={seedMockData}
+                disabled={isSeedingLoading || isDeletingLoading}
+                className="bg-sand hover:bg-sand/80 text-charcoal px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+                title="Seed your account with realistic mock financial data to explore features"
+                aria-label="Seed mock data"
+              >
+                {isSeedingLoading ? (
+                  <>
+                    <div className="h-4 w-4 border-2 border-charcoal border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm font-medium">Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4" />
+                    <span className="text-sm font-medium">Seed Mock Data</span>
+                  </>
+                )}
+              </Button>
+
+              <Button
+                onClick={handleDeleteMockData}
+                disabled={isSeedingLoading || isDeletingLoading}
+                className="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+                title="Delete all mock financial data from your account"
+                aria-label="Delete mock data"
+              >
+                {isDeletingLoading ? (
+                  <>
+                    <div className="h-4 w-4 border-2 border-red-700 border-t-transparent rounded-full animate-spin" />
+                    <span className="text-sm font-medium">Deleting...</span>
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="h-4 w-4" />
+                    <span className="text-sm font-medium">Delete Mock Data</span>
+                  </>
+                )}
+              </Button>
+            </>
           )}
         </div>
 
@@ -154,6 +189,14 @@ export function TopBar() {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <DeleteConfirmationDialog
+        open={showDeleteDialog}
+        onOpenChange={setShowDeleteDialog}
+        onConfirm={handleConfirmDelete}
+        isLoading={isDeletingLoading}
+      />
     </header>
   );
 }

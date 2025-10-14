@@ -1,0 +1,179 @@
+schema: 1
+story: '2.2'
+story_title: 'Bank Statement Upload & OCR Trigger'
+gate: FAIL
+status_reason: 'Critical security vulnerabilities (no malware scanning, insufficient RLS validation, predictable file paths) and data integrity risks (no backup strategy, inconsistent state on failures) must be resolved before production deployment.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-01-15T10:30:00Z'
+
+top_issues:
+  - id: 'SEC-001'
+    severity: high
+    finding: 'No malware scanning on file uploads - malicious PDFs or CSVs could compromise system'
+    suggested_action: 'Implement ClamAV or similar malware scanning before file storage, validate file content not just extension'
+    suggested_owner: dev
+
+  - id: 'SEC-002'
+    severity: high
+    finding: 'Insufficient RLS policy validation on bank_statements table - users could potentially access other users financial data'
+    suggested_action: 'Write comprehensive RLS policy tests including cross-user access attempts, document exact RLS implementation'
+    suggested_owner: dev
+
+  - id: 'DATA-001'
+    severity: high
+    finding: 'No backup strategy for original uploaded files - data loss potential if processing corrupts files'
+    suggested_action: 'Implement versioned backups before processing, set 7-year retention policy for financial documents'
+    suggested_owner: dev
+
+  - id: 'PERF-001'
+    severity: high
+    finding: 'Synchronous processing could block UI for large files - 50MB uploads on slow connections could take 5+ minutes'
+    suggested_action: 'Implement chunked file uploads (5MB chunks), add proper progress tracking and resume capability'
+    suggested_owner: dev
+
+  - id: 'SEC-003'
+    severity: medium
+    finding: 'File paths use predictable timestamps - enables enumeration attacks to discover other users files'
+    suggested_action: 'Replace timestamp-based paths with UUIDs, implement signed URLs with short expiry'
+    suggested_owner: dev
+
+  - id: 'DATA-002'
+    severity: medium
+    finding: 'OCR processing failure could leave database in inconsistent state - no data validation after extraction'
+    suggested_action: 'Add data validation layer, implement completed_with_errors status, store confidence scores'
+    suggested_owner: dev
+
+  - id: 'OPS-001'
+    severity: medium
+    finding: 'No monitoring/alerting for failed uploads - production issues could go unnoticed'
+    suggested_action: 'Implement application monitoring (Sentry), create ops dashboard, add dead letter queue'
+    suggested_owner: dev
+
+  - id: 'OPS-002'
+    severity: medium
+    finding: 'Gamification points award could fail silently - users miss rewards, no notification or retry'
+    suggested_action: 'Implement retry queue for failed gamification actions, notify users on failure with retry button'
+    suggested_owner: dev
+
+  - id: 'TECH-001'
+    severity: medium
+    finding: 'Edge Function dependency on external n8n service - OCR completely blocked if n8n fails'
+    suggested_action: 'Implement retry logic with exponential backoff, add circuit breaker, create manual processing fallback'
+    suggested_owner: dev
+
+waiver:
+  active: false
+
+# Extended Quality Assessment
+quality_score: 32  # 100 - (20×4 critical) - (10×5 high) = 32 (high risk)
+expires: '2025-01-29T10:30:00Z'  # 2 weeks from review
+
+evidence:
+  tests_reviewed: 0  # No tests executed yet
+  risks_identified: 18
+  trace:
+    ac_covered: []  # No test coverage yet
+    ac_gaps: [1, 2, 3, 4, 5, 6]  # All ACs lack test coverage
+
+risk_summary:
+  totals:
+    critical: 4  # Score 9 risks
+    high: 5      # Score 6 risks
+    medium: 6    # Score 4 risks
+    low: 3       # Score 2-3 risks
+  highest:
+    id: SEC-001
+    score: 9
+    title: 'No malware scanning on file uploads'
+  recommendations:
+    must_fix:
+      - 'Implement malware scanning with ClamAV or similar'
+      - 'Add comprehensive RLS policy tests'
+      - 'Implement backup strategy with 7-year retention'
+      - 'Add chunked uploads for files > 10MB'
+      - 'Replace predictable file paths with UUIDs'
+      - 'Add OCR data validation layer'
+      - 'Configure monitoring and alerting'
+      - 'Implement gamification retry queue'
+      - 'Add n8n circuit breaker and fallback'
+    monitor:
+      - 'File upload success/failure rates'
+      - 'OCR processing times and success rates'
+      - 'Storage bucket capacity'
+      - 'n8n webhook response times'
+
+nfr_validation:
+  _assessed: [security, performance, reliability, maintainability]
+  security:
+    status: FAIL
+    notes: |
+      Critical vulnerabilities: No malware scanning, insufficient RLS validation, 
+      predictable file paths enable enumeration. No audit trail for file access.
+      Cross-reference with Story 1.9 shows pattern of underspecified security controls.
+  performance:
+    status: FAIL
+    notes: |
+      Synchronous processing blocks UI for large files. No chunked uploads.
+      Polling every 2 seconds is inefficient. No CDN optimization.
+      Similar issues found in Story 2.1 with async operations.
+  reliability:
+    status: CONCERNS
+    notes: |
+      n8n dependency creates single point of failure. No retry logic or fallback.
+      Gamification failures are silent. Pattern across Stories 2.1, 5.6 shows 
+      fragile error handling.
+  maintainability:
+    status: CONCERNS
+    notes: |
+      No monitoring/alerting infrastructure. Testing coverage gaps.
+      Cross-story analysis reveals systemic testing execution issues.
+
+cross_story_patterns:
+  pattern_1:
+    title: 'Incomplete Error Handling'
+    affected_stories: ['1.9', '2.1', '2.2']
+    description: 'Error handling consistently treats failures as log and ignore with no retry mechanisms'
+    recommendation: 'Establish project-wide error handling standards with retry queues and user notification'
+  
+  pattern_2:
+    title: 'Security Controls Underspecified'
+    affected_stories: ['1.9', '2.1', '2.2']
+    description: 'RLS policies and input validation mentioned but not comprehensively tested'
+    recommendation: 'Create security checklist required for all stories, mandate security reviews'
+  
+  pattern_3:
+    title: 'Testing Coverage Gaps'
+    affected_stories: ['1.9', '5.6', '2.2']
+    description: 'Testing sections documented but not consistently executed, integration tests failing'
+    recommendation: 'Make test execution evidence required for story completion, block merging without passing tests'
+  
+  pattern_4:
+    title: 'Gamification Fragility'
+    affected_stories: ['2.1', '5.6', '2.2']
+    description: 'Gamification treated as non-critical with no failure recovery'
+    recommendation: 'Either make gamification reliable with retry queues or make it truly optional with degraded mode'
+
+recommendations:
+  immediate:
+    - action: 'Do NOT proceed to production without addressing all Critical (Score 9) risks'
+      refs: ['SEC-001', 'SEC-002', 'DATA-001', 'PERF-001']
+    - action: 'Implement malware scanning before file storage'
+      refs: ['src/services/storageService.ts']
+    - action: 'Add comprehensive RLS policy tests with cross-user access attempts'
+      refs: ['tests/integration/file-security.test.ts']
+    - action: 'Implement automatic backup strategy with versioning'
+      refs: ['src/services/storageService.ts']
+    - action: 'Add chunked file uploads for files > 10MB'
+      refs: ['src/pages/onboarding/BankStatementUpload.tsx']
+    
+  future:
+    - action: 'Address all High (Score 6) risks in next sprint'
+      refs: ['SEC-003', 'DATA-002', 'OPS-001', 'OPS-002', 'TECH-001']
+    - action: 'Implement audit logging for all file operations'
+      refs: ['src/services/auditService.ts']
+    - action: 'Add CDN for file downloads and performance optimization'
+      refs: ['docs/architecture/infrastructure.md']
+    - action: 'Create error handling standards document'
+      refs: ['docs/architecture/error-handling-standards.md']
+    - action: 'Establish testing execution as blocker for story completion'
+      refs: ['docs/development-process.md']

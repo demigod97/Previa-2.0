@@ -15,7 +15,9 @@
       "Bash(npm run build:*)",
       "Read(//d/c/**)",
       "Bash(npm test:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

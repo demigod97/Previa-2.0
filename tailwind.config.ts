@@ -25,7 +25,13 @@ export default {
 				'98': '0.98',
 			},
 			colors: {
-				// Previa Brand Colors
+				// Previa Brand Colors - Direct Access
+				cream: '#F2E9D8',          // Primary background, light surfaces
+				stone: '#8C877D',          // Secondary text, borders
+				sand: '#D9C8B4',           // Accent elements, hover states
+				charcoal: '#403B31',       // Primary text, headings
+				darkStone: '#595347',      // Secondary headings, icons
+				// Previa Brand Colors - Namespaced
 				previa: {
 					cream: '#F2E9D8',      // Primary background, light surfaces
 					stone: '#8C877D',      // Secondary text, borders

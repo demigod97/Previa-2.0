@@ -1,155 +1,146 @@
-Us# CLAUDE.md
+# CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with the Previa repository.
 
-## Project Overview
+## Project Overview (Previa)
 
-**PolicyAi** is an AI-powered policy management and compliance Q&A system being developed from the existing InsightsLM codebase. It transforms organizational policy documents into an intelligent, searchable system with role-based access control and RAG (Retrieval-Augmented Generation) capabilities.
+**Previa** is an AI-driven financial intelligence and pre‑accounting platform for Australian households, freelancers, and small businesses. It delivers manual data ingestion (PDF/CSV statements and receipts), AI extraction, reconciliation, a multi‑view dashboard, and gamified financial literacy.
 
-### Key Project Context
-- **Transformation Goal**: Convert InsightsLM into PolicyAi with strict role-based access control
-- **Primary Users**: Administrators (HR/Legal/Compliance) and Executives (C-Level/VPs)
-- **Core Value**: Mitigate compliance risk through verifiable, role-appropriate policy answers
-- **Security Model**: Role-Based Access Control (RBAC) enforced at database level via Supabase RLS
+Authoritative sources for this doc:
+
+- `docs/Previa-Project Brief.md`
+- `docs/prd/` (sharded PRD)
+- `docs/architecture/` (sharded architecture)
+- `docs/frontend-spec-new.md`
+- `docs/gamification/` (badges, tips, implementation)
+- `docs/epics/`, `docs/stories/`, `docs/qa/`, `docs/specifications/`
 
 ## Common Development Commands
 
-### Development
-- `npm run dev` - Start development server with Vite
-- `npm run build` - Production build
-- `npm run build:dev` - Development build
-- `npm run lint` - Lint code with ESLint
-- `npm run preview` - Preview production build locally
+- `npm run dev` → Vite dev server
+- `npm run build` → Production build
+- `npm run build:dev` → Dev build
+- `npm run lint` → ESLint
+- `npm run preview` → Preview production build
+- BMAD utilities: `npm run bmad:refresh`, `npm run bmad:list`, `npm run bmad:validate`
 
-### BMAD Integration
-- `npm run bmad:refresh` - Refresh BMAD method installation
-- `npm run bmad:list` - List available BMAD agents
-- `npm run bmad:validate` - Validate BMAD configuration
+## Technical Stack
 
-## Architecture Overview
+- Frontend: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI
+- State/Data: TanStack Query (React Query), React Hook Form, Zod
+- Charts: Recharts
+- Backend: Supabase (Auth, Postgres with RLS, Storage, Edge Functions)
+- Workflows/AI: n8n for OCR/LLM processing; Gemini primary, GPT‑4o optional
 
-### Technical Stack
-- **Frontend**: React 18 + TypeScript + Vite + shadcn/ui + Tailwind CSS
-- **Backend**: Supabase (Auth, Database, Storage, Edge Functions) + N8N workflows
-- **Database**: PostgreSQL with Row Level Security (RLS)
-- **AI Integration**: OpenAI/Gemini via N8N workflows
-- **State Management**: React Query (@tanstack/react-query)
+See `docs/architecture/tech-stack.md` for pinned versions and rationale.
 
-### Critical Architectural Changes (InsightsLM → PolicyAi)
+## High-Level Architecture
 
-#### Database Schema Evolution
-- `notebooks` table renamed to `policy_documents`
-- Added role-based access control with `user_roles` table
-- Enhanced metadata extraction for policy dates and compliance tracking
-- Strict RLS policies to enforce Administrator vs Executive data segregation
+- Client never calls n8n directly; all calls go through Supabase Edge Functions
+- Postgres RLS protects all per‑user data; Edge uses service role only for validated ops
+- Key Edge Functions (Deno): `send-chat-message`, `process-document`, `process-document-callback`, `process-additional-sources`, `assign-user-role`
 
-#### Removed Features (From InsightsLM)
-- **Audio/Podcast Generation**: All audio-related features, components, and workflows removed
-- **Public Sharing**: No external sharing capabilities
-- **Multi-tenant Architecture**: Simplified to single-org, role-based model
+Mermaid diagram and details: `docs/architecture/3-high-level-architecture.md`.
 
-#### Key Data Models
-- **policy_documents**: Main policy entities (formerly notebooks)
-- **user_roles**: Role assignments (Administrator/Executive)
-- **sources**: Document sources with role assignments
-- **documents**: Vector embeddings for RAG
-- **n8n_chat_histories**: Role-aware chat history
+## Financial Domain Data Model (MVP)
 
-### Component Architecture
+Tables: `user_tiers`, `bank_accounts`, `bank_statements`, `transactions`, `receipts`, `reconciliation_matches` with indexes and RLS policies.
+References:
 
-```
-src/
-├── components/
-│   ├── auth/              # Authentication components
-│   ├── chat/              # Chat interface and message rendering
-│   ├── dashboard/         # Main dashboard and policy document grid
-│   ├── notebook/          # Policy document management (legacy naming)
-│   └── ui/                # shadcn/ui components
-├── hooks/                 # Custom React hooks for data fetching
-├── contexts/              # React contexts (AuthContext)
-├── integrations/supabase/ # Supabase client and types
-└── pages/                 # Main application pages
-```
+- Schema: `docs/architecture/6-data-model-financial-domain.md`
+- Security/RLS: `docs/architecture/7-security-rls-deterministic-rules.md`
+
+## Frontend Specification & Screens
+
+Comprehensive UI/UX spec with Previa design tokens, components, and 12 primary screens:
+
+- Onboarding (Welcome → Auth → Upload → Extraction → Confirm → Preview → Complete)
+- Dashboard (Home widgets, Reconciliation Engine, Transaction Table, AI Chat)
+- Upload Hub & Document Library
+
+Reference: `docs/frontend-spec-new.md`
+
+Component/library usage (shadcn/ui) and patterns are defined in:
+
+- `docs/architecture/source-tree.md`
+- `docs/architecture/coding-standards.md`
+
+## Gamification (Australian Financial Literacy)
+
+Australian‑specific badges, tips, modules, insights, and challenges with ATO/ASIC alignment.
+
+- Overview and plans: `docs/gamification/implementation-plan.md`, `docs/gamification/SUMMARY.md`
+- Badge definitions: `docs/gamification/badges.yaml`
+- Tips: `docs/gamification/tips.yaml`
+- Migration status/verification: `docs/gamification/MIGRATION_VERIFICATION.md`
+
+## Stories, Epics, QA
+
+- Epics: `docs/epics/`
+- Stories (implementation units): `docs/stories/` (e.g., `2.1-welcome-authentication-screens.md`)
+- QA: `docs/qa/assessments/`, `docs/qa/gates/` (test design, traceability, risk, NFR)
+
+BMAD agents/process are used; see `AGENTS.md` and `docs/SCRUM-MASTER-HANDOFF.md`.
 
 ## Key Development Patterns
 
-### Role-Based Data Access
-All database queries MUST respect role-based access:
+### RLS‑Aware Data Access
+
 ```typescript
-// Example pattern - always filter by user role
-const { data } = useQuery({
-  queryKey: ['policy-documents', userRole],
-  queryFn: async () => {
-    return supabase
-      .from('policy_documents')
-      .select('*')
-      .eq('assigned_role', userRole); // Critical: role-based filtering
-  }
-});
+const { data, error } = await supabase
+  .from('transactions')
+  .select('*')
+  .eq('user_id', user.id)        // Enforced by RLS
+  .order('transaction_date', { ascending: false });
 ```
 
-### Security Requirements
-- **RLS Enforcement**: All data access controlled by Supabase Row Level Security
-- **Role Verification**: Backend workflows must verify user roles before processing
-- **Citation Integrity**: All AI responses must include verifiable source citations
-- **Data Segregation**: Zero cross-role data leakage between Administrator and Executive users
+### Upload → Process → Callback Flow
 
-## Critical Implementation Details
+- Create DB row → upload to Supabase Storage
+- Invoke `process-document` Edge Function → n8n webhook
+- n8n posts results to `process-document-callback` → DB status/content update
 
-### Terminology Migration
-**Legacy (InsightsLM) → New (PolicyAi)**:
-- "Notebook" → "Policy Document"
-- "Audio Overview" → Removed entirely
-- "Sources" → "Policy Sources" (with role assignment)
-- Generic document management → Compliance-focused policy management
+### Error/Retry UX
 
-### Required RAG Enhancements
-1. **Metadata Extraction**: Extract policy effective dates, last updated dates
-2. **Age Flagging**: Flag documents older than 18 months
-3. **Role-Aware Search**: Vector searches filtered by user role
-4. **Citation Tracking**: Maintain source document traceability
+- Backoff and retry on 429/5xx for chat and processing
+- Toast notifications for user feedback; accessible error states (ARIA/live regions)
 
-### N8N Workflow Integration
-Key workflows in `n8n/` directory:
-- Document processing with metadata extraction
-- Role-aware chat functionality
-- Callback handling for asynchronous operations
-- Policy date extraction and flagging
+## Environment & Secrets
 
-## Development Guidelines
+- Never commit secrets. Use `.env.local` for local dev and Supabase Edge Function secrets for server‑side.
+- Reference (do not copy values): `docs/supabase-cloud-credentails.md`
+- Required variables and setup: `docs/environment-variables.md`, `docs/env-example-template.md`
 
-### Authentication Flow
-- Uses Supabase Auth with custom AuthContext
-- Protected routes enforce authentication
-- Role assignment managed by super-admin users
+## Testing & QA Expectations
 
-### Error Handling
-- Toast notifications (Sonner) for user feedback
-- Graceful handling of role permission errors
-- Clear messaging for cross-role access attempts
+- Unit tests: financial logic, role‑gated UI, upload validation (Vitest/RTL)
+- Integration: Edge schema validation and error paths where feasible
+- E2E (as available): critical user journeys
+- QA artifacts live under `docs/qa/assessments/` and gates in `docs/qa/gates/`
+See: `docs/architecture/9-observability-testing.md`
 
-### Testing Requirements
-Per architecture document:
-- **Unit Tests**: Business logic and role-based access
-- **Integration Tests**: Database RLS policies and N8N workflows
-- **E2E Tests**: Critical user flows (upload, role assignment, chat)
-- **AI Quality Tests**: Golden dataset for RAG accuracy
+## File/Directory Quick Map
 
-## Important Notes
+- UI components: `src/components/` (financial, onboarding, upload, dashboard, chat, ui)
+- Hooks: `src/hooks/`
+- Pages: `src/pages/`
+- Supabase integration: `src/integrations/supabase/`
+- Services/Lib/Types: `src/services/`, `src/lib/`, `src/types/`
+- Edge Functions: `supabase/functions/`
+- DB migrations: `supabase/migrations/`
 
-### BMAD Integration
-Project uses BMAD methodology with specialized agents:
-- Developer, Architect, QA, Product Manager, UX Expert agents
-- Agent rules defined in `.cursor/rules/bmad/`
+## Do/Don’t (for AI agent changes)
 
-### Environment Dependencies
-- Supabase project with proper RLS policies
-- N8N instance with PolicyAi-specific workflows
-- OpenAI/Gemini API keys for AI functionality
-- Proper role-based database setup
+- Do follow `docs/architecture/coding-standards.md` and `docs/architecture/source-tree.md`
+- Do keep financial amounts in cents and use precise arithmetic utilities (`src/lib/currency.ts`)
+- Do respect RLS and never bypass server‑side constraints
+- Don’t invent new libraries/patterns—align with PRD/Architecture
+- Don’t expose secrets or raw financial data in logs
 
-### Documentation References
-- **Project Brief**: `docs/project brief.md` - Overall vision and requirements
-- **PRD**: `docs/prd.md` - Detailed product requirements and user stories
-- **Architecture**: `docs/architecure.md` - Technical architecture and patterns
-- **UI/UX Spec**: `docs/PolicyAi UI-UX Specifications.md` - Design specifications
+---
+
+For deeper context, start at:
+
+- PRD index: `docs/prd/index.md`
+- Architecture index: `docs/architecture/index.md`
+- Frontend spec: `docs/frontend-spec-new.md`
