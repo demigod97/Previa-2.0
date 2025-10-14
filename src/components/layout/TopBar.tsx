@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bell, Sparkles, Trash2 } from 'lucide-react';
+import { Bell, Sparkles, Trash2, Wand2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -33,6 +33,7 @@ export function TopBar() {
   const { seedMockData, isLoading: isSeedingLoading } = useMockDataSeeding();
   const { deleteMockData, isLoading: isDeletingLoading } = useDeleteMockData();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showWizard, setShowWizard] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -60,6 +61,13 @@ export function TopBar() {
   const handleConfirmDelete = async () => {
     await deleteMockData();
     setShowDeleteDialog(false);
+  };
+
+  const handleWizardClick = () => {
+    // Toggle wizard modal/page
+    setShowWizard(!showWizard);
+    // Or navigate to wizard page:
+    // navigate('/wizard');
   };
 
   return (
@@ -118,6 +126,16 @@ export function TopBar() {
                     <span className="text-sm font-medium">Delete Mock Data</span>
                   </>
                 )}
+              </Button>
+
+              <Button
+                onClick={handleWizardClick}
+                className="bg-purple-100 hover:bg-purple-200 text-purple-700 px-4 py-2 rounded-md transition-colors flex items-center gap-2"
+                title="Open setup wizard to guide you through configuration"
+                aria-label="Open wizard"
+              >
+                <Wand2 className="h-4 w-4" />
+                <span className="text-sm font-medium">Setup Wizard</span>
               </Button>
             </>
           )}
