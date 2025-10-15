@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Bell, Sparkles, Trash2, Wand2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWizard } from '@/contexts/WizardContext';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { DiscordIcon } from '@/components/ui/discord-icon';
 import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog';
+import { SetupWizardModal } from '@/components/wizard/SetupWizardModal';
 import { useNavigate } from 'react-router-dom';
 import { useMockDataSeeding } from '@/hooks/useMockDataSeeding';
 import { useDeleteMockData } from '@/hooks/useDeleteMockData';
@@ -29,11 +31,11 @@ import { useDeleteMockData } from '@/hooks/useDeleteMockData';
  */
 export function TopBar() {
   const { user, userTier, signOut } = useAuth();
+  const { openWizard } = useWizard();
   const navigate = useNavigate();
   const { seedMockData, isLoading: isSeedingLoading } = useMockDataSeeding();
   const { deleteMockData, isLoading: isDeletingLoading } = useDeleteMockData();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showWizard, setShowWizard] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -64,10 +66,8 @@ export function TopBar() {
   };
 
   const handleWizardClick = () => {
-    // Toggle wizard modal/page
-    setShowWizard(!showWizard);
-    // Or navigate to wizard page:
-    // navigate('/wizard');
+    // Open wizard modal using context
+    openWizard();
   };
 
   return (
@@ -215,6 +215,9 @@ export function TopBar() {
         onConfirm={handleConfirmDelete}
         isLoading={isDeletingLoading}
       />
+
+      {/* Setup Wizard Modal */}
+      <SetupWizardModal />
     </header>
   );
 }
