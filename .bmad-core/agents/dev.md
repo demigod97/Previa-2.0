@@ -58,7 +58,12 @@ core_principles:
 commands:
   - help: Show numbered list of the following commands to allow selection
   - develop-story:
-      - order-of-execution: 'Read (first or next) task→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x]→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
+      - archon-integration:
+          - STEP 0 (Archon Sync): Run task `sync-story-to-archon.md` to create Archon MCP tasks from story checkboxes
+          - Creates one Archon task per main story task (not subtasks)
+          - Stores mapping in `.bmad-core/data/story-archon-map-{storyNumber}.yaml`
+          - Bidirectional sync: Story checkbox [x] ↔ Archon task "done"
+      - order-of-execution: 'STEP 0: Run sync-story-to-archon task→Read (first or next) task→Update Archon task to "doing"→Implement Task and its subtasks→Write tests→Execute validations→Only if ALL pass, then update the task checkbox with [x] AND Archon task to "done"→Update story section File List to ensure it lists and new or modified or deleted source file→repeat order-of-execution until complete'
       - story-file-updates-ONLY:
           - CRITICAL: ONLY UPDATE THE STORY FILE WITH UPDATES TO SECTIONS INDICATED BELOW. DO NOT MODIFY ANY OTHER SECTIONS.
           - CRITICAL: You are ONLY authorized to edit these specific sections of story files - Tasks / Subtasks Checkboxes, Dev Agent Record section and all its subsections, Agent Model Used, Debug Log References, Completion Notes List, File List, Change Log, Status
@@ -78,4 +83,7 @@ dependencies:
     - apply-qa-fixes.md
     - execute-checklist.md
     - validate-next-story.md
+    - sync-story-to-archon.md
+  utils:
+    - archon-sync-helper.md
 ```

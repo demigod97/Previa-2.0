@@ -22,6 +22,8 @@ import NotFound from "./pages/NotFound";
 import BankStatementUpload from "./pages/onboarding/BankStatementUpload";
 import ProcessingStatus from "./pages/onboarding/ProcessingStatus";
 import ConfirmAccount from "./pages/onboarding/ConfirmAccount";
+import Upload from "./pages/Upload";
+import MultiDocProcessingStatus from "./pages/ProcessingStatus";
 
 const queryClient = new QueryClient();
 
@@ -75,6 +77,22 @@ const AppContent = () => {
           element={
             <ProtectedRoute fallback={<Auth />}>
               <Gamification />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/upload"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <Upload />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/processing-status"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <MultiDocProcessingStatus />
             </ProtectedRoute>
           }
         />

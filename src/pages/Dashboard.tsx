@@ -1,5 +1,6 @@
 
-import React, { useState, useMemo, lazy, Suspense } from 'react';
+import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DashboardLayout } from '@/components/layout';
 import {
   UserGreetingCard,
@@ -14,6 +15,8 @@ import { useBankAccounts, useTransactions, useReceipts } from '@/hooks/financial
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 import type { UserTierData, Transaction } from '@/types/financial';
 
 // Lazy load chart components to reduce initial bundle size
@@ -22,8 +25,10 @@ const IncomeVsExpensesChart = lazy(() => import('@/components/widgets/IncomeVsEx
 const UnreconciledAlert = lazy(() => import('@/components/widgets/UnreconciledAlert').then(module => ({ default: module.UnreconciledAlert })));
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const { user, loading: authLoading, error: authError, userTier } = useAuth();
   const [showUpgradePrompt, setShowUpgradePrompt] = useState(false);
+  const { toast } = useToast();
 
   // Fetch real financial data
   const { data: bankAccounts = [], isLoading: accountsLoading } = useBankAccounts(user?.id);
@@ -67,6 +72,53 @@ const Dashboard = () => {
     transactions_monthly_limit: 50,
     receipts_monthly_limit: 10,
   } as UserTierData;
+
+  // Show welcome badge for new users (signed up within last 5 minutes)
+  useEffect(() => {
+    const checkNewUser = async () => {
+      if (!user?.id) return;
+
+      // Check if we've already shown the welcome message in this session
+      const hasShownWelcome = sessionStorage.getItem('welcome_shown');
+      if (hasShownWelcome) return;
+
+      try {
+        // Fetch user metadata from Supabase Auth
+        const { data: authData } = await supabase.auth.getUser();
+        if (!authData?.user) return;
+
+        const createdAt = new Date(authData.user.created_at);
+        const now = new Date();
+        const minutesSinceSignup = (now.getTime() - createdAt.getTime()) / 1000 / 60;
+
+        // If user signed up within last 5 minutes, show welcome badge
+        if (minutesSinceSignup < 5) {
+          // Check if they have the First Steps badge
+          const { data: badge } = await supabase
+            .from('user_badges')
+            .select('badge_id, unlocked_at')
+            .eq('user_id', user.id)
+            .eq('badge_id', 'first_steps')
+            .single();
+
+          if (badge) {
+            toast({
+              title: '🎉 Welcome to Previa!',
+              description: 'You\'ve earned the "First Steps" badge and 10 points! Start by uploading your first bank statement.',
+              duration: 6000,
+            });
+
+            // Mark as shown in this session
+            sessionStorage.setItem('welcome_shown', 'true');
+          }
+        }
+      } catch (error) {
+        console.error('Failed to check new user status:', error);
+      }
+    };
+
+    checkNewUser();
+  }, [user?.id, toast]);
 
   // Show loading while auth is initializing
   if (authLoading) {
@@ -173,10 +225,7 @@ const Dashboard = () => {
             <BankAccountsList
               accounts={bankAccounts}
               loading={accountsLoading}
-              onAddAccount={() => {
-                // TODO: Implement add account flow in future story
-                console.log('Add account clicked - feature coming soon');
-              }}
+              onAddAccount={() => navigate('/onboarding/upload')}
             />
 
             {/* Show upgrade CTA for free tier */}

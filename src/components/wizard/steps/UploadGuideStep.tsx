@@ -1,19 +1,124 @@
+import { useState } from 'react';
+import { useDropzone } from 'react-dropzone';
+import { useNavigate } from 'react-router-dom';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { FileText, FileSpreadsheet, Upload } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { FileText, FileSpreadsheet, Upload, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
+import { uploadBankStatement } from '@/services/storageService';
+import { triggerBankStatementProcessing } from '@/services/ocrService';
+import { awardPoints } from '@/services/gamificationService';
 
 /**
  * UploadGuideStep - Step 2: Upload Guide
- * 
+ *
  * Purpose: Teach users how to upload bank statements
- * 
+ *
  * Content:
  * - File upload instructions
  * - Supported formats (PDF, CSV)
  * - Visual guide with icons
  * - Tips for best results
+ * - Actual file upload functionality with "Try It Now"
  */
 export function UploadGuideStep() {
+  const [showUpload, setShowUpload] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    accept: {
+      'application/pdf': ['.pdf'],
+      'text/csv': ['.csv'],
+    },
+    maxSize: 50 * 1024 * 1024, // 50MB
+    multiple: false,
+    onDrop: (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        setFile(acceptedFiles[0]);
+      }
+    },
+    onDropRejected: (rejections) => {
+      const error = rejections[0].errors[0];
+      toast({
+        title: 'Invalid file',
+        description: error.code === 'file-too-large'
+          ? 'File is too large. Maximum size is 50MB.'
+          : 'Please upload a PDF or CSV file.',
+        variant: 'destructive',
+      });
+    },
+  });
+
+  const handleUpload = async () => {
+    if (!file || !user) return;
+
+    setUploading(true);
+
+    try {
+      // 1. Upload to Supabase Storage
+      const filePath = await uploadBankStatement(file, user.id, (progress) => {
+        setUploadProgress(progress);
+      });
+
+      // 2. Create database record
+      const { data: statement, error: dbError } = await supabase
+        .from('bank_statements')
+        .insert({
+          user_id: user.id,
+          file_path: filePath,
+          processing_status: 'pending',
+          file_size: file.size,
+        })
+        .select('id')
+        .single();
+
+      if (dbError) throw dbError;
+
+      // 3. Trigger OCR processing
+      await triggerBankStatementProcessing(
+        statement.id,
+        user.id,
+        filePath,
+        'bank-statements'
+      );
+
+      // 4. Award gamification points (non-blocking)
+      try {
+        await awardPoints(user.id, 5, 'First bank statement uploaded via wizard');
+      } catch (error) {
+        console.error('Failed to award points:', error);
+      }
+
+      toast({
+        title: 'Upload successful!',
+        description: 'Processing your statement now. Redirecting...',
+      });
+
+      // Navigate to processing status screen
+      setTimeout(() => {
+        navigate(`/onboarding/processing/${statement.id}`);
+      }, 1000);
+    } catch (error) {
+      console.error('Upload failed:', error);
+      toast({
+        title: 'Upload failed',
+        description: error instanceof Error ? error.message : 'Something went wrong. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Heading */}
@@ -115,13 +220,96 @@ export function UploadGuideStep() {
         </div>
       </Card>
 
-      {/* Try it now callout */}
-      <div className="text-center p-4 bg-sand/20 rounded-lg border border-sand">
-        <p className="text-charcoal">
-          <Upload className="inline h-5 w-5 mr-2 mb-1" />
-          <strong>Ready to try?</strong> You'll upload your first statement after this wizard
-        </p>
-      </div>
+      {/* Try it now - Interactive Upload */}
+      {!showUpload ? (
+        <div className="text-center">
+          <Button
+            onClick={() => setShowUpload(true)}
+            className="bg-sand hover:bg-sand/90 text-charcoal px-6 py-3 text-lg"
+          >
+            <Upload className="inline h-5 w-5 mr-2" />
+            Try It Now - Upload Your First Statement
+          </Button>
+          <p className="text-sm text-stone mt-2">
+            Test the upload process right here in the wizard
+          </p>
+        </div>
+      ) : (
+        <Card className="p-6 bg-cream/30 border-sand">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-lg font-semibold text-charcoal">
+              Upload Your Bank Statement
+            </h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setShowUpload(false);
+                setFile(null);
+              }}
+              disabled={uploading}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* File Drop Zone */}
+          <div
+            {...getRootProps()}
+            className={`
+              border-2 border-dashed rounded-lg p-8 text-center cursor-pointer
+              transition-all duration-200
+              ${isDragActive
+                ? 'border-sand bg-sand/20'
+                : 'border-stone/30 hover:border-sand hover:bg-sand/10'}
+              ${file ? 'bg-green-50 border-green-300' : ''}
+            `}
+          >
+            <input {...getInputProps()} />
+
+            {file ? (
+              <div className="space-y-2">
+                <FileText className="h-12 w-12 text-green-600 mx-auto" />
+                <p className="font-medium text-charcoal">{file.name}</p>
+                <p className="text-sm text-stone">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Upload className="h-12 w-12 text-stone mx-auto" />
+                <p className="font-medium text-charcoal">
+                  {isDragActive ? 'Drop the file here' : 'Drag & drop a file here'}
+                </p>
+                <p className="text-sm text-stone">
+                  or click to browse (PDF or CSV, max 50MB)
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Upload Progress */}
+          {uploading && (
+            <div className="mt-4 space-y-2">
+              <Progress value={uploadProgress} className="h-2" />
+              <p className="text-sm text-center text-charcoal">
+                Uploading... {uploadProgress}%
+              </p>
+            </div>
+          )}
+
+          {/* Upload Button */}
+          {file && !uploading && (
+            <Button
+              onClick={handleUpload}
+              className="w-full mt-4 bg-sand hover:bg-sand/90 text-charcoal"
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              Upload & Process Statement
+            </Button>
+          )}
+        </Card>
+      )}
     </div>
   );
 }

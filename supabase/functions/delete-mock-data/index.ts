@@ -42,7 +42,7 @@ Deno.serve(async (req: Request) => {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, x-client-info, x-supabase-api-version',
         'Access-Control-Max-Age': '86400',
       },
     });
@@ -159,7 +159,7 @@ Deno.serve(async (req: Request) => {
     // 1. Delete reconciliation matches first (references transactions and receipts)
     const { count: reconciliationCount, error: reconciliationError } = await supabaseAdmin
       .from('reconciliation_matches')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (reconciliationError) {
@@ -171,7 +171,7 @@ Deno.serve(async (req: Request) => {
     // 2. Delete transactions
     const { count: transactionsCount, error: transactionsError } = await supabaseAdmin
       .from('transactions')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (transactionsError) {
@@ -183,7 +183,7 @@ Deno.serve(async (req: Request) => {
     // 3. Delete receipts
     const { count: receiptsCount, error: receiptsError } = await supabaseAdmin
       .from('receipts')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (receiptsError) {
@@ -195,7 +195,7 @@ Deno.serve(async (req: Request) => {
     // 4. Delete bank statements
     const { count: statementsCount, error: statementsError } = await supabaseAdmin
       .from('bank_statements')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (statementsError) {
@@ -207,7 +207,7 @@ Deno.serve(async (req: Request) => {
     // 5. Delete bank accounts
     const { count: accountsCount, error: accountsError } = await supabaseAdmin
       .from('bank_accounts')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (accountsError) {
@@ -219,7 +219,7 @@ Deno.serve(async (req: Request) => {
     // 6. Delete gamification data
     const { count: badgeProgressCount, error: badgeProgressError } = await supabaseAdmin
       .from('user_badge_progress')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (badgeProgressError) {
@@ -230,7 +230,7 @@ Deno.serve(async (req: Request) => {
 
     const { count: educationalProgressCount, error: educationalProgressError } = await supabaseAdmin
       .from('user_educational_progress')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (educationalProgressError) {
@@ -242,7 +242,7 @@ Deno.serve(async (req: Request) => {
     // 7. Delete transaction insights
     const { count: insightsCount, error: insightsError } = await supabaseAdmin
       .from('transaction_insights')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('user_id', user.id);
     
     if (insightsError) {
@@ -254,7 +254,7 @@ Deno.serve(async (req: Request) => {
     // 8. Delete chat histories
     const { count: chatCount, error: chatError } = await supabaseAdmin
       .from('n8n_chat_histories')
-      .delete()
+      .delete({ count: 'exact' })
       .eq('session_id', user.id); // Assuming session_id maps to user_id
     
     if (chatError) {

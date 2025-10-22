@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, ArrowLeftRight, Receipt, MessageSquare, Settings, LogOut, Trophy } from 'lucide-react';
+import { Home, ArrowLeftRight, Receipt, MessageSquare, Settings, LogOut, Trophy, Upload } from 'lucide-react';
 import Logo from '@/components/ui/Logo';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ interface NavigationItem {
 
 const navigationItems: NavigationItem[] = [
   { label: 'Home', emoji: '🏠', icon: Home, path: '/' },
+  { label: 'Upload', emoji: '📤', icon: Upload, path: '/upload' },
   { label: 'Reconciliation', emoji: '🔄', icon: ArrowLeftRight, path: '/reconciliation', featureId: 'reconciliation' },
   { label: 'Transactions', emoji: '📊', icon: Receipt, path: '/transactions', featureId: 'transactions' },
   { label: 'My Progress', emoji: '🏆', icon: Trophy, path: '/gamification', featureId: 'gamification' },

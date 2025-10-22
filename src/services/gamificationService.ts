@@ -171,15 +171,15 @@ export async function fetchBadgeProgress(): Promise<UserBadgeProgress[]> {
       *,
       badge:australian_badges(*)
     `)
-    .eq('user_id', user.id)
-    .lt('current_progress', 'target_progress'); // Only incomplete badges
+    .eq('user_id', user.id);
 
   if (error) {
     console.error('Error fetching badge progress:', error);
     return [];
   }
 
-  return data || [];
+  // Filter incomplete badges in JavaScript (PostgREST doesn't support column-to-column comparison)
+  return (data || []).filter(p => p.current_progress < p.target_progress);
 }
 
 /**

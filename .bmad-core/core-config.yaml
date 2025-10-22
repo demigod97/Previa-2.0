@@ -1,22 +1,378 @@
+# BMAD Core Configuration for Previa
+# AI-driven financial intelligence and pre-accounting platform
+
+# Markdown document explosion
 markdownExploder: true
+
+# QA Configuration
 qa:
   qaLocation: docs/qa
+  qaAssessments: docs/qa/assessments
+  qaGates: docs/qa/gates
+  qaTracking: docs/qa/traceability
+
+# Product Requirements Document (PRD)
 prd:
   prdFile: docs/prd.md
   prdVersion: v4
   prdSharded: true
   prdShardedLocation: docs/prd
   epicFilePattern: epic-{n}*.md
+  prdIndex: docs/prd/index.md
+  prdBrief: docs/Previa-Project Brief.md
+
+# Architecture Documentation
 architecture:
   architectureFile: docs/architecture.md
   architectureVersion: v4
   architectureSharded: true
   architectureShardedLocation: docs/architecture
-customTechnicalDocuments: null
+  architectureIndex: docs/architecture/index.md
+  techStack: docs/architecture/tech-stack.md
+  codingStandards: docs/architecture/coding-standards.md
+  sourceTree: docs/architecture/source-tree.md
+  technicalDecisions: docs/architecture/TECHNICAL-DECISIONS.md
+
+# Custom Technical Documents
+customTechnicalDocuments:
+  # Core guidance
+  - CLAUDE.md                                   # Primary Claude Code guidance with Archon integration
+  - docs/archon_claude.md                      # Archon MCP workflow and task management
+  - docs/claude-best-practices.md              # Claude 4 prompt engineering best practices
+
+  # Frontend specifications
+  - docs/frontend-spec-new.md                  # Complete UI/UX specification with design tokens
+
+  # Gamification
+  - docs/gamification/implementation-plan.md   # Gamification strategy and implementation
+  - docs/gamification/SUMMARY.md              # Gamification overview
+  - docs/gamification/badges.yaml             # Badge definitions (Australian financial literacy)
+  - docs/gamification/tips.yaml               # Financial tips and insights
+
+  # SCRUM and agents
+  - AGENTS.md                                  # BMAD agent definitions and workflows
+  - docs/SCRUM-MASTER-HANDOFF.md              # SCRUM process documentation
+
+# Development Load-Always Files
+# These files are loaded by AI agents at the start of every development session
 devLoadAlwaysFiles:
-  - docs/architecture/coding-standards.md
-  - docs/architecture/tech-stack.md
-  - docs/architecture/source-tree.md
+  # Architecture essentials
+  - docs/architecture/coding-standards.md      # Code style, patterns, conventions
+  - docs/architecture/tech-stack.md            # Technology stack and versions
+  - docs/architecture/source-tree.md           # File organization and structure
+
+  # Archon integration
+  - docs/archon_claude.md                      # Task management and RAG workflow
+
+  # Key patterns
+  - docs/architecture/6-data-model-financial-domain.md   # Database schema and tables
+  - docs/architecture/7-security-rls-deterministic-rules.md  # RLS policies and security
+
+# Development Debugging
 devDebugLog: .ai/debug-log.md
+
+# Story and Epic Locations
 devStoryLocation: docs/stories
+devEpicLocation: docs/epics
+
+# Slash Command Prefix for BMAD
 slashPrefix: BMad
+
+# Project Metadata
+project:
+  name: Previa
+  description: AI-driven financial intelligence and pre-accounting platform for Australian market
+  version: "0.1.0-mvp"
+  targetMarket:
+    primary: Australian households
+    secondary: Freelancers and sole traders
+    tertiary: Small businesses
+  status: MVP Development
+
+  # Archon Integration
+  archonProjectId: "7a3602ff-1c55-46bc-8e9c-9f6712210606"
+  taskManagement: archon  # Primary task management via Archon MCP
+
+# MCP Server Configuration
+mcpServers:
+  archon:
+    enabled: true
+    priority: critical
+    purpose: Primary task management, project tracking, documentation research
+    knowledgeSources:
+      - name: Supabase
+        sourceId: "9c5f534e51ee9237"
+        wordCount: 483632
+      - name: shadcn/ui
+        sourceId: "ec33815e5a584d70"
+        wordCount: 101130
+      - name: Tailwind CSS v3
+        sourceId: "0af3670e8b0d4f9b"
+        wordCount: 213362
+      - name: Radix UI
+        sourceId: "17b90e7793b91cfe"
+        wordCount: 46700
+      - name: React Native
+        sourceId: "b3ae283d5ea24b3c"
+        wordCount: 185245
+
+  supabase:
+    enabled: true
+    priority: required
+    purpose: Database operations, migrations, RLS policies, Edge Functions, type generation
+
+  shadcn:
+    enabled: true
+    priority: required
+    purpose: UI component patterns, design system, accessibility guidelines
+
+# Workflow Configuration
+workflow:
+  taskDriven: true
+  taskManagementSystem: archon
+
+  # Standard development cycle
+  developmentCycle:
+    - checkArchonTasks
+    - startTask
+    - researchViaRAG
+    - implement
+    - markForReview
+    - nextTask
+
+  # Research-first approach
+  researchPattern:
+    enabled: true
+    ragFirst: true
+    shortQueries: true  # Keep queries 2-5 keywords
+
+  # Task status flow
+  taskStatusFlow:
+    - todo
+    - doing
+    - review
+    - done
+
+# Code Quality Standards
+codeQuality:
+  typescript:
+    strictMode: true
+    noImplicitAny: true
+    explicitTypes: true
+
+  testing:
+    framework: Vitest
+    coverage:
+      target: 80
+      financial: 100  # Critical financial logic must have 100% coverage
+
+  accessibility:
+    standard: WCAG-AA
+    required: true
+
+  financialPrecision:
+    currencyUnit: cents
+    arithmetic: integer
+    utilityLib: src/lib/currency.ts
+
+# Security Configuration
+security:
+  rls:
+    enabled: true
+    required: true
+    userIdFilter: mandatory
+    testingPolicy: authenticatedUsersOnly  # Never test with service role
+
+  secrets:
+    localEnv: .env.local
+    edgeFunctions: supabaseSecrets
+    neverCommit: true
+
+  financialData:
+    noLogging: true
+    encryptAtRest: true
+
+# Australian Context
+locale:
+  country: Australia
+  currency: AUD
+  dateFormat: DD/MM/YYYY
+  timezone: AEST/AEDT
+
+  compliance:
+    ato: true          # Australian Taxation Office
+    asic: true         # Australian Securities and Investments Commission
+    privacyAct: planned  # Future compliance
+
+# MVP Scope Control
+mvp:
+  inScope:
+    - manualDataIngestion
+    - aiExtraction
+    - reconciliation
+    - basicDashboard
+    - gamification
+    - dataExport
+
+  outOfScope:
+    - openBanking
+    - directXeroIntegration
+    - directQuickBooksIntegration
+    - advancedReporting
+    - multiUser
+    - realtimeBankFeeds
+
+# Tech Stack Reference
+techStack:
+  frontend:
+    framework: React 18
+    language: TypeScript
+    bundler: Vite
+    styling:
+      - Tailwind CSS
+      - shadcn/ui
+      - Radix UI
+    stateManagement:
+      - TanStack Query (React Query)
+      - React Hook Form
+      - Zod
+    charts: Recharts
+
+  backend:
+    platform: Supabase
+    services:
+      - Auth
+      - Postgres (with RLS)
+      - Storage
+      - Edge Functions (Deno)
+
+  workflows:
+    orchestration: n8n
+    aiModels:
+      primary: Gemini
+      secondary: GPT-4o
+
+  taskManagement:
+    primary: Archon MCP
+    secondary: BMAD agents
+
+# File Organization Reference
+fileStructure:
+  src:
+    components:
+      - ui/                    # shadcn/ui components
+      - financial/            # Financial domain components
+      - onboarding/           # Onboarding flow components
+      - upload/               # Upload and document components
+      - dashboard/            # Dashboard widgets
+      - chat/                 # AI chat interface
+    hooks: hooks/
+    pages: pages/
+    lib: lib/                 # Utilities (currency, date, etc.)
+    services: services/
+    types: types/
+    integrations: integrations/supabase/
+
+  supabase:
+    functions: supabase/functions/
+    migrations: supabase/migrations/
+
+  docs:
+    prd: docs/prd/
+    architecture: docs/architecture/
+    stories: docs/stories/
+    epics: docs/epics/
+    qa: docs/qa/
+    gamification: docs/gamification/
+
+  bmad:
+    core: .bmad-core/
+    ai: .ai/
+
+# Agent Behavior
+agentBehavior:
+  # Never use TodoWrite - use Archon instead
+  taskManagement:
+    tool: archon
+    noTodoWrite: true
+
+  # Research before implementing
+  researchFirst:
+    enabled: true
+    ragSearch: true
+    codeExamples: true
+
+  # MCP server usage
+  mcpUsage:
+    database: supabase  # All DB operations
+    ui: shadcn         # All UI components
+    tasks: archon      # All task management
+
+  # Code patterns
+  patterns:
+    rlsAware: true
+    financialPrecision: true
+    errorRecovery: true
+    accessibility: true
+
+# Documentation Priorities
+documentationPriority:
+  - CLAUDE.md                    # 1. Start here
+  - docs/archon_claude.md        # 2. Archon workflow
+  - docs/Previa-Project Brief.md # 3. Business context
+  - docs/architecture/index.md   # 4. Architecture overview
+  - docs/prd/index.md           # 5. Product requirements
+  - docs/frontend-spec-new.md   # 6. UI/UX specification
+
+# Critical Patterns to Follow
+criticalPatterns:
+  # Upload flow
+  uploadFlow:
+    - createDatabaseRow
+    - uploadToStorage
+    - invokeEdgeFunction
+    - n8nProcessing
+    - callbackUpdate
+
+  # RLS-aware queries
+  rlsPattern: |
+    const { data, error } = await supabase
+      .from('table_name')
+      .select('*')
+      .eq('user_id', user.id)  // Enforced by RLS
+
+  # Financial calculations
+  financialPattern: |
+    import { formatCurrency, parseCurrency } from '@/lib/currency'
+    const amountInCents = 12345  // Store as integer cents
+    const displayAmount = formatCurrency(amountInCents)  // "$123.45"
+
+  # Error handling
+  errorPattern: |
+    try {
+      // Operation
+    } catch (error) {
+      // Log for debugging (no sensitive data)
+      // Show user-friendly message
+      // Implement retry with exponential backoff for 429/5xx
+    }
+
+# Version History
+configVersion: "2.0.0"
+lastUpdated: "2025-10-22"
+changeLog:
+  - version: "2.0.0"
+    date: "2025-10-22"
+    changes:
+      - Added Archon MCP integration
+      - Added MCP server configuration (Archon, Supabase, shadcn)
+      - Added archon_claude.md and claude-best-practices.md references
+      - Enhanced workflow configuration with RAG-first approach
+      - Added Australian locale and compliance settings
+      - Expanded tech stack documentation
+      - Added critical patterns and file structure
+  - version: "1.0.0"
+    date: "2025-10-15"
+    changes:
+      - Initial BMAD configuration
+      - Basic PRD and architecture setup
