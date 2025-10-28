@@ -28,6 +28,14 @@ const navigationItems: NavigationItem[] = [
   { label: 'Chat', emoji: '💬', icon: MessageSquare, path: '/chat', featureId: 'chat' },
   { label: 'Reports', emoji: '📈', icon: Receipt, path: '/reports', featureId: 'reports' },
   { label: 'Integrations', emoji: '🔗', icon: Settings, path: '/integrations', featureId: 'integrations' },
+];
+
+// Demo Features - Preview of upcoming features
+const demoNavigationItems: NavigationItem[] = [
+  { label: 'Advanced Analytics', emoji: '📊', icon: Receipt, path: '/demo/advanced-analytics' },
+];
+
+const settingsNavigationItems: NavigationItem[] = [
   { label: 'Settings', emoji: '⚙️', icon: Settings, path: '/settings', featureId: 'settings' },
 ];
 
@@ -84,37 +92,104 @@ export function Sidebar() {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-4 py-6 space-y-2">
-          {navigationItems.map((item) => {
-            const active = isActive(item.path);
+        <nav className="flex-1 px-4 py-6 space-y-4 overflow-y-auto">
+          {/* Main Navigation */}
+          <div className="space-y-2">
+            {navigationItems.map((item) => {
+              const active = isActive(item.path);
 
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                aria-label={item.label}
-                aria-current={active ? 'page' : undefined}
-                className={cn(
-                  'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
-                  'text-sm font-medium min-w-0',
-                  'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
-                  active
-                    ? 'bg-sand text-charcoal'
-                    : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
-                )}
-              >
-                <span className="text-lg" aria-hidden="true">{item.emoji}</span>
-                <span className="flex-1">{item.label}</span>
-                {item.featureId && APP_FEATURES[item.featureId] && (
-                  <FeatureStatusIndicator
-                    featureId={item.featureId}
-                    size="compact"
-                    showTooltip={true}
-                  />
-                )}
-              </Link>
-            );
-          })}
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  aria-label={item.label}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                    'text-sm font-medium min-w-0',
+                    'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
+                    active
+                      ? 'bg-sand text-charcoal'
+                      : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                  )}
+                >
+                  <span className="text-lg" aria-hidden="true">{item.emoji}</span>
+                  <span className="flex-1">{item.label}</span>
+                  {item.featureId && APP_FEATURES[item.featureId] && (
+                    <FeatureStatusIndicator
+                      featureId={item.featureId}
+                      size="compact"
+                      showTooltip={true}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Demo Features Section */}
+          <div className="space-y-2 pt-2 border-t border-sand/50">
+            <h3 className="px-4 text-xs font-semibold text-stone uppercase tracking-wider">
+              Demo Features
+            </h3>
+            {demoNavigationItems.map((item) => {
+              const active = isActive(item.path);
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  aria-label={item.label}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                    'text-sm font-medium min-w-0',
+                    'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
+                    active
+                      ? 'bg-sand text-charcoal'
+                      : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                  )}
+                >
+                  <span className="text-lg" aria-hidden="true">{item.emoji}</span>
+                  <span className="flex-1">{item.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Settings Section */}
+          <div className="space-y-2 pt-2 border-t border-sand/50">
+            {settingsNavigationItems.map((item) => {
+              const active = isActive(item.path);
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  aria-label={item.label}
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
+                    'text-sm font-medium min-w-0',
+                    'focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2 focus:ring-offset-cream',
+                    active
+                      ? 'bg-sand text-charcoal'
+                      : 'text-darkStone hover:bg-sand/50 hover:text-charcoal'
+                  )}
+                >
+                  <span className="text-lg" aria-hidden="true">{item.emoji}</span>
+                  <span className="flex-1">{item.label}</span>
+                  {item.featureId && APP_FEATURES[item.featureId] && (
+                    <FeatureStatusIndicator
+                      featureId={item.featureId}
+                      size="compact"
+                      showTooltip={true}
+                    />
+                  )}
+                </Link>
+              );
+            })}
+          </div>
         </nav>
 
         {/* User Menu Section */}

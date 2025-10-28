@@ -301,12 +301,11 @@ serve(async (req) => {
                  documentType === 'receipt' ? 'receipts' : 'sources'
 
     if (n8nSuccess) {
-      // Update status to 'processing' with timestamp
+      // Update status to 'processing' (created_at already tracks upload time)
       const { error: updateError } = await supabaseClient
         .from(table)
         .update({
           processing_status: 'processing',
-          processing_started_at: new Date().toISOString(),
         })
         .eq('id', documentId)
 

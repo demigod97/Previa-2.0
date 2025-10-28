@@ -63,7 +63,6 @@ Deno.serve(async (req: Request) => {
       .from('receipts')
       .update({
         processing_status: 'processing',
-        processing_started_at: new Date().toISOString(),
       })
       .eq('id', receipt_id)
       .eq('user_id', user_id);

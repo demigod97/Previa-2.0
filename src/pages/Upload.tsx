@@ -16,7 +16,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui
 import { Button } from '@/components/chakra-ui/button';
 import { Badge } from '@/components/chakra-ui/badge';
 import { Progress } from '@/components/chakra-ui/progress';
-import { FileText, Receipt, Upload as UploadIcon, X, Eye, Clock } from 'lucide-react';
+import { FileText, Receipt, Upload as UploadIcon, X, Eye, Clock, Trash2, RefreshCw } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { uploadBankStatement, uploadReceipt } from '@/services/storageService';
 import { useAuth } from '@/contexts/AuthContext';
@@ -209,6 +209,64 @@ export default function Upload() {
 
   const removeFromQueue = (id: string) => {
     setUploadQueue(prev => prev.filter(item => item.id !== id));
+  };
+
+  const handleDeleteDocument = async (id: string, type: 'bank_statement' | 'receipt') => {
+    if (!confirm('Delete this document? This action cannot be undone.')) return;
+
+    try {
+      const table = type === 'bank_statement' ? 'bank_statements' : 'receipts';
+      const { error } = await supabase.from(table).delete().eq('id', id);
+
+      if (error) throw error;
+
+      toast({
+        title: 'Document deleted',
+        description: 'Document deleted successfully',
+      });
+
+      // Refresh the lists
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to delete document',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleRetryDocument = async (id: string, type: 'bank_statement' | 'receipt', filePath: string) => {
+    try {
+      const functionName = type === 'bank_statement' ? 'process-document' : 'process-receipt';
+
+      const { error: fnError } = await supabase.functions.invoke(functionName, {
+        body: {
+          [type === 'bank_statement' ? 'document_id' : 'receipt_id']: id,
+          user_id: user?.id,
+          file_path: filePath,
+          bucket: type === 'bank_statement' ? 'bank-statements' : 'receipts',
+        },
+      });
+
+      if (fnError) throw fnError;
+
+      toast({
+        title: 'Processing restarted',
+        description: 'Document processing has been restarted',
+      });
+
+      // Refresh after a short delay
+      setTimeout(() => window.location.reload(), 1000);
+    } catch (error) {
+      console.error('Error retrying document:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to retry processing',
+        variant: 'destructive',
+      });
+    }
   };
 
   const getFileName = (filePath: string) => {
@@ -421,13 +479,36 @@ export default function Upload() {
                           </VStack>
                           <HStack spacing={2} flexShrink={0}>
                             {getStatusBadge(statement.processing_status)}
+                            {statement.processing_status === 'failed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRetryDocument(statement.id, 'bank_statement', statement.file_path)}
+                                p={1}
+                                title="Retry processing"
+                              >
+                                <Icon as={RefreshCw} boxSize={4} color="blue.600" />
+                              </Button>
+                            )}
+                            {statement.processing_status === 'completed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate(`/onboarding/processing/${statement.id}`)}
+                                p={1}
+                                title="View details"
+                              >
+                                <Icon as={Eye} boxSize={4} />
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => navigate(`/onboarding/processing/${statement.id}`)}
+                              onClick={() => handleDeleteDocument(statement.id, 'bank_statement')}
                               p={1}
+                              title="Delete document"
                             >
-                              <Icon as={Eye} boxSize={4} />
+                              <Icon as={Trash2} boxSize={4} color="red.600" />
                             </Button>
                           </HStack>
                         </HStack>
@@ -474,13 +555,36 @@ export default function Upload() {
                           </VStack>
                           <HStack spacing={2} flexShrink={0}>
                             {getStatusBadge(receipt.processing_status)}
+                            {receipt.processing_status === 'failed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRetryDocument(receipt.id, 'receipt', receipt.file_path)}
+                                p={1}
+                                title="Retry processing"
+                              >
+                                <Icon as={RefreshCw} boxSize={4} color="blue.600" />
+                              </Button>
+                            )}
+                            {receipt.processing_status === 'completed' && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => navigate(`/receipts/${receipt.id}`)}
+                                p={1}
+                                title="View details"
+                              >
+                                <Icon as={Eye} boxSize={4} />
+                              </Button>
+                            )}
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => navigate(`/receipts/${receipt.id}`)}
+                              onClick={() => handleDeleteDocument(receipt.id, 'receipt')}
                               p={1}
+                              title="Delete document"
                             >
-                              <Icon as={Eye} boxSize={4} />
+                              <Icon as={Trash2} boxSize={4} color="red.600" />
                             </Button>
                           </HStack>
                         </HStack>

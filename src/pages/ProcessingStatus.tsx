@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Loader2, CheckCircle, XCircle, Upload, Eye } from 'lucide-react';
+import { Loader2, CheckCircle, XCircle, Upload, Eye, ArrowLeft, Trash2, RefreshCw } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
 import { Button } from '@/components/chakra-ui/button';
 import { Progress } from '@/components/chakra-ui/progress';
 import { supabase } from '@/integrations/supabase/client';
+import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { toast } from 'sonner';
 
 interface DocumentStatus {
   id: string;
@@ -42,11 +44,11 @@ export default function ProcessingStatus() {
     try {
       const statusPromises = documentIds.map(async (id) => {
         // Try to fetch from bank_statements first
-        const { data: bankStatement } = await supabase
+        const { data: bankStatement, error: bankError } = await supabase
           .from('bank_statements')
           .select('id, file_path, processing_status, error_message')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (bankStatement) {
           return {
@@ -59,11 +61,11 @@ export default function ProcessingStatus() {
         }
 
         // Try to fetch from receipts
-        const { data: receipt } = await supabase
+        const { data: receipt, error: receiptError } = await supabase
           .from('receipts')
           .select('id, file_path, merchant, processing_status, error_message')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
         if (receipt) {
           return {
@@ -133,6 +135,56 @@ export default function ProcessingStatus() {
     }
   };
 
+  const handleDelete = async (doc: DocumentStatus) => {
+    if (!confirm(`Delete ${doc.fileName}? This action cannot be undone.`)) return;
+
+    try {
+      const table = doc.type === 'bank_statement' ? 'bank_statements' : 'receipts';
+      const { error } = await supabase.from(table).delete().eq('id', doc.id);
+
+      if (error) throw error;
+
+      // Remove from local state
+      setDocuments(prev => prev.filter(d => d.id !== doc.id));
+      toast.success('Document deleted successfully');
+    } catch (error) {
+      console.error('Error deleting document:', error);
+      toast.error('Failed to delete document');
+    }
+  };
+
+  const handleRetry = async (doc: DocumentStatus) => {
+    try {
+      // Invoke the appropriate Edge Function to retry processing
+      const functionName = doc.type === 'bank_statement' ? 'process-document' : 'process-receipt';
+
+      const table = doc.type === 'bank_statement' ? 'bank_statements' : 'receipts';
+      const { data } = await supabase.from(table).select('file_path').eq('id', doc.id).maybeSingle();
+
+      if (!data) {
+        toast.error('Document not found');
+        return;
+      }
+
+      const { error: fnError } = await supabase.functions.invoke(functionName, {
+        body: {
+          [doc.type === 'bank_statement' ? 'document_id' : 'receipt_id']: doc.id,
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          file_path: data.file_path,
+          bucket: doc.type === 'bank_statement' ? 'bank-statements' : 'receipts',
+        },
+      });
+
+      if (fnError) throw fnError;
+
+      toast.success('Processing restarted');
+      await fetchDocumentStatuses();
+    } catch (error) {
+      console.error('Error retrying document:', error);
+      toast.error('Failed to retry processing');
+    }
+  };
+
   const allCompleted = documents.every(
     (doc) => doc.status === 'completed' || doc.status === 'failed'
   );
@@ -142,17 +194,29 @@ export default function ProcessingStatus() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-previa-cream flex flex-col items-center justify-center p-4">
-        <Loader2 className="w-8 h-8 animate-spin text-previa-charcoal" />
-        <p className="mt-4 text-previa-stone">Loading document statuses...</p>
-      </div>
+      <DashboardLayout>
+        <div className="flex flex-col items-center justify-center p-4" style={{ minHeight: '60vh' }}>
+          <Loader2 className="w-8 h-8 animate-spin text-previa-charcoal" />
+          <p className="mt-4 text-previa-stone">Loading document statuses...</p>
+        </div>
+      </DashboardLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-previa-cream p-8">
-      <div className="max-w-4xl mx-auto">
+    <DashboardLayout>
+      <div className="max-w-4xl mx-auto p-8">
+        {/* Header with Back Button */}
         <div className="mb-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/upload')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Upload
+          </Button>
           <h1 className="text-3xl font-bold text-previa-charcoal mb-2">Processing Status</h1>
           <p className="text-previa-stone">
             Tracking {documents.length} document{documents.length !== 1 ? 's' : ''}
@@ -222,6 +286,24 @@ export default function ProcessingStatus() {
                         View
                       </Button>
                     )}
+                    {doc.status === 'failed' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRetry(doc)}
+                      >
+                        <RefreshCw className="w-4 h-4 mr-2" />
+                        Retry
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDelete(doc)}
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
                 </div>
               </CardContent>
@@ -267,6 +349,6 @@ export default function ProcessingStatus() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

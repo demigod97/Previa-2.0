@@ -14,7 +14,16 @@
       "mcp__supabase__list_edge_functions",
       "mcp__playwright__browser_navigate",
       "mcp__playwright__browser_console_messages",
-      "mcp__playwright__browser_snapshot"
+      "mcp__playwright__browser_snapshot",
+      "mcp__archon__manage_task",
+      "Bash(npm run dev:*)",
+      "mcp__playwright__browser_take_screenshot",
+      "mcp__playwright__browser_close",
+      "Bash(mkdir:*)",
+      "Bash(npm run lint)",
+      "mcp__supabase__deploy_edge_function",
+      "Bash(cat:*)",
+      "Bash(npx supabase functions deploy:*)"
     ],
     "deny": [],
     "ask": []

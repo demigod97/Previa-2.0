@@ -27,6 +27,7 @@ import Upload from "./pages/Upload";
 import MultiDocProcessingStatus from "./pages/ProcessingStatus";
 import Receipts from "./pages/Receipts";
 import ReceiptDetails from "./pages/ReceiptDetails";
+import { AdvancedAnalyticsDemo } from "./pages/demo";
 
 const queryClient = new QueryClient();
 
@@ -121,6 +122,15 @@ const AppContent = () => {
           element={
             <ProtectedRoute fallback={<Auth />}>
               <ReceiptDetails />
+            </ProtectedRoute>
+          }
+        />
+        {/* Demo routes */}
+        <Route
+          path="/demo/advanced-analytics"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <AdvancedAnalyticsDemo />
             </ProtectedRoute>
           }
         />
