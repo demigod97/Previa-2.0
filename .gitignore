@@ -25,5 +25,9 @@ dist-ssr
 .env
 .mcp.json
 
+# PDF files (sensitive documents)
+*.pdf
+Statements*.pdf
+
 # BMAD (local only)
 nul
