@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 
 interface CitationButtonProps {
   chunkIndex: number;

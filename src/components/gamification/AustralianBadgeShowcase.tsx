@@ -3,10 +3,10 @@
 
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Tabs, TabList, Tab, TabPanels, TabPanel } from '@chakra-ui/react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/chakra-ui/dialog';
 import {
   Lock,
   Trophy,
@@ -67,7 +67,11 @@ const badgeIconMap: Record<string, React.ComponentType<{ className?: string }>> 
 
 export function AustralianBadgeShowcase() {
   const [selectedBadge, setSelectedBadge] = useState<BadgeWithProgress | null>(null);
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
+
+  // Tab categories mapping
+  const categories = ['all', 'onboarding', 'transaction', 'education', 'data_driven', 'milestone'];
+  const [tabIndex, setTabIndex] = useState(0);
+  const categoryFilter = categories[tabIndex];
 
   // Fetch all badges with progress and earned status
   const { data: badges, isLoading } = useQuery<BadgeWithProgress[]>({
@@ -112,17 +116,22 @@ export function AustralianBadgeShowcase() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Category Filter Tabs */}
-          <Tabs value={categoryFilter} onValueChange={setCategoryFilter}>
-            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="onboarding">Getting Started</TabsTrigger>
-              <TabsTrigger value="transaction">Transactions</TabsTrigger>
-              <TabsTrigger value="education">Education</TabsTrigger>
-              <TabsTrigger value="data_driven">Data-Driven</TabsTrigger>
-              <TabsTrigger value="milestone">Milestones</TabsTrigger>
-            </TabsList>
+          <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)}>
+            <TabList
+              display="grid"
+              gridTemplateColumns={{ base: 'repeat(3, 1fr)', lg: 'repeat(6, 1fr)' }}
+              w="full"
+            >
+              <Tab>All</Tab>
+              <Tab>Getting Started</Tab>
+              <Tab>Transactions</Tab>
+              <Tab>Education</Tab>
+              <Tab>Data-Driven</Tab>
+              <Tab>Milestones</Tab>
+            </TabList>
 
-            <TabsContent value={categoryFilter} className="mt-6">
+            <TabPanels>
+              <TabPanel mt={6} px={0}>
               {/* Badge Grid */}
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {filteredBadges?.map((badge) => {
@@ -218,7 +227,84 @@ export function AustralianBadgeShowcase() {
                   );
                 })}
               </div>
-            </TabsContent>
+              </TabPanel>
+              {/* Duplicate panels for remaining tabs - all show same filtered content */}
+              <TabPanel mt={6} px={0}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filteredBadges?.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.badge_icon] || Trophy;
+                    const isEarned = badge.isEarned;
+                    const themeColorClass = {
+                      green: 'from-green-100 to-green-50 border-green-200',
+                      blue: 'from-blue-100 to-blue-50 border-blue-200',
+                      gold: 'from-yellow-100 to-yellow-50 border-yellow-200',
+                      purple: 'from-purple-100 to-purple-50 border-purple-200',
+                      platinum: 'from-gray-100 to-gray-50 border-gray-200',
+                    }[badge.badge_theme];
+                    const rarityBadgeClass = {
+                      common: 'bg-gray-200 text-gray-700',
+                      rare: 'bg-blue-200 text-blue-700',
+                      epic: 'bg-purple-200 text-purple-700',
+                      legendary: 'bg-yellow-200 text-yellow-700',
+                    }[badge.rarity];
+                    return (
+                      <div key={badge.badge_id} onClick={() => setSelectedBadge(badge)} className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${isEarned ? `bg-gradient-to-br ${themeColorClass}` : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}>
+                        <div className="absolute top-2 right-2"><Badge className={`text-xs px-1.5 py-0.5 ${rarityBadgeClass}`}>{badge.rarity}</Badge></div>
+                        <div className="flex justify-center mb-3 mt-4">{isEarned ? <IconComponent className="h-14 w-14" style={{ color: badge.badge_color }} /> : <Lock className="h-14 w-14 text-gray-400" />}</div>
+                        <p className={`text-center font-semibold text-sm leading-tight ${isEarned ? 'text-charcoal' : 'text-gray-400'}`}>{badge.badge_name}</p>
+                        {isEarned && <p className="text-center text-xs text-stone mt-1">+{badge.reward_points} pts</p>}
+                        {!isEarned && badge.progress && (<div className="mt-2"><div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${(badge.progress.current_progress / badge.progress.target_progress) * 100}%` }} /></div><p className="text-xs text-gray-500 text-center mt-1">{badge.progress.current_progress}/{badge.progress.target_progress}</p></div>)}
+                        {!isEarned && !badge.progress && <p className="text-xs text-gray-400 text-center mt-2 line-clamp-2">{badge.unlock_criteria}</p>}
+                      </div>
+                    );
+                  })}
+                </div>
+              </TabPanel>
+              <TabPanel mt={6} px={0}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filteredBadges?.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.badge_icon] || Trophy;
+                    const isEarned = badge.isEarned;
+                    const themeColorClass = { green: 'from-green-100 to-green-50 border-green-200', blue: 'from-blue-100 to-blue-50 border-blue-200', gold: 'from-yellow-100 to-yellow-50 border-yellow-200', purple: 'from-purple-100 to-purple-50 border-purple-200', platinum: 'from-gray-100 to-gray-50 border-gray-200' }[badge.badge_theme];
+                    const rarityBadgeClass = { common: 'bg-gray-200 text-gray-700', rare: 'bg-blue-200 text-blue-700', epic: 'bg-purple-200 text-purple-700', legendary: 'bg-yellow-200 text-yellow-700' }[badge.rarity];
+                    return (<div key={badge.badge_id} onClick={() => setSelectedBadge(badge)} className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${isEarned ? `bg-gradient-to-br ${themeColorClass}` : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}><div className="absolute top-2 right-2"><Badge className={`text-xs px-1.5 py-0.5 ${rarityBadgeClass}`}>{badge.rarity}</Badge></div><div className="flex justify-center mb-3 mt-4">{isEarned ? <IconComponent className="h-14 w-14" style={{ color: badge.badge_color }} /> : <Lock className="h-14 w-14 text-gray-400" />}</div><p className={`text-center font-semibold text-sm leading-tight ${isEarned ? 'text-charcoal' : 'text-gray-400'}`}>{badge.badge_name}</p>{isEarned && <p className="text-center text-xs text-stone mt-1">+{badge.reward_points} pts</p>}{!isEarned && badge.progress && (<div className="mt-2"><div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${(badge.progress.current_progress / badge.progress.target_progress) * 100}%` }} /></div><p className="text-xs text-gray-500 text-center mt-1">{badge.progress.current_progress}/{badge.progress.target_progress}</p></div>)}{!isEarned && !badge.progress && <p className="text-xs text-gray-400 text-center mt-2 line-clamp-2">{badge.unlock_criteria}</p>}</div>);
+                  })}
+                </div>
+              </TabPanel>
+              <TabPanel mt={6} px={0}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filteredBadges?.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.badge_icon] || Trophy;
+                    const isEarned = badge.isEarned;
+                    const themeColorClass = { green: 'from-green-100 to-green-50 border-green-200', blue: 'from-blue-100 to-blue-50 border-blue-200', gold: 'from-yellow-100 to-yellow-50 border-yellow-200', purple: 'from-purple-100 to-purple-50 border-purple-200', platinum: 'from-gray-100 to-gray-50 border-gray-200' }[badge.badge_theme];
+                    const rarityBadgeClass = { common: 'bg-gray-200 text-gray-700', rare: 'bg-blue-200 text-blue-700', epic: 'bg-purple-200 text-purple-700', legendary: 'bg-yellow-200 text-yellow-700' }[badge.rarity];
+                    return (<div key={badge.badge_id} onClick={() => setSelectedBadge(badge)} className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${isEarned ? `bg-gradient-to-br ${themeColorClass}` : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}><div className="absolute top-2 right-2"><Badge className={`text-xs px-1.5 py-0.5 ${rarityBadgeClass}`}>{badge.rarity}</Badge></div><div className="flex justify-center mb-3 mt-4">{isEarned ? <IconComponent className="h-14 w-14" style={{ color: badge.badge_color }} /> : <Lock className="h-14 w-14 text-gray-400" />}</div><p className={`text-center font-semibold text-sm leading-tight ${isEarned ? 'text-charcoal' : 'text-gray-400'}`}>{badge.badge_name}</p>{isEarned && <p className="text-center text-xs text-stone mt-1">+{badge.reward_points} pts</p>}{!isEarned && badge.progress && (<div className="mt-2"><div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${(badge.progress.current_progress / badge.progress.target_progress) * 100}%` }} /></div><p className="text-xs text-gray-500 text-center mt-1">{badge.progress.current_progress}/{badge.progress.target_progress}</p></div>)}{!isEarned && !badge.progress && <p className="text-xs text-gray-400 text-center mt-2 line-clamp-2">{badge.unlock_criteria}</p>}</div>);
+                  })}
+                </div>
+              </TabPanel>
+              <TabPanel mt={6} px={0}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filteredBadges?.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.badge_icon] || Trophy;
+                    const isEarned = badge.isEarned;
+                    const themeColorClass = { green: 'from-green-100 to-green-50 border-green-200', blue: 'from-blue-100 to-blue-50 border-blue-200', gold: 'from-yellow-100 to-yellow-50 border-yellow-200', purple: 'from-purple-100 to-purple-50 border-purple-200', platinum: 'from-gray-100 to-gray-50 border-gray-200' }[badge.badge_theme];
+                    const rarityBadgeClass = { common: 'bg-gray-200 text-gray-700', rare: 'bg-blue-200 text-blue-700', epic: 'bg-purple-200 text-purple-700', legendary: 'bg-yellow-200 text-yellow-700' }[badge.rarity];
+                    return (<div key={badge.badge_id} onClick={() => setSelectedBadge(badge)} className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${isEarned ? `bg-gradient-to-br ${themeColorClass}` : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}><div className="absolute top-2 right-2"><Badge className={`text-xs px-1.5 py-0.5 ${rarityBadgeClass}`}>{badge.rarity}</Badge></div><div className="flex justify-center mb-3 mt-4">{isEarned ? <IconComponent className="h-14 w-14" style={{ color: badge.badge_color }} /> : <Lock className="h-14 w-14 text-gray-400" />}</div><p className={`text-center font-semibold text-sm leading-tight ${isEarned ? 'text-charcoal' : 'text-gray-400'}`}>{badge.badge_name}</p>{isEarned && <p className="text-center text-xs text-stone mt-1">+{badge.reward_points} pts</p>}{!isEarned && badge.progress && (<div className="mt-2"><div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${(badge.progress.current_progress / badge.progress.target_progress) * 100}%` }} /></div><p className="text-xs text-gray-500 text-center mt-1">{badge.progress.current_progress}/{badge.progress.target_progress}</p></div>)}{!isEarned && !badge.progress && <p className="text-xs text-gray-400 text-center mt-2 line-clamp-2">{badge.unlock_criteria}</p>}</div>);
+                  })}
+                </div>
+              </TabPanel>
+              <TabPanel mt={6} px={0}>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  {filteredBadges?.map((badge) => {
+                    const IconComponent = badgeIconMap[badge.badge_icon] || Trophy;
+                    const isEarned = badge.isEarned;
+                    const themeColorClass = { green: 'from-green-100 to-green-50 border-green-200', blue: 'from-blue-100 to-blue-50 border-blue-200', gold: 'from-yellow-100 to-yellow-50 border-yellow-200', purple: 'from-purple-100 to-purple-50 border-purple-200', platinum: 'from-gray-100 to-gray-50 border-gray-200' }[badge.badge_theme];
+                    const rarityBadgeClass = { common: 'bg-gray-200 text-gray-700', rare: 'bg-blue-200 text-blue-700', epic: 'bg-purple-200 text-purple-700', legendary: 'bg-yellow-200 text-yellow-700' }[badge.rarity];
+                    return (<div key={badge.badge_id} onClick={() => setSelectedBadge(badge)} className={`relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:scale-105 hover:shadow-lg ${isEarned ? `bg-gradient-to-br ${themeColorClass}` : 'bg-gray-50 border-gray-200 opacity-60 grayscale'}`}><div className="absolute top-2 right-2"><Badge className={`text-xs px-1.5 py-0.5 ${rarityBadgeClass}`}>{badge.rarity}</Badge></div><div className="flex justify-center mb-3 mt-4">{isEarned ? <IconComponent className="h-14 w-14" style={{ color: badge.badge_color }} /> : <Lock className="h-14 w-14 text-gray-400" />}</div><p className={`text-center font-semibold text-sm leading-tight ${isEarned ? 'text-charcoal' : 'text-gray-400'}`}>{badge.badge_name}</p>{isEarned && <p className="text-center text-xs text-stone mt-1">+{badge.reward_points} pts</p>}{!isEarned && badge.progress && (<div className="mt-2"><div className="w-full bg-gray-200 rounded-full h-1.5"><div className="bg-blue-500 h-1.5 rounded-full transition-all" style={{ width: `${(badge.progress.current_progress / badge.progress.target_progress) * 100}%` }} /></div><p className="text-xs text-gray-500 text-center mt-1">{badge.progress.current_progress}/{badge.progress.target_progress}</p></div>)}{!isEarned && !badge.progress && <p className="text-xs text-gray-400 text-center mt-2 line-clamp-2">{badge.unlock_criteria}</p>}</div>);
+                  })}
+                </div>
+              </TabPanel>
+            </TabPanels>
           </Tabs>
         </CardContent>
       </Card>

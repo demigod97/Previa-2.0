@@ -1,6 +1,6 @@
 # Tech Stack - Previa Financial Intelligence Platform
 
-**Last Updated:** 2025-01-09
+**Last Updated:** 2025-10-26
 **Purpose:** Define specific technology versions, rationale, and integration patterns for Previa development
 
 ---
@@ -20,26 +20,33 @@ Previa is built as a **serverless-first, full-stack financial platform** optimiz
 
 **Rationale:** React 18 provides concurrent features essential for responsive financial UIs. TypeScript prevents financial calculation errors through compile-time type checking.
 
-### UI & Styling
-- **shadcn/ui**: Latest - Accessible, customizable components for financial interfaces
-- **Tailwind CSS**: `3.4.11` - Utility-first styling with Previa design system
-- **Radix UI**: `^1.2.0` - Accessible primitives underlying shadcn/ui
+### UI & Component Libraries
+- **Chakra UI**: `^2.8.0` - Comprehensive accessible component library (WCAG AA compliant)
+- **AG-Grid Enterprise**: `^31.0.0` - Enterprise-grade data grid for financial transactions
+- **Copilot Kit**: `^0.10.0` - AI chat interface with built-in message threading
+- **Tailwind CSS**: `3.4.11` - Utility-first styling complementary to Chakra UI
 - **Lucide React**: `^0.462.0` - Financial icons and UI elements
 
 **Component Library Versions:**
 ```json
 {
-  "@radix-ui/react-dialog": "^1.1.2",
-  "@radix-ui/react-select": "^2.1.1",
-  "@radix-ui/react-progress": "^1.1.0",
-  "@radix-ui/react-toast": "^1.2.1",
-  "class-variance-authority": "^0.7.1",
-  "tailwind-merge": "^2.5.2",
-  "tailwindcss-animate": "^1.0.7"
+  "@chakra-ui/react": "^2.8.0",
+  "@chakra-ui/icons": "^2.1.0",
+  "@emotion/react": "^11.11.0",
+  "@emotion/styled": "^11.11.0",
+  "framer-motion": "^10.16.0",
+  "ag-grid-react": "^31.0.0",
+  "ag-grid-community": "^31.0.0",
+  "ag-grid-enterprise": "^31.0.0",
+  "@copilotkit/react-core": "^0.10.0",
+  "@copilotkit/react-ui": "^0.10.0"
 }
 ```
 
-**Design Rationale:** shadcn/ui provides production-ready financial components while maintaining customization flexibility for Previa's warm color palette.
+**Design Rationale:**
+- **Chakra UI** provides production-ready financial components with built-in theming, accessibility, and responsive design—ideal for Previa's warm color palette
+- **AG-Grid** handles complex financial data tables with sorting, filtering, pagination, and CSV export—critical for transaction and reconciliation views
+- **Copilot Kit** accelerates AI chat implementation with pre-built UI components—enables rapid MVP delivery for the AI assistant feature
 
 ### State Management & Data Fetching
 - **TanStack Query (React Query)**: `^5.56.2` - Server state management for financial data

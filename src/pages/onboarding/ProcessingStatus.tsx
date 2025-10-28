@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Progress } from '@/components/chakra-ui/progress';
 import { useProcessingStatus } from '@/hooks/useProcessingStatus';
 
 export default function ProcessingStatus() {

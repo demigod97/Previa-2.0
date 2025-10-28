@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Box } from '@chakra-ui/react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/chakra-ui/card';
 import OAuthProviders from './OAuthProviders';
 import { useOAuth } from '@/hooks/auth/useOAuth';
 
@@ -10,7 +11,7 @@ interface SignUpFormProps {
 
 /**
  * SignUpForm - OAuth-only sign-up form
- * 
+ *
  * @param onSuccess - Callback when sign-up is successful
  * @param className - Additional CSS classes
  */
@@ -31,23 +32,23 @@ export function SignUpForm({ onSuccess, className }: SignUpFormProps) {
   };
 
   return (
-    <Card className={`w-full max-w-md mx-auto ${className}`} style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
-      <CardHeader>
-        <CardTitle style={{ color: '#403B31' }}>
-          Create Account
-        </CardTitle>
-        <CardDescription style={{ color: '#595347' }}>
-          Choose your preferred sign-up method to create your Previa account
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <OAuthProviders 
-          onProviderClick={handleOAuthProvider}
-          loading={oauthLoading}
-          mode="signup"
-        />
-      </CardContent>
-    </Card>
+    <Box width="full" maxW="md" mx="auto" className={className}>
+      <Card>
+        <CardHeader>
+          <CardTitle>Create Account</CardTitle>
+          <CardDescription>
+            Choose your preferred sign-up method to create your Previa account
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <OAuthProviders
+            onProviderClick={handleOAuthProvider}
+            loading={oauthLoading}
+            mode="signup"
+          />
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
 

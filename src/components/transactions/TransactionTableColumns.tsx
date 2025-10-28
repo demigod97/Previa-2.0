@@ -1,8 +1,8 @@
 import { ColumnDef } from '@tanstack/react-table';
 import { MoreHorizontal, ArrowUpDown, Eye, Edit, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Checkbox } from '@/components/chakra-ui/checkbox';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/chakra-ui/dropdown-menu';
 import { Transaction } from '@/types/financial';
 import { format } from 'date-fns';
 

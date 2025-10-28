@@ -7,23 +7,23 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from '@/components/chakra-ui/dialog';
+import { Button } from '@/components/chakra-ui/button';
+import { Input } from '@/components/chakra-ui/input';
+import { Label } from '@/components/chakra-ui/label';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Calendar } from '@/components/ui/calendar';
+} from '@/components/chakra-ui/select';
+import { Calendar } from '@/components/chakra-ui/calendar';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from '@/components/chakra-ui/popover';
 import { CalendarIcon } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';

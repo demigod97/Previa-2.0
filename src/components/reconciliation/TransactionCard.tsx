@@ -3,9 +3,9 @@
  */
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/chakra-ui/card';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Button } from '@/components/chakra-ui/button';
 import { Check } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Transaction } from '@/types/financial';

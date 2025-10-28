@@ -1,55 +1,110 @@
-# Documentation Index
+# Previa Documentation Index
 
-## Project Status
-
-### [Project Log](./project-log.md)
-
-**Latest:** 2025-01-08 - Brownfield pivot specifications complete. Ready for UX/Architect review.
-
-### [Sprint Change Proposal](./sprint-change-proposal.md)
-
-**APPROVED** - Comprehensive brownfield pivot plan: 4→6 epics, financial schema, Previa design system.
+**Purpose:** Master documentation map for Previa AI-driven financial intelligence platform
+**Last Updated:** 2025-10-28
+**Maintained By:** Previa Development Team
 
 ---
 
-## Core Planning Documents
+## 🔥 Start Here (Essential Reading)
 
-### [Project Brief](./Project Brief.md)
+**New to Previa? Read these 4 documents in order:**
 
-Initial project vision and requirements for the AI-driven financial intelligence platform targeting Australian households, freelancers, and small businesses.
-
-### [Product Requirements Document (PRD)](./prd.md)
-
-**Version 1.1** - Comprehensive product requirements with 6 epics, Previa branding, and FR8 onboarding workflow.
-
-### [Architecture Document](./architecture.md)
-
-**Updated** - Full-stack technical architecture with financial data models, user/premium_user tiers, RLS policies.
-
-### [Frontend Specification v2.0 (CURRENT)](./frontend-spec-new.md)
-
-**Version 2.0** - Complete UI/UX specification with shadcn/ui, Previa design system, 12 screens, multi-view dashboard, reconciliation engine.
-
-### [Frontend Specification v1.0 (Reference)](./frontend-spec.md)
-
-**Superseded** - Original generic spec from PolicyAi. Kept for reference only.
+1. **[CLAUDE.md](../CLAUDE.md)** - Claude Code guidance with Archon integration
+2. **[Previa Project Brief](Previa-Project Brief.md)** - Business context and goals
+3. **[Design System](design-system.md)** - Chakra UI theming (v3.0 CURRENT)
+4. **[Frontend Spec Update](frontend-spec-Update.md)** - UI/UX specification (v3.0 CURRENT)
 
 ---
 
-## Reference Materials
+## 📐 Architecture Documentation
 
-### [Database Schema](./currentschema.sql)
+**Location:** `docs/architecture/`
 
-Current database structure (will be updated with financial schema migrations).
-
-### [Screen References](./screens/)
-
-Competitor analysis screenshots (Monarch Money, Expensify, PocketSmith patterns).
+- **[Index](architecture/index.md)** - Architecture overview
+- **[Tech Stack](architecture/tech-stack.md)** - Technology decisions
+- **[Coding Standards](architecture/coding-standards.md)** - Code style
+- **[Data Model: Financial Domain](architecture/6-data-model-financial-domain.md)** - Database schema
+- **[Security: RLS Rules](architecture/7-security-rls-deterministic-rules.md)** - Row Level Security
 
 ---
 
-## Archive
+## 📋 Product Requirements (PRD)
 
-### [_archive/](._archive/)
+**Location:** `docs/prd/`
 
-Previous architecture iterations and documentation from PolicyAi codebase.
+- **[PRD Index](prd/index.md)** - Product requirements overview
+- **[Epic List](prd/5-epic-list.md)** - Summary of all epics
+
+---
+
+## 📖 User Stories
+
+**Location:** `docs/stories/`
+
+**Completion Status:** 24/30 stories complete (80%)
+
+### Completed Stories
+- **3.3: Status tracking system** ✅ (2025-10-27)
+- **3.4: Receipt OCR extraction** ✅ (2025-10-27)
+
+### In Progress
+- **4.3: Interactive matching interface** 🔄
+
+---
+
+## 🎮 Gamification
+
+**Location:** `docs/gamification/`
+
+- **[Implementation Plan](gamification/implementation-plan.md)**
+- **[Badges YAML](gamification/badges.yaml)** - Australian badge definitions
+- **[Tips YAML](gamification/tips.yaml)** - Financial tips
+
+---
+
+## 🔧 Implementation Guides
+
+### Receipt OCR System
+- **[Receipt OCR Implementation Complete](RECEIPT-OCR-IMPLEMENTATION-COMPLETE.md)** ✅
+- **[Receipt OCR Deployment Guide](RECEIPT-OCR-DEPLOYMENT-GUIDE.md)**
+
+### User Flow & Navigation
+- **[User Flow: Reconciliation Workflow](USER-FLOW-RECONCILIATION.md)** ✅
+
+### Integration
+- **[n8n Workflow Requirements](n8n-workflow-requirements.md)**
+- **[OAuth Deployment Checklist](OAUTH_DEPLOYMENT_CHECKLIST.md)**
+
+---
+
+## 🤖 Development Workflow
+
+- **[AGENTS.md](../AGENTS.md)** - BMAD agent definitions
+- **[Archon Claude Integration](archon_claude.md)** - Task management
+- **[Claude Best Practices](claude-best-practices.md)** - Prompt engineering
+
+---
+
+## ⚠️ DEPRECATED (Historical Reference Only)
+
+- ❌ **[frontend-spec-complete.md](frontend-spec-complete.md)** - v2.0 (shadcn/ui)
+  - **Deprecated:** 2025-10-26
+  - **Replacement:** frontend-spec-Update.md + design-system.md
+
+---
+
+## 🔍 Quick Find
+
+| Looking for... | Location |
+|----------------|----------|
+| Color palette | design-system.md → Brand Colors |
+| Database schema | architecture/6-data-model-financial-domain.md |
+| RLS policies | architecture/7-security-rls-deterministic-rules.md |
+| Gamification badges | gamification/badges.yaml |
+| User reconciliation flow | USER-FLOW-RECONCILIATION.md |
+
+---
+
+**Version:** 1.0.0
+**Archon Project ID:** 7a3602ff-1c55-46bc-8e9c-9f6712210606

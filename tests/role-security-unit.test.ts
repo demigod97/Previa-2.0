@@ -6,11 +6,14 @@ vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     auth: {
       getUser: vi.fn(),
+      getSession: vi.fn(),
     },
     from: vi.fn(() => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
-          single: vi.fn(),
+          eq: vi.fn(() => ({
+            single: vi.fn()
+          })),
           order: vi.fn()
         }))
       }))
@@ -31,9 +34,9 @@ describe('Role-Based Security Unit Tests', () => {
     it('should return null for unauthenticated users', async () => {
       const { supabase } = await import('@/integrations/supabase/client');
 
-      // Mock no user
-      (supabase.auth.getUser as any).mockResolvedValue({
-        data: { user: null },
+      // Mock no session
+      (supabase.auth.getSession as any).mockResolvedValue({
+        data: { session: null },
         error: null
       });
 
@@ -44,8 +47,8 @@ describe('Role-Based Security Unit Tests', () => {
     it('should handle database errors gracefully', async () => {
       const { supabase } = await import('@/integrations/supabase/client');
 
-      (supabase.auth.getUser as any).mockResolvedValue({
-        data: { user: { id: 'user-1' } },
+      (supabase.auth.getSession as any).mockResolvedValue({
+        data: { session: { user: { id: 'user-1', email: 'test@example.com' } } },
         error: null
       });
 
@@ -70,8 +73,8 @@ describe('Role-Based Security Unit Tests', () => {
     it('should return correct role for authenticated user', async () => {
       const { supabase } = await import('@/integrations/supabase/client');
 
-      (supabase.auth.getUser as any).mockResolvedValue({
-        data: { user: { id: 'user-1' } },
+      (supabase.auth.getSession as any).mockResolvedValue({
+        data: { session: { user: { id: 'user-1', email: 'test@example.com' } } },
         error: null
       });
 
@@ -102,14 +105,15 @@ describe('Role-Based Security Unit Tests', () => {
         error: null
       });
 
-      // Mock no matching role
+      // Mock no matching role - needs double .eq() chain
       const mockSingle = vi.fn().mockResolvedValue({
         data: null,
         error: { code: 'PGRST116' } // No rows returned
       });
 
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
-      const mockSelect = vi.fn(() => ({ eq: mockEq }));
+      const mockEq2 = vi.fn(() => ({ single: mockSingle }));
+      const mockEq1 = vi.fn(() => ({ eq: mockEq2 }));
+      const mockSelect = vi.fn(() => ({ eq: mockEq1 }));
 
       (supabase.from as any).mockReturnValue({
         select: mockSelect
@@ -127,14 +131,15 @@ describe('Role-Based Security Unit Tests', () => {
         error: null
       });
 
-      // Mock matching role found
+      // Mock matching role found - needs double .eq() chain
       const mockSingle = vi.fn().mockResolvedValue({
         data: { id: 'role-1' },
         error: null
       });
 
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
-      const mockSelect = vi.fn(() => ({ eq: mockEq }));
+      const mockEq2 = vi.fn(() => ({ single: mockSingle }));
+      const mockEq1 = vi.fn(() => ({ eq: mockEq2 }));
+      const mockSelect = vi.fn(() => ({ eq: mockEq1 }));
 
       (supabase.from as any).mockReturnValue({
         select: mockSelect
@@ -152,14 +157,15 @@ describe('Role-Based Security Unit Tests', () => {
         error: null
       });
 
-      // Mock database error
+      // Mock database error - needs double .eq() chain
       const mockSingle = vi.fn().mockResolvedValue({
         data: null,
         error: { message: 'Database connection failed' }
       });
 
-      const mockEq = vi.fn(() => ({ single: mockSingle }));
-      const mockSelect = vi.fn(() => ({ eq: mockEq }));
+      const mockEq2 = vi.fn(() => ({ single: mockSingle }));
+      const mockEq1 = vi.fn(() => ({ eq: mockEq2 }));
+      const mockSelect = vi.fn(() => ({ eq: mockEq1 }));
 
       (supabase.from as any).mockReturnValue({
         select: mockSelect

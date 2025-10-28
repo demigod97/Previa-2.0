@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useOAuth } from '@/hooks/auth/useOAuth';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/chakra-ui/card';
 
 const AuthCallback: React.FC = () => {
   const navigate = useNavigate();

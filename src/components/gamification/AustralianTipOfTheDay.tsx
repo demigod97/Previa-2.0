@@ -3,9 +3,9 @@
 
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Lightbulb, ChevronLeft, ChevronRight, ExternalLink } from 'lucide-react';
 import { getRandomTips } from '@/services/gamificationService';
 import type { EducationalTip } from '@/types/gamification';

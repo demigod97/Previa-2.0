@@ -1,0 +1,41 @@
+/* Previa Theme for AG-Grid */
+.ag-theme-previa {
+  /* Colors */
+  --ag-background-color: #FFFFFF;
+  --ag-foreground-color: #403B31;
+  --ag-border-color: #8C877D;
+  --ag-header-background-color: #F2E9D8;
+  --ag-header-foreground-color: #403B31;
+  --ag-row-hover-color: rgba(217, 200, 180, 0.3);
+  --ag-selected-row-background-color: rgba(217, 200, 180, 0.5);
+
+  /* Typography */
+  --ag-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ag-font-size: 14px;
+
+  /* Spacing */
+  --ag-grid-size: 6px;
+  --ag-cell-horizontal-padding: 12px;
+
+  /* Borders */
+  --ag-borders: solid 1px;
+  --ag-border-radius: 8px;
+}
+
+/* Custom styling for financial amounts */
+.ag-theme-previa .ag-cell.financial-amount {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-align: right;
+  font-feature-settings: "tnum"; /* Tabular numbers */
+}
+
+/* Positive amounts */
+.ag-theme-previa .ag-cell.amount-positive {
+  color: #10B981;
+}
+
+/* Negative amounts */
+.ag-theme-previa .ag-cell.amount-negative {
+  color: #EF4444;
+}

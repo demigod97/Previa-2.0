@@ -1,9 +1,11 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Building2, Plus } from 'lucide-react';
 import type { BankAccount } from '@/hooks/financial/useBankAccounts';
+import { BankAccountCardSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface BankAccountsListProps {
   accounts: BankAccount[];
@@ -63,30 +65,28 @@ export const BankAccountsList: React.FC<BankAccountsListProps> = ({
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="space-y-3">
-            {[1, 2].map(i => (
-              <div key={i} className="h-20 animate-pulse bg-previa-sand/20 rounded"></div>
-            ))}
-          </div>
+          <BankAccountCardSkeleton count={2} />
         ) : accounts.length === 0 ? (
-          <div className="text-center py-8 bg-white rounded-lg border border-previa-stone/20">
-            <div className="text-4xl mb-3">💰</div>
-            <p className="text-sm mb-2 text-previa-stone">
-              No bank accounts connected yet
-            </p>
-            <p className="text-xs mb-4 text-previa-stone">
-              Upload a bank statement to get started
-            </p>
-            {onAddAccount && (
-              <Button
-                onClick={onAddAccount}
-                className="bg-previa-sand hover:bg-previa-sand/90 text-previa-charcoal transition-all duration-150 hover:scale-102 active:scale-98 min-h-[44px]"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                Add Your First Account
-              </Button>
-            )}
-          </div>
+          <EmptyState
+            icon={<Building2 className="h-12 w-12" />}
+            title="No Bank Accounts Yet"
+            description="Upload a bank statement to connect your first account and start tracking your finances."
+            action={
+              onAddAccount && (
+                <Button
+                  onClick={onAddAccount}
+                  bg="previa.sand"
+                  color="previa.charcoal"
+                  _hover={{ bg: "previa.sand", opacity: 0.9 }}
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  Add Your First Account
+                </Button>
+              )
+            }
+            variant="outline"
+            minH="240px"
+          />
         ) : (
           <div className="bg-white rounded-lg border border-previa-stone/20 divide-y divide-charcoal/10">
             {accounts.map((account, index) => (

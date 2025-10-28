@@ -3,7 +3,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/chakra-ui/dialog';
 import { useWizard } from '@/contexts/WizardContext';
 import { WizardProgress } from './WizardProgress';
 import { WizardNavigation } from './WizardNavigation';

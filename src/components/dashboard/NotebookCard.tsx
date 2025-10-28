@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Trash2, Edit, CheckSquare, Square } from 'lucide-react';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/chakra-ui/alert-dialog';
 import { useNotebookDelete } from '@/hooks/useNotebookDelete';
 import { useGlobalSourcesCount } from '@/hooks/useGlobalSourcesCount';
 // NotebookTitleEditor removed - will be replaced with Previa components

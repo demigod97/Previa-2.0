@@ -49,10 +49,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with th
 
 **Available Documentation Sources in Archon:**
 - Tailwind CSS v3 (213k words) - `source_id: 0af3670e8b0d4f9b`
-- Radix UI (46k words) - `source_id: 17b90e7793b91cfe`
+
 - Supabase (483k words) - `source_id: 9c5f534e51ee9237`
 - React Native (185k words) - `source_id: b3ae283d5ea24b3c`
-- shadcn/ui (101k words) - `source_id: ec33815e5a584d70`
+
 
 #### Searching Specific Documentation:
 ```bash
@@ -63,7 +63,7 @@ rag_get_available_sources()
 rag_search_knowledge_base(query="RLS policies", source_id="9c5f534e51ee9237", match_count=5)
 
 # 3. Find code examples
-rag_search_code_examples(query="React Query", source_id="ec33815e5a584d70", match_count=3)
+rag_search_code_examples(query="React Query", source_id="9c5f534e51ee9237", match_count=3)
 ```
 
 **CRITICAL Query Guidelines:**
@@ -132,34 +132,70 @@ mcp__supabase__execute_sql(query="SELECT ...")
 mcp__supabase__get_advisors(type="security")
 ```
 
-### shadcn/ui MCP Server (REQUIRED for UI Components)
+### Chakra UI MCP Server (REQUIRED for UI Components)
 
 **MUST consult before:**
 - Creating or modifying any UI components
-- Building custom solutions (check available components first)
-- Component selection, customization patterns, best practices
+- Building forms, modals, layouts, and interactive elements
+- Component selection, theming, and accessibility patterns
+- Implementing responsive designs with Chakra UI responsive syntax
 
-**Available Documentation:**
-- shadcn/ui components, patterns, CLI (101k words) - `source_id: ec33815e5a584d70`
-- Radix UI primitives (46k words) - `source_id: 17b90e7793b91cfe`
-- Tailwind CSS utilities (213k words) - `source_id: 0af3670e8b0d4f9b`
+**Key Capabilities:**
+- Comprehensive component library with built-in accessibility (WCAG AA)
+- Theming system with design tokens (colors, spacing, typography)
+- Responsive design utilities with mobile-first approach
+- Composable components with `as` prop for semantic HTML
 
 **Usage Pattern:**
 ```bash
-# 1. Research component patterns via Archon
-rag_search_knowledge_base(query="form validation", source_id="ec33815e5a584d70")
-rag_search_code_examples(query="dialog modal", source_id="ec33815e5a584d70")
+# 1. Research Chakra UI patterns and components
+# Use external Chakra UI documentation or examples
 
-# 2. Implement using shadcn/ui patterns
-# Prefer shadcn components over custom implementations
+# 2. Implement using Chakra UI patterns
+import { Button, Box, Flex, Text, useToast } from '@chakra-ui/react'
+
+# 3. Follow Previa theme (defined in src/theme/index.ts)
+# - Use semantic tokens: previa.purple, previa.coral, etc.
+# - Leverage Chakra's built-in responsive props: base, sm, md, lg, xl
+# - Use Chakra's accessibility features (ARIA attributes, keyboard nav)
+
+# 4. Prefer Chakra components over custom implementations
 ```
 
+**Component Categories:**
+- **Layout**: Box, Flex, Grid, Container, Stack, Wrap
+- **Forms**: Input, Select, Textarea, Checkbox, Radio, Switch, FormControl
+- **Data Display**: Table, List, Badge, Tag, Card, Stat
+- **Feedback**: Alert, Toast (useToast), Progress, Spinner, Skeleton
+- **Overlay**: Modal, Drawer, Popover, Tooltip, Menu
+- **Disclosure**: Accordion, Tabs, VisuallyHidden
+- **Navigation**: Breadcrumb, Link, LinkOverlay
+- **Media**: Image, Avatar, Icon
+
+### Chrome Dev MCP Server (Browser Development Tools)
+
+**MUST use for:**
+- Browser-based debugging and inspection
+- Performance profiling and network analysis
+- Console interaction and DOM manipulation testing
+- Lighthouse audits for accessibility and performance
+
+**Usage Pattern:**
+```bash
+# Use Chrome Dev MCP to:
+# - Debug React component rendering issues
+# - Inspect network requests to Supabase/n8n
+# - Profile performance of financial calculations
+# - Validate accessibility (WCAG AA compliance)
+# - Test responsive layouts across viewports
+```
 ---
 
 ## Technical Stack
 
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui, Radix UI
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
 - **State/Data**: TanStack Query (React Query), React Hook Form, Zod
+- **UI Components**: Chakra UI, AG-Grid (Enterprise), Copilot Kit
 - **Charts**: Recharts
 - **Backend**: Supabase (Auth, Postgres with RLS, Storage, Edge Functions)
 - **Workflows/AI**: n8n for OCR/LLM processing; Gemini primary, GPT‑4o optional
@@ -208,11 +244,12 @@ Comprehensive UI/UX spec with Previa design tokens, components, and 12 primary s
 - **Dashboard**: Home widgets, Reconciliation Engine, Transaction Table, AI Chat
 - **Upload Hub** & Document Library
 
-**Reference**: `docs/frontend-spec-new.md`
+**Reference**: `docs/frontend-spec-new.md` (v3.0 - Chakra UI)
 
-Component/library usage (shadcn/ui) and patterns are defined in:
+Component/library usage (Chakra UI, AG-Grid, Copilot Kit) and patterns are defined in:
 - `docs/architecture/source-tree.md`
 - `docs/architecture/coding-standards.md`
+- `docs/design-system.md`
 
 ---
 
@@ -269,7 +306,81 @@ const { data, error } = await supabase
 ### Error/Retry UX
 
 - Backoff and retry on 429/5xx for chat and processing
-- Toast notifications for user feedback; accessible error states (ARIA/live regions)
+- Toast notifications for user feedback (Chakra UI useToast)
+- Accessible error states (ARIA/live regions)
+
+### Chakra UI Component Pattern
+
+```typescript
+import { Box, Button, Flex, Text, useToast, useColorModeValue } from '@chakra-ui/react'
+
+// Use semantic color tokens from theme
+const bgColor = useColorModeValue('white', 'gray.800')
+const accentColor = 'previa.purple'
+
+// Responsive design with Chakra props
+<Box
+  bg={bgColor}
+  p={{ base: 4, md: 6, lg: 8 }}
+  borderRadius="lg"
+  boxShadow="md"
+>
+  <Text fontSize={{ base: 'md', md: 'lg' }} color={accentColor}>
+    Financial Dashboard
+  </Text>
+</Box>
+
+// Toast notifications
+const toast = useToast()
+toast({
+  title: 'Transaction added',
+  status: 'success',
+  duration: 3000,
+  isClosable: true
+})
+```
+
+### AG-Grid Data Table Pattern
+
+```typescript
+import { AgGridReact } from 'ag-grid-react'
+import 'ag-grid-community/styles/ag-grid.css'
+import 'ag-grid-community/styles/ag-theme-quartz.css'
+
+// Financial data grid with currency formatting
+<div className="ag-theme-quartz" style={{ height: 600, width: '100%' }}>
+  <AgGridReact
+    rowData={transactions}
+    columnDefs={[
+      { field: 'date', sortable: true, filter: true },
+      {
+        field: 'amount',
+        valueFormatter: params => formatCurrency(params.value),
+        cellClass: params => params.value < 0 ? 'text-red' : 'text-green'
+      }
+    ]}
+    pagination={true}
+    paginationPageSize={50}
+  />
+</div>
+```
+
+### Copilot Kit Chat Pattern
+
+```typescript
+import { CopilotChat } from '@copilotkit/react-ui'
+import '@copilotkit/react-ui/styles.css'
+
+// AI chat interface for financial assistance
+<CopilotChat
+  instructions="You are a financial assistant helping with reconciliation and insights."
+  labels={{
+    title: "Financial AI Assistant",
+    placeholder: "Ask about your transactions..."
+  }}
+  makeSystemMessage={(message) => `${message} Context: User has ${transactionCount} transactions.`}
+/>
+```
 
 ---
 
@@ -294,7 +405,8 @@ See: `docs/architecture/9-observability-testing.md`
 
 ## File/Directory Quick Map
 
-- **UI components**: `src/components/` (financial, onboarding, upload, dashboard, chat, ui)
+- **UI components**: `src/components/` (financial, onboarding, upload, dashboard, chat)
+- **Theme**: `src/theme/` (Chakra UI theme configuration)
 - **Hooks**: `src/hooks/`
 - **Pages**: `src/pages/`
 - **Supabase integration**: `src/integrations/supabase/`
@@ -311,13 +423,19 @@ See: `docs/architecture/9-observability-testing.md`
 ### DO:
 - ✅ **Use Archon MCP** for task management (not TodoWrite)
 - ✅ **Research first** via RAG before implementing
-- ✅ Follow `docs/architecture/coding-standards.md` and `docs/architecture/source-tree.md`
+- ✅ Follow `docs/architecture/coding-standards.md`
+- `docs/design-system.md` and `docs/architecture/source-tree.md`
 - ✅ Keep financial amounts in cents and use precise arithmetic utilities (`src/lib/currency.ts`)
 - ✅ Respect RLS and never bypass server‑side constraints
 - ✅ **Consult Supabase MCP** for all database operations
-- ✅ **Consult shadcn/ui MCP** before creating UI components
+- ✅ **Use Chakra UI MCP** before creating UI components
 - ✅ Keep RAG queries SHORT (2-5 keywords)
 - ✅ Update task status throughout work cycle
+- ✅ **Use Chakra UI MCP** for UI component guidance
+- ✅ **Use AG-Grid** for complex financial data tables
+- ✅ **Use Copilot Kit** for AI chat interfaces
+- ✅ Leverage Chakra UI's built-in accessibility features
+- ✅ Use Chakra UI theming system (src/theme/index.ts)
 
 ### DON'T:
 - ❌ **Never use TodoWrite** - use Archon task management instead
@@ -325,8 +443,10 @@ See: `docs/architecture/9-observability-testing.md`
 - ❌ Don't expose secrets or raw financial data in logs
 - ❌ Don't skip Archon task checks before coding
 - ❌ Don't use long, verbose RAG queries (keep it 2-5 keywords)
-- ❌ Don't create custom components without checking shadcn/ui first
 - ❌ Don't make database changes without using Supabase MCP
+- ❌ Don't create custom components when Chakra UI provides them
+- ❌ Don't build custom data grids when AG-Grid is available
+- ❌ Don't bypass Chakra UI theming system with inline styles
 
 ---
 
@@ -419,7 +539,7 @@ rag_search_knowledge_base(query="relevant tech", source_id="...", match_count=5)
 
 # 4. Implement using MCP servers
 # - Supabase MCP for database
-# - shadcn/ui patterns for UI
+# - Chakra UI for UI components
 
 # 5. Mark for review
 manage_task("update", task_id="...", status="review")
@@ -431,6 +551,7 @@ For deeper context, start at:
 
 - **PRD index**: `docs/prd/index.md`
 - **Architecture index**: `docs/architecture/index.md`
-- **Frontend spec**: `docs/frontend-spec-new.md`
+- **Frontend spec**: `docs/frontend-spec-new.md` (v3.0)
+- **Design system**: `docs/design-system.md`
 - **Archon integration**: `docs/archon_claude.md`
 - **Claude best practices**: `docs/claude-best-practices.md`

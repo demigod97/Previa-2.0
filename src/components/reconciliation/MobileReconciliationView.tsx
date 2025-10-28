@@ -9,13 +9,24 @@
  */
 
 import React, { useState } from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import {
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Box,
+  VStack,
+  HStack,
+  Icon,
+  Text,
+} from '@chakra-ui/react';
+import { Dialog, DialogContent } from '@/components/chakra-ui/dialog';
+import { Button } from '@/components/chakra-ui/button';
+import { Input } from '@/components/chakra-ui/input';
+import { ScrollArea } from '@/components/chakra-ui/scroll-area';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/chakra-ui/select';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/chakra-ui/sheet';
 import { ArrowLeftRight, Upload, Search, Filter, Check, X } from 'lucide-react';
 import { TransactionCard, ReceiptCard, MatchingPreview } from '@/components/reconciliation';
 import type { Transaction, Receipt } from '@/types/financial';
@@ -44,7 +55,8 @@ export function MobileReconciliationView({
   calculateConfidence,
   isCreatingMatch,
 }: MobileReconciliationViewProps) {
-  const [activeTab, setActiveTab] = useState<'transactions' | 'receipts' | 'matches'>('transactions');
+  // Tab indices: 0 = transactions, 1 = receipts, 2 = matches
+  const [tabIndex, setTabIndex] = useState(0);
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
   const [selectedReceipt, setSelectedReceipt] = useState<Receipt | null>(null);
   const [matchDialogOpen, setMatchDialogOpen] = useState(false);
@@ -64,7 +76,7 @@ export function MobileReconciliationView({
   // Handle transaction selection for matching
   const handleTransactionSelect = (transaction: Transaction) => {
     setSelectedTransaction(transaction);
-    setActiveTab('receipts');
+    setTabIndex(1); // Switch to receipts tab
   };
 
   // Handle receipt selection
@@ -81,7 +93,7 @@ export function MobileReconciliationView({
     setMatchDialogOpen(false);
     setSelectedTransaction(null);
     setSelectedReceipt(null);
-    setActiveTab('transactions');
+    setTabIndex(0); // Return to transactions tab
   };
 
   // Handle match rejection
@@ -92,37 +104,45 @@ export function MobileReconciliationView({
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <Box h="full" display="flex" flexDirection="column">
       {/* Tab Navigation */}
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)} className="flex-1 flex flex-col">
-        <div className="border-b border-previa-sand bg-card px-4 pt-4">
-          <TabsList className="grid w-full grid-cols-3 h-12 bg-previa-cream">
-            <TabsTrigger value="transactions" className="text-sm data-[state=active]:bg-sand">
-              <ArrowLeftRight className="h-4 w-4 mr-2" />
+      <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)} display="flex" flexDirection="column" flex={1}>
+        <Box borderBottom="1px solid" borderColor="previa.sand" bg="white" px={4} pt={4}>
+          <TabList
+            display="grid"
+            gridTemplateColumns="repeat(3, 1fr)"
+            h={12}
+            bg="previa.cream"
+            gap={0}
+          >
+            <Tab fontSize="sm">
+              <Icon as={ArrowLeftRight} w={4} h={4} mr={2} />
               Transactions
-            </TabsTrigger>
-            <TabsTrigger value="receipts" className="text-sm data-[state=active]:bg-sand">
-              <Upload className="h-4 w-4 mr-2" />
+            </Tab>
+            <Tab fontSize="sm">
+              <Icon as={Upload} w={4} h={4} mr={2} />
               Receipts
-            </TabsTrigger>
-            <TabsTrigger value="matches" className="text-sm data-[state=active]:bg-sand">
-              <Check className="h-4 w-4 mr-2" />
+            </Tab>
+            <Tab fontSize="sm">
+              <Icon as={Check} w={4} h={4} mr={2} />
               Matched
-            </TabsTrigger>
-          </TabsList>
-        </div>
+            </Tab>
+          </TabList>
+        </Box>
 
-        {/* Transactions Tab */}
-        <TabsContent value="transactions" className="flex-1 flex flex-col m-0 p-0">
+        <TabPanels flex={1} display="flex" flexDirection="column">
+          {/* Transactions Tab */}
+          <TabPanel flex={1} display="flex" flexDirection="column" m={0} p={0}>
           <div className="bg-card border-b border-previa-sand p-4 space-y-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone pointer-events-none" />
               <Input
                 placeholder="Search transactions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-9 h-12 text-base"
+                className="h-12 text-base"
+                paddingLeft="2.5rem"
               />
             </div>
 
@@ -196,10 +216,10 @@ export function MobileReconciliationView({
               )}
             </div>
           </ScrollArea>
-        </TabsContent>
+          </TabPanel>
 
-        {/* Receipts Tab */}
-        <TabsContent value="receipts" className="flex-1 flex flex-col m-0 p-0">
+          {/* Receipts Tab */}
+          <TabPanel flex={1} display="flex" flexDirection="column" m={0} p={0}>
           <div className="bg-card border-b border-previa-sand p-4">
             <Button className="w-full h-12 bg-previa-sand hover:bg-previa-sand/90 text-previa-charcoal">
               <Upload className="h-4 w-4 mr-2" />
@@ -244,10 +264,10 @@ export function MobileReconciliationView({
               )}
             </div>
           </ScrollArea>
-        </TabsContent>
+          </TabPanel>
 
-        {/* Matches Tab */}
-        <TabsContent value="matches" className="flex-1 flex flex-col m-0 p-0">
+          {/* Matches Tab */}
+          <TabPanel flex={1} display="flex" flexDirection="column" m={0} p={0}>
           <div className="p-4">
             <div className="bg-cream/50 rounded-lg p-8 text-center">
               <Check className="h-12 w-12 mx-auto mb-3 text-green-600" />
@@ -257,7 +277,8 @@ export function MobileReconciliationView({
               </p>
             </div>
           </div>
-        </TabsContent>
+          </TabPanel>
+        </TabPanels>
       </Tabs>
 
       {/* Full-Screen Matching Modal */}
@@ -280,7 +301,7 @@ export function MobileReconciliationView({
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </Box>
   );
 }
 

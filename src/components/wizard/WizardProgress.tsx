@@ -1,4 +1,4 @@
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/chakra-ui/progress';
 import { useWizard } from '@/contexts/WizardContext';
 
 /**

@@ -3,9 +3,18 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import {
+  Box,
+  VStack,
+  HStack,
+  Text,
+  Progress as ChakraProgress,
+  Icon,
+  List,
+  ListItem,
+} from '@chakra-ui/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
 import { ArrowLeftRight, Check, X, Edit } from 'lucide-react';
 import { format } from 'date-fns';
 import type { Transaction, Receipt } from '@/types/financial';
@@ -72,121 +81,136 @@ export function MatchingPreview({
   ];
 
   return (
-    <Card className="border-sand">
+    <Card borderColor="previa.sand">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-charcoal text-lg">
-          <ArrowLeftRight className="h-5 w-5 text-sand" />
-          Match Preview
+        <CardTitle>
+          <HStack spacing={2}>
+            <Icon as={ArrowLeftRight} w={5} h={5} color="previa.sand" />
+            <Text fontSize="lg" color="previa.charcoal">Match Preview</Text>
+          </HStack>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Transaction Details */}
-        <div className="space-y-2">
-          <p className="text-xs font-semibold text-darkStone uppercase tracking-wide">
-            Transaction
-          </p>
-          <div className="bg-cream p-3 rounded-md">
-            <p className="text-sm font-medium text-charcoal truncate">
-              {transaction.description}
-            </p>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-xs text-stone">
-                {format(txDate, 'dd/MM/yyyy')}
-              </span>
-              <span className="font-mono text-sm font-semibold text-charcoal">
-                {formatAmount(transaction.amount)}
-              </span>
-            </div>
-          </div>
-        </div>
+      <CardContent>
+        <VStack spacing={6} align="stretch">
+          {/* Transaction Details */}
+          <VStack spacing={2} align="stretch">
+            <Text fontSize="xs" fontWeight="semibold" color="previa.darkStone" textTransform="uppercase" letterSpacing="wide">
+              Transaction
+            </Text>
+            <Box bg="previa.cream" p={3} borderRadius="md">
+              <Text fontSize="sm" fontWeight="medium" color="previa.charcoal" noOfLines={1}>
+                {transaction.description}
+              </Text>
+              <HStack justify="space-between" mt={2}>
+                <Text fontSize="xs" color="previa.stone">
+                  {format(txDate, 'dd/MM/yyyy')}
+                </Text>
+                <Text fontFamily="mono" fontSize="sm" fontWeight="semibold" color="previa.charcoal">
+                  {formatAmount(transaction.amount)}
+                </Text>
+              </HStack>
+            </Box>
+          </VStack>
 
-        {/* Receipt Details */}
-        <div className="space-y-2">
-          <p className="text-xs font-semibold text-darkStone uppercase tracking-wide">
-            Receipt
-          </p>
-          <div className="bg-cream p-3 rounded-md">
-            <p className="text-sm font-medium text-charcoal truncate">
-              {receipt.merchant || 'Unknown Merchant'}
-            </p>
-            <div className="flex items-center justify-between mt-2">
-              <span className="text-xs text-stone">
-                {format(rcDate, 'dd/MM/yyyy')}
-              </span>
-              <span className="font-mono text-sm font-semibold text-charcoal">
-                {formatAmount(receipt.amount || 0)}
-              </span>
-            </div>
-          </div>
-        </div>
+          {/* Receipt Details */}
+          <VStack spacing={2} align="stretch">
+            <Text fontSize="xs" fontWeight="semibold" color="previa.darkStone" textTransform="uppercase" letterSpacing="wide">
+              Receipt
+            </Text>
+            <Box bg="previa.cream" p={3} borderRadius="md">
+              <Text fontSize="sm" fontWeight="medium" color="previa.charcoal" noOfLines={1}>
+                {receipt.merchant || 'Unknown Merchant'}
+              </Text>
+              <HStack justify="space-between" mt={2}>
+                <Text fontSize="xs" color="previa.stone">
+                  {format(rcDate, 'dd/MM/yyyy')}
+                </Text>
+                <Text fontFamily="mono" fontSize="sm" fontWeight="semibold" color="previa.charcoal">
+                  {formatAmount(receipt.amount || 0)}
+                </Text>
+              </HStack>
+            </Box>
+          </VStack>
 
-        {/* Confidence Score */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-semibold text-darkStone uppercase tracking-wide">
-              Confidence Score
-            </p>
-            <span className={`font-mono text-2xl font-bold ${getConfidenceColor(confidenceScore)}`}>
-              {confidenceScore}%
-            </span>
-          </div>
-          <div className="relative">
-            <Progress 
-              value={confidenceScore} 
-              className="h-2 bg-stone/20"
+          {/* Confidence Score */}
+          <VStack spacing={3} align="stretch">
+            <HStack justify="space-between">
+              <Text fontSize="xs" fontWeight="semibold" color="previa.darkStone" textTransform="uppercase" letterSpacing="wide">
+                Confidence Score
+              </Text>
+              <Text
+                fontFamily="mono"
+                fontSize="2xl"
+                fontWeight="bold"
+                color={confidenceScore >= 80 ? 'green.600' : confidenceScore >= 50 ? 'yellow.600' : 'red.600'}
+              >
+                {confidenceScore}%
+              </Text>
+            </HStack>
+            <ChakraProgress
+              value={confidenceScore}
+              h={2}
+              borderRadius="full"
+              colorScheme={confidenceScore >= 80 ? 'green' : confidenceScore >= 50 ? 'yellow' : 'red'}
+              bg="previa.stone"
+              bgOpacity={0.2}
             />
-            <div 
-              className={`absolute top-0 left-0 h-2 rounded-full transition-all ${getProgressColor(confidenceScore)}`}
-              style={{ width: `${confidenceScore}%` }}
-            />
-          </div>
-        </div>
+          </VStack>
 
-        {/* Match Reasons */}
-        <div className="space-y-2">
-          <p className="text-xs font-semibold text-darkStone uppercase tracking-wide">
-            Match Analysis
-          </p>
-          <ul className="space-y-1">
-            {displayReasons.map((reason, index) => (
-              <li key={index} className="text-xs text-stone flex items-start">
-                <span className="mr-2">•</span>
-                <span>{reason}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+          {/* Match Reasons */}
+          <VStack spacing={2} align="stretch">
+            <Text fontSize="xs" fontWeight="semibold" color="previa.darkStone" textTransform="uppercase" letterSpacing="wide">
+              Match Analysis
+            </Text>
+            <List spacing={1}>
+              {displayReasons.map((reason, index) => (
+                <ListItem key={index} fontSize="xs" color="previa.stone">
+                  <HStack align="flex-start" spacing={2}>
+                    <Text>•</Text>
+                    <Text>{reason}</Text>
+                  </HStack>
+                </ListItem>
+              ))}
+            </List>
+          </VStack>
 
-        {/* Action Buttons */}
-        <div className="flex items-center gap-2 pt-2">
-          <Button
-            onClick={onApprove}
-            disabled={isLoading}
-            className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Check className="h-4 w-4 mr-2" />
-            Approve Match
-          </Button>
-          <Button
-            onClick={onReject}
-            disabled={isLoading}
-            variant="ghost"
-            className="flex-1 text-red-600 hover:bg-red-50"
-          >
-            <X className="h-4 w-4 mr-2" />
-            Reject
-          </Button>
-          {onEdit && (
+          {/* Action Buttons */}
+          <HStack spacing={2} pt={2}>
             <Button
-              onClick={onEdit}
-              disabled={isLoading}
-              variant="outline"
-              size="icon"
+              onClick={onApprove}
+              isDisabled={isLoading}
+              isLoading={isLoading}
+              flex={1}
+              bg="green.600"
+              color="white"
+              _hover={{ bg: 'green.700' }}
+              leftIcon={<Icon as={Check} w={4} h={4} />}
             >
-              <Edit className="h-4 w-4" />
+              Approve Match
             </Button>
-          )}
-        </div>
+            <Button
+              onClick={onReject}
+              isDisabled={isLoading}
+              flex={1}
+              variant="ghost"
+              color="red.600"
+              _hover={{ bg: 'red.50' }}
+              leftIcon={<Icon as={X} w={4} h={4} />}
+            >
+              Reject
+            </Button>
+            {onEdit && (
+              <Button
+                onClick={onEdit}
+                isDisabled={isLoading}
+                variant="outline"
+                size="icon"
+              >
+                <Icon as={Edit} w={4} h={4} />
+              </Button>
+            )}
+          </HStack>
+        </VStack>
       </CardContent>
     </Card>
   );

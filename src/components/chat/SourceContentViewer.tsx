@@ -1,14 +1,14 @@
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
+import { ScrollArea } from '@/components/chakra-ui/scroll-area';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Citation } from '@/types/message';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from '@/components/ui/accordion';
+} from '@/components/chakra-ui/accordion';
 import { parseContentStructure, detectContentType } from '@/utils/contentParser';
 import EnhancedContentRenderer from './EnhancedContentRenderer';
 

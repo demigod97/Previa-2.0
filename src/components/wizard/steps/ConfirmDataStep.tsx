@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/chakra-ui/card';
+import { Badge } from '@/components/chakra-ui/badge';
 import { CheckCircle2, Edit3, AlertCircle, Eye } from 'lucide-react';
 
 /**

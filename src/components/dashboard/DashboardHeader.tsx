@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Box, Flex, Heading, Icon } from '@chakra-ui/react';
+import { Button } from '@/components/chakra-ui/button';
 import { User, LogOut } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/chakra-ui/dropdown-menu';
 import { useLogout } from '@/services/authService';
-import Logo from '@/components/ui/Logo';
+import Logo from '@/components/chakra-ui/Logo';
 
 interface DashboardHeaderProps {
   userEmail?: string;
@@ -14,32 +15,44 @@ const DashboardHeader = ({ userEmail }: DashboardHeaderProps) => {
   const { logout } = useLogout();
 
   return (
-    <header className="px-6 py-4" style={{ backgroundColor: '#F2E9D8', borderBottom: '1px solid #D9C8B4' }}>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2">
+    <Box as="header" px={6} py={4} bg="previa.cream" borderBottom="1px solid" borderColor="previa.sand">
+      <Flex justify="space-between" align="center">
+        <Flex align="center" gap={2}>
           <Logo />
-          <h1 className="text-xl font-medium" style={{ color: '#403B31' }}>Previa</h1>
-        </div>
+          <Heading as="h1" size="lg" fontWeight="medium" color="previa.charcoal">
+            Previa
+          </Heading>
+        </Flex>
 
-        <div className="flex items-center space-x-4">
+        <Flex align="center" gap={4}>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="p-0">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer transition-colors" style={{ backgroundColor: '#D9C8B4' }}>
-                  <User className="h-4 w-4" style={{ color: '#403B31' }} />
-                </div>
+              <Button variant="ghost" size="sm" p={0}>
+                <Flex
+                  w={8}
+                  h={8}
+                  borderRadius="full"
+                  align="center"
+                  justify="center"
+                  cursor="pointer"
+                  transition="background 0.2s"
+                  bg="previa.sand"
+                  _hover={{ bg: "previa.stone" }}
+                >
+                  <Icon as={User} w={4} h={4} color="previa.charcoal" />
+                </Flex>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48" style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
-              <DropdownMenuItem onClick={logout} className="cursor-pointer" style={{ color: '#403B31' }}>
-                <LogOut className="h-4 w-4 mr-2" />
+            <DropdownMenuContent align="end" w="48" bg="previa.cream" borderColor="previa.sand">
+              <DropdownMenuItem onClick={logout} cursor="pointer" color="previa.charcoal">
+                <Icon as={LogOut} w={4} h={4} mr={2} />
                 Sign Out
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        </div>
-      </div>
-    </header>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 

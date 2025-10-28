@@ -5,14 +5,23 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import {
+  Box,
+  Flex,
+  VStack,
+  HStack,
+  Text,
+  Heading,
+  Icon,
+} from '@chakra-ui/react';
+import { Button } from '@/components/chakra-ui/button';
+import { ScrollArea } from '@/components/chakra-ui/scroll-area';
 import { RefreshCw, Sparkles } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import ChatInput from './ChatInput';
 import { useFinancialChat } from '@/hooks/useFinancialChat';
 import { Citation } from '@/types/message';
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/chakra-ui/card';
 
 interface FinancialChatPanelProps {
   onCitationClick?: (citation: Citation) => void;
@@ -102,52 +111,71 @@ const FinancialChatPanel = ({
   const shouldShowRefreshButton = messages.length > 0;
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-previa-cream">
+    <Flex flex={1} flexDir="column" h="full" overflow="hidden" bg="previa.cream">
       {/* Chat Header */}
-      <div className="p-4 border-b border-previa-sand flex-shrink-0 bg-card">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-sand" />
-            <h2 className="text-lg font-medium text-charcoal">AI Financial Assistant</h2>
-          </div>
+      <Box p={4} borderBottom="1px solid" borderColor="previa.sand" flexShrink={0} bg="card">
+        <Flex maxW="4xl" mx="auto" align="center" justify="space-between">
+          <HStack spacing={2}>
+            <Icon as={Sparkles} boxSize={5} color="previa.sand" />
+            <Heading as="h2" size="md" fontWeight="medium" color="previa.charcoal">
+              AI Financial Assistant
+            </Heading>
+          </HStack>
           {shouldShowRefreshButton && (
             <Button
               variant="ghost"
               size="sm"
               onClick={handleRefreshChat}
               disabled={isClearing}
-              className="flex items-center space-x-2 hover:bg-sand/20"
+              _hover={{ bg: 'previa.sand', opacity: 0.2 }}
             >
-              <RefreshCw className={`h-4 w-4 ${isClearing ? 'animate-spin' : ''}`} />
-              <span>{isClearing ? 'Clearing...' : 'Clear Chat'}</span>
+              <HStack spacing={2}>
+                <Icon
+                  as={RefreshCw}
+                  boxSize={4}
+                  animation={isClearing ? 'spin 1s linear infinite' : undefined}
+                />
+                <Text>{isClearing ? 'Clearing...' : 'Clear Chat'}</Text>
+              </HStack>
             </Button>
           )}
-        </div>
-      </div>
+        </Flex>
+      </Box>
 
       {/* Chat Messages Area */}
-      <ScrollArea className="flex-1 h-full" ref={scrollAreaRef}>
-        <div className="p-8">
-          <div className="max-w-4xl mx-auto">
+      <ScrollArea flex={1} h="full" ref={scrollAreaRef}>
+        <Box p={8}>
+          <Box maxW="4xl" mx="auto">
             {/* Welcome message */}
             {messages.length === 0 && !pendingUserMessage && (
-              <Card className="border-previa-sand mb-6">
-                <div className="p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-sand flex items-center justify-center">
-                      <Sparkles className="h-5 w-5 text-charcoal" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-charcoal">Welcome to Previa AI</h3>
-                      <p className="text-sm text-darkStone">Your intelligent financial assistant</p>
-                    </div>
-                  </div>
-                  <p className="text-darkStone leading-relaxed">
-                    I can help you understand your financial data, analyze transactions, 
-                    track spending patterns, and answer questions about your finances. 
+              <Card borderColor="previa.sand" mb={6}>
+                <Box p={6}>
+                  <HStack gap={3} mb={4}>
+                    <Flex
+                      w={10}
+                      h={10}
+                      borderRadius="full"
+                      bg="previa.sand"
+                      align="center"
+                      justify="center"
+                    >
+                      <Icon as={Sparkles} boxSize={5} color="previa.charcoal" />
+                    </Flex>
+                    <VStack align="start" spacing={0}>
+                      <Heading as="h3" size="sm" fontWeight="semibold" color="previa.charcoal">
+                        Welcome to Previa AI
+                      </Heading>
+                      <Text fontSize="sm" color="previa.darkStone">
+                        Your intelligent financial assistant
+                      </Text>
+                    </VStack>
+                  </HStack>
+                  <Text color="previa.darkStone" lineHeight="relaxed">
+                    I can help you understand your financial data, analyze transactions,
+                    track spending patterns, and answer questions about your finances.
                     Try asking me about your recent expenses, income trends, or specific transactions.
-                  </p>
-                </div>
+                  </Text>
+                </Box>
               </Card>
             )}
 
@@ -159,38 +187,67 @@ const FinancialChatPanel = ({
                 onCitationClick={onCitationClick}
               />
             ))}
-            
+
             {/* Pending user message */}
             {pendingUserMessage && (
-              <div className="flex justify-end mb-4">
-                <div className="max-w-xs lg:max-w-md px-4 py-2 bg-sand text-charcoal rounded-lg">
+              <Flex justify="flex-end" mb={4}>
+                <Box
+                  maxW={{ base: 'xs', lg: 'md' }}
+                  px={4}
+                  py={2}
+                  bg="previa.sand"
+                  color="previa.charcoal"
+                  borderRadius="lg"
+                >
                   {pendingUserMessage}
-                </div>
-              </div>
+                </Box>
+              </Flex>
             )}
-            
+
             {/* AI Loading Indicator */}
             {showAiLoading && (
-              <div className="flex justify-start mb-4" ref={latestMessageRef}>
-                <div className="flex items-center space-x-2 px-4 py-3 bg-cream rounded-lg border border-sand">
-                  <div className="w-2 h-2 bg-sand rounded-full animate-bounce"></div>
-                  <div className="w-2 h-2 bg-sand rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                  <div className="w-2 h-2 bg-sand rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                </div>
-              </div>
+              <Flex justify="flex-start" mb={4} ref={latestMessageRef}>
+                <HStack
+                  spacing={2}
+                  px={4}
+                  py={3}
+                  bg="previa.cream"
+                  borderRadius="lg"
+                  border="1px solid"
+                  borderColor="previa.sand"
+                >
+                  <Box w={2} h={2} bg="previa.sand" borderRadius="full" animation="bounce 1s infinite" />
+                  <Box
+                    w={2}
+                    h={2}
+                    bg="previa.sand"
+                    borderRadius="full"
+                    animation="bounce 1s infinite"
+                    sx={{ animationDelay: '0.1s' }}
+                  />
+                  <Box
+                    w={2}
+                    h={2}
+                    bg="previa.sand"
+                    borderRadius="full"
+                    animation="bounce 1s infinite"
+                    sx={{ animationDelay: '0.2s' }}
+                  />
+                </HStack>
+              </Flex>
             )}
-            
+
             {/* Scroll target */}
             {!showAiLoading && (messages.length > 0 || pendingUserMessage) && (
-              <div ref={latestMessageRef} />
+              <Box ref={latestMessageRef} />
             )}
-          </div>
-        </div>
+          </Box>
+        </Box>
       </ScrollArea>
 
       {/* Chat Input - Fixed at bottom */}
-      <div className="p-6 border-t border-previa-sand flex-shrink-0 bg-card">
-        <div className="max-w-4xl mx-auto">
+      <Box p={6} borderTop="1px solid" borderColor="previa.sand" flexShrink={0} bg="card">
+        <Box maxW="4xl" mx="auto">
           <ChatInput
             onSendMessage={handleSendMessage}
             disabled={isSending || !!pendingUserMessage}
@@ -198,16 +255,16 @@ const FinancialChatPanel = ({
             placeholder="Ask about your finances..."
             exampleQuestions={exampleQuestions}
           />
-        </div>
-      </div>
+        </Box>
+      </Box>
 
       {/* Footer */}
-      <div className="p-4 border-t border-sand flex-shrink-0 bg-cream">
-        <p className="text-center text-sm text-stone">
+      <Box p={4} borderTop="1px solid" borderColor="previa.sand" flexShrink={0} bg="previa.cream">
+        <Text textAlign="center" fontSize="sm" color="previa.stone">
           Previa AI can make mistakes. Please verify important information.
-        </p>
-      </div>
-    </div>
+        </Text>
+      </Box>
+    </Flex>
   );
 };
 

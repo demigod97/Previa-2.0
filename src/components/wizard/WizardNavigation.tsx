@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 import { useWizard } from '@/contexts/WizardContext';
 
 /**

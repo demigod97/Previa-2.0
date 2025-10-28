@@ -9,9 +9,9 @@
  */
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { Button } from '@/components/chakra-ui/button';
+import { Checkbox } from '@/components/chakra-ui/checkbox';
+import { Label } from '@/components/chakra-ui/label';
 import {
   Sheet,
   SheetContent,
@@ -19,9 +19,9 @@ import {
   SheetTitle,
   SheetTrigger,
   SheetFooter,
-} from '@/components/ui/sheet';
+} from '@/components/chakra-ui/sheet';
 import { Filter, X } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/components/chakra-ui/badge';
 
 interface MobileTransactionFiltersProps {
   statusFilters: string[];

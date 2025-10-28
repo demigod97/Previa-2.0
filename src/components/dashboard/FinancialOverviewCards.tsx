@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
 import { TrendingUp, CreditCard, Receipt } from 'lucide-react';
 import type { UserTierData } from '@/types/financial';
 

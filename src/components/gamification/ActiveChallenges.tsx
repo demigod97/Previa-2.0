@@ -2,9 +2,9 @@
 // Displays daily/weekly/monthly challenges with progress tracking and countdown timers
 
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Progress } from '@/components/chakra-ui/progress';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Trophy, Clock, Target } from 'lucide-react';
 import { fetchActiveChallenges } from '@/services/gamificationService';
 import type { UserChallenge } from '@/types/gamification';

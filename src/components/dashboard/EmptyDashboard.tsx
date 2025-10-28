@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 import { MessageCircle, FileText, Globe } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useNotebooks } from '@/hooks/useNotebooks';

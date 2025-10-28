@@ -1,7 +1,7 @@
 import { Table } from '@tanstack/react-table';
 import { X, Search, Filter, Download, Trash2, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Button } from '@/components/chakra-ui/button';
+import { Input } from '@/components/chakra-ui/input';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -9,14 +9,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/components/chakra-ui/dropdown-menu';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/chakra-ui/popover';
+import { Calendar } from '@/components/chakra-ui/calendar';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Transaction } from '@/types/financial';
 import { format } from 'date-fns';
 import React from 'react';
@@ -73,12 +73,13 @@ export function TransactionTableToolbar<TData extends Transaction>({
       <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
         {/* Search Input */}
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-stone pointer-events-none" />
           <Input
             placeholder="Search transactions..."
             value={globalFilter ?? ''}
             onChange={(event) => setGlobalFilter(event.target.value)}
             className="pl-10 bg-card border-previa-sand focus:ring-previa-sand text-previa-charcoal"
+            paddingLeft="2.5rem"
           />
         </div>
 

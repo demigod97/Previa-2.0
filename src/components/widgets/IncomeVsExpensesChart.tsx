@@ -1,4 +1,5 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Box, Text } from "@chakra-ui/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/chakra-ui/card";
 import { useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { format, startOfMonth, endOfMonth, subMonths, isWithinInterval } from "date-fns";
@@ -16,7 +17,6 @@ export function IncomeVsExpensesChart({ transactions }: IncomeVsExpensesChartPro
     const previousMonthStart = startOfMonth(subMonths(now, 1));
     const previousMonthEnd = endOfMonth(subMonths(now, 1));
 
-    // Calculate current month totals
     const currentMonthTransactions = transactions.filter((tx) =>
       isWithinInterval(new Date(tx.date), { start: currentMonthStart, end: currentMonthEnd })
     );
@@ -31,7 +31,6 @@ export function IncomeVsExpensesChart({ transactions }: IncomeVsExpensesChartPro
         .reduce((sum, tx) => sum + tx.amount, 0)
     );
 
-    // Calculate previous month totals
     const previousMonthTransactions = transactions.filter((tx) =>
       isWithinInterval(new Date(tx.date), { start: previousMonthStart, end: previousMonthEnd })
     );
@@ -66,21 +65,22 @@ export function IncomeVsExpensesChart({ transactions }: IncomeVsExpensesChartPro
   }, [chartData]);
 
   return (
-    <Card className="border-previa-sand">
+    <Card borderColor="previa.sand">
       <CardHeader>
-        <CardTitle className="text-previa-charcoal font-semibold">Income vs Expenses</CardTitle>
+        <CardTitle color="previa.charcoal" fontWeight="semibold">Income vs Expenses</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
-          <p className="text-sm text-stone">Net Income (This Month)</p>
-          <p
-            className={`text-2xl font-mono font-bold ${
-              netIncome >= 0 ? "text-green-600" : "text-red-600"
-            }`}
+        <Box mb={4}>
+          <Text fontSize="sm" color="previa.stone">Net Income (This Month)</Text>
+          <Text
+            fontSize="2xl"
+            fontFamily="mono"
+            fontWeight="bold"
+            color={netIncome >= 0 ? "green.600" : "red.600"}
           >
             {netIncome >= 0 ? "+" : ""}${netIncome.toFixed(2)}
-          </p>
-        </div>
+          </Text>
+        </Box>
         <ResponsiveContainer width="100%" height={250}>
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#D9C8B4" opacity={0.3} />
@@ -126,4 +126,3 @@ export function IncomeVsExpensesChart({ transactions }: IncomeVsExpensesChartPro
     </Card>
   );
 }
-

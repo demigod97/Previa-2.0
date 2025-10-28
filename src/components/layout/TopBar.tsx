@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Bell, Sparkles, Trash2, Wand2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWizard } from '@/contexts/WizardContext';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/chakra-ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,11 +10,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { DiscordIcon } from '@/components/ui/discord-icon';
-import { DeleteConfirmationDialog } from '@/components/ui/delete-confirmation-dialog';
+} from '@/components/chakra-ui/dropdown-menu';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
+import { DiscordIcon } from '@/components/chakra-ui/discord-icon';
+import { DeleteConfirmationDialog } from '@/components/chakra-ui/delete-confirmation-dialog';
 import { SetupWizardModal } from '@/components/wizard/SetupWizardModal';
 import { useNavigate } from 'react-router-dom';
 import { useMockDataSeeding } from '@/hooks/useMockDataSeeding';
@@ -169,8 +169,8 @@ export function TopBar() {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="font-normal">
+            <DropdownMenuContent align="end" minW="14rem">
+              <DropdownMenuLabel>
                 <div className="flex flex-col space-y-2">
                   <p className="text-sm font-medium text-charcoal">
                     {user?.email}
@@ -186,20 +186,18 @@ export function TopBar() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => navigate('/settings')}
-                className="cursor-pointer"
               >
                 Settings
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => navigate('/settings#billing')}
-                className="cursor-pointer"
               >
                 Billing & Upgrade
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={handleSignOut}
-                className="cursor-pointer text-red-600 focus:text-red-600"
+                color="red.600"
               >
                 Sign Out
               </DropdownMenuItem>

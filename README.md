@@ -51,7 +51,7 @@ Previa provides an intelligent, automated platform that:
 
 ## 🎨 Design & User Experience
 
-Previa features a warm, approachable design built with **shadcn/ui** components:
+Previa features a warm, approachable design built with **Chakra UI** components:
 
 ### Color Palette
 
@@ -77,8 +77,10 @@ Previa features a warm, approachable design built with **shadcn/ui** components:
 ### Frontend
 - **Framework**: React 18.3.1 with TypeScript 5.5.3
 - **Build Tool**: Vite 5.4.1
-- **UI Components**: shadcn/ui with custom Previa theme
-- **Styling**: Tailwind CSS 3.4.11
+- **UI Components**: Chakra UI 2.8.0 with custom Previa theme
+- **Data Grids**: AG-Grid Enterprise 31.0.0 for financial tables
+- **AI Chat**: Copilot Kit 0.10.0 for intelligent assistant
+- **Styling**: Tailwind CSS 3.4.11 (complementary to Chakra UI)
 - **State Management**: TanStack Query 5.56.2
 - **Testing**: Vitest, React Testing Library, Playwright
 
@@ -324,7 +326,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **shadcn/ui**: Beautiful, accessible component library
+- **Chakra UI**: Comprehensive accessible component library
+- **AG-Grid**: Enterprise-grade data grid solution
+- **Copilot Kit**: AI chat interface framework
 - **Supabase**: Backend-as-a-Service platform
 - **n8n**: Workflow automation
 - **Design Inspiration**: Monarch Money, Expensify, PocketSmith

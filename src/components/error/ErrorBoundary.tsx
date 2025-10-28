@@ -6,8 +6,8 @@
  */
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 
 interface Props {

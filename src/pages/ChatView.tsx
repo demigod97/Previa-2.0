@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Sidebar, TopBar } from '@/components/layout';
-import { FinancialChatPanel } from '@/components/chat';
+import { FinancialChatPanel, ChatModeToggle } from '@/components/chat';
+import { useChatMode } from '@/contexts/ChatModeContext';
 import { Citation } from '@/types/message';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Card } from '@/components/ui/card';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/chakra-ui/dialog';
+import { Card } from '@/components/chakra-ui/card';
+import { Box } from '@chakra-ui/react';
 import { formatCurrency } from '@/lib/utils';
 
 /**
@@ -11,8 +13,10 @@ import { formatCurrency } from '@/lib/utils';
  *
  * Full-page chat interface where users can ask questions about their financial data
  * and receive AI-powered insights with citations to transactions and receipts.
+ * Supports toggle between CopilotKit AI and standard Financial Chat.
  */
 const ChatView = () => {
+  const { chatMode } = useChatMode();
   const [selectedCitation, setSelectedCitation] = useState<Citation | null>(null);
 
   const handleCitationClick = (citation: Citation) => {
@@ -33,11 +37,45 @@ const ChatView = () => {
         {/* Top Bar */}
         <TopBar />
 
-        {/* Chat Panel - Full Height */}
+        {/* Chat Mode Toggle */}
+        <Box px={6} pt={4}>
+          <ChatModeToggle />
+        </Box>
+
+        {/* Chat Panel - Conditional Rendering Based on Mode */}
         <main className="flex-1 overflow-hidden">
-          <FinancialChatPanel 
-            onCitationClick={handleCitationClick}
-          />
+          {chatMode === 'copilot' ? (
+            <Box h="full" px={6} pb={4}>
+              <Box
+                h="full"
+                bg="previa.cream"
+                borderRadius="lg"
+                borderWidth="1px"
+                borderColor="previa.sand"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                flexDirection="column"
+                gap={4}
+                p={8}
+              >
+                <Box fontSize="4xl">🚧</Box>
+                <Box textAlign="center">
+                  <Box fontSize="xl" fontWeight="medium" color="previa.charcoal" mb={2}>
+                    CopilotKit AI - Coming Soon
+                  </Box>
+                  <Box fontSize="sm" color="previa.stone" maxW="md">
+                    We're working on integrating advanced AI capabilities with CopilotKit.
+                    For now, please use the Financial Chat mode which provides full AI-powered financial assistance.
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          ) : (
+            <FinancialChatPanel
+              onCitationClick={handleCitationClick}
+            />
+          )}
         </main>
       </div>
 

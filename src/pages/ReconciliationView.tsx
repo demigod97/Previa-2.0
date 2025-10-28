@@ -1,21 +1,54 @@
 /**
- * ReconciliationView - Match transactions with receipts
- * 
- * Features:
+ * Reconciliation Engine View - Match transactions with receipts
+ *
+ * **Purpose**: Review AI-suggested matches between transactions and receipts (Story 4.3 + 5.3)
+ *
+ * **User Flow** (see docs/USER-FLOW-RECONCILIATION.md):
+ * 1. User uploads bank statements + receipts via /upload
+ * 2. AI automatically extracts data and suggests matches (stored in reconciliation_matches table)
+ * 3. User reviews matches HERE in side-by-side comparison view
+ * 4. User approves/rejects/manually matches transactions to receipts
+ *
+ * **Current Features**:
  * - 3-panel resizable layout (transactions | matching preview | receipts)
- * - Drag-and-drop matching
- * - AI confidence scoring
- * - Filter by date, amount, category
+ * - Drag-and-drop matching for manual workflow
+ * - AI confidence scoring indicators
+ * - Filter by date, amount, category, status
+ *
+ * **Key Differences from Related Views**:
+ * - `/receipts` = Browse ALL receipts independently (library view with search/filter)
+ * - `/reconciliation` (this view) = Review AI MATCH SUGGESTIONS (approve/reject workflow)
+ * - `/transactions` = View ALL transactions with reconciliation status badges
+ *
+ * **Expected Layout Enhancements** (per Story 4.3):
+ * - Statistics panel at top (match counts, reconciliation rate %, avg confidence)
+ * - Quick actions toolbar (Approve All High Confidence, Manual Match, Refresh)
+ * - Match cards sorted by confidence score (High ≥0.80, Medium 0.50-0.79, Low <0.50)
+ * - Side-by-side comparison with field-level indicators:
+ *   - GREEN ✓ = Exact match
+ *   - YELLOW ⚠️ = Close match (within tolerance)
+ *   - RED ✗ = Mismatch (review carefully)
+ * - Keyboard shortcuts (A=approve, R=reject, N=next)
+ * - Recent approvals section with Undo capability (last 5 matches)
+ *
+ * **Gamification Integration**:
+ * - Awards 3 points per match approved
+ * - Updates challenge progress (e.g., "Reconcile 10 transactions: 7/10")
+ * - Shows points earned this week from reconciliation
+ *
+ * @see docs/stories/4.3-interactive-matching-interface.md - Complete acceptance criteria
+ * @see docs/stories/5.3-reconciliation-engine-view.md - Dashboard context integration
+ * @see docs/USER-FLOW-RECONCILIATION.md - User workflow and navigation guide
  */
 
 import React, { useState } from 'react';
 import { Sidebar, TopBar } from '@/components/layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Input } from '@/components/chakra-ui/input';
+import { ScrollArea } from '@/components/chakra-ui/scroll-area';
+import { Tabs, TabList, Tab } from '@chakra-ui/react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/chakra-ui/select';
 import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { ArrowLeftRight, Filter, Search, Upload } from 'lucide-react';
 import { TransactionCard, ReceiptCard, MatchingPreview, MobileReconciliationView } from '@/components/reconciliation';
@@ -201,12 +234,12 @@ const ReconciliationView = () => {
                         {/* Filters */}
                         <div className="space-y-2 mt-4">
                           <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone" />
+                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-stone pointer-events-none" />
                             <Input
                               placeholder="Search transactions..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
-                              className="pl-9"
+                              paddingLeft="2.5rem"
                             />
                           </div>
                           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -281,11 +314,14 @@ const ReconciliationView = () => {
                             <Upload className="h-5 w-5 text-sand" />
                             Receipts ({receipts.length})
                           </span>
-                          <Tabs value={receiptView} onValueChange={(v) => setReceiptView(v as 'list' | 'grid')}>
-                            <TabsList className="h-8">
-                              <TabsTrigger value="list" className="text-xs">List</TabsTrigger>
-                              <TabsTrigger value="grid" className="text-xs">Grid</TabsTrigger>
-                            </TabsList>
+                          <Tabs
+                            index={receiptView === 'list' ? 0 : 1}
+                            onChange={(index) => setReceiptView(index === 0 ? 'list' : 'grid')}
+                          >
+                            <TabList h={8}>
+                              <Tab fontSize="xs">List</Tab>
+                              <Tab fontSize="xs">Grid</Tab>
+                            </TabList>
                           </Tabs>
                         </CardTitle>
                         <Button

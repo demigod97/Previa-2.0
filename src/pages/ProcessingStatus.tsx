@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle, XCircle, Upload, Eye } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Progress } from '@/components/chakra-ui/progress';
 import { supabase } from '@/integrations/supabase/client';
 
 interface DocumentStatus {

@@ -1,6 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle, ArrowRight } from "lucide-react";
+import { Box, Flex, Text, Icon } from "@chakra-ui/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/chakra-ui/card";
+import { Button } from "@chakra-ui/react";
+import { AlertTriangle, ArrowRight, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 import type { Transaction } from "@/types/financial";
@@ -25,35 +26,33 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
   if (unreconciledCount === 0) {
     return (
       <Card
-        className="border-previa-sand"
+        borderColor="previa.sand"
         role="status"
         aria-live="polite"
         aria-label="All transactions reconciled"
       >
         <CardHeader>
-          <CardTitle className="text-previa-charcoal font-semibold flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center" aria-hidden="true">
-              <svg
-                className="h-5 w-5 text-green-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+          <CardTitle color="previa.charcoal" fontWeight="semibold">
+            <Flex align="center" gap={2}>
+              <Flex
+                w={8}
+                h={8}
+                borderRadius="full"
+                bg="green.100"
+                align="center"
+                justify="center"
+                aria-hidden="true"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-            </div>
-            All Reconciled
+                <Icon as={Check} w={5} h={5} color="green.600" />
+              </Flex>
+              All Reconciled
+            </Flex>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-previa-stone text-sm">
+          <Text color="previa.stone" fontSize="sm">
             Great job! All your transactions are reconciled.
-          </p>
+          </Text>
         </CardContent>
       </Card>
     );
@@ -61,40 +60,60 @@ export function UnreconciledAlert({ transactions }: UnreconciledAlertProps) {
 
   return (
     <Card
-      className="border-amber-200"
+      borderColor="amber.200"
       role="alert"
       aria-live="polite"
       aria-label={`Warning: ${unreconciledCount} unreconciled items`}
     >
       <CardHeader>
-        <CardTitle className="text-previa-charcoal font-semibold flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-amber-100 flex items-center justify-center" aria-hidden="true">
-            <AlertTriangle className="h-5 w-5 text-amber-600" />
-          </div>
-          Unreconciled Items
+        <CardTitle color="previa.charcoal" fontWeight="semibold">
+          <Flex align="center" gap={2}>
+            <Flex
+              w={8}
+              h={8}
+              borderRadius="full"
+              bg="amber.100"
+              align="center"
+              justify="center"
+              aria-hidden="true"
+            >
+              <Icon as={AlertTriangle} w={5} h={5} color="amber.600" />
+            </Flex>
+            Unreconciled Items
+          </Flex>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div>
-          <p className="text-sm text-previa-stone mb-1">Items Pending Review</p>
-          <p className="text-3xl font-bold text-previa-charcoal" aria-live="polite">{unreconciledCount}</p>
-          <p className="text-sm text-previa-stone mt-1">
+      <CardContent>
+        <Box mb={4}>
+          <Text fontSize="sm" color="previa.stone" mb={1}>Items Pending Review</Text>
+          <Text fontSize="3xl" fontWeight="bold" color="previa.charcoal" aria-live="polite">
+            {unreconciledCount}
+          </Text>
+          <Text fontSize="sm" color="previa.stone" mt={1}>
             Total Amount:{" "}
-            <span className="font-mono font-semibold text-previa-charcoal">
+            <Text as="span" fontFamily="mono" fontWeight="semibold" color="previa.charcoal">
               ${unreconciledAmount.toFixed(2)}
-            </span>
-          </p>
-        </div>
+            </Text>
+          </Text>
+        </Box>
         <Button
           onClick={() => navigate("/reconciliation")}
           aria-label={`Review ${unreconciledCount} unreconciled items`}
-          className="w-full bg-amber-500 hover:bg-amber-600 text-white focus:outline-none focus:ring-2 focus:ring-sand focus:ring-offset-2"
+          w="full"
+          bg="amber.500"
+          color="white"
+          rightIcon={<Icon as={ArrowRight} />}
+          _hover={{ bg: "amber.600" }}
+          _focus={{
+            outline: "none",
+            ring: 2,
+            ringColor: "previa.sand",
+            ringOffsetWidth: 2,
+          }}
         >
           Review Now
-          <ArrowRight className="ml-2 h-4 w-4" aria-hidden="true" />
         </Button>
       </CardContent>
     </Card>
   );
 }
-

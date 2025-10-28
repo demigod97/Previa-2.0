@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo, lazy, Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Flex, Grid, GridItem, Heading, Text, VStack, List, ListItem, Icon } from '@chakra-ui/react';
 import { DashboardLayout } from '@/components/layout';
 import {
   UserGreetingCard,
@@ -10,14 +11,15 @@ import {
 } from '@/components/dashboard';
 import { TierDisplay } from '@/components/auth/TierDisplay';
 import { UpgradePrompt } from '@/components/auth/UpgradePrompt';
+import { PreviaCopilotSidebar } from '@/components/copilot';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBankAccounts, useTransactions, useReceipts } from '@/hooks/financial';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import type { UserTierData, Transaction } from '@/types/financial';
+import { ChartWidgetSkeleton } from '@/components/ui/skeletons';
 
 // Lazy load chart components to reduce initial bundle size
 const MonthlySpendingChart = lazy(() => import('@/components/widgets/MonthlySpendingChart').then(module => ({ default: module.MonthlySpendingChart })));
@@ -124,10 +126,20 @@ const Dashboard = () => {
   if (authLoading) {
     return (
       <DashboardLayout>
-        <div className="text-center py-16">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 mx-auto mb-4 border-sand"></div>
-          <p className="text-darkStone">Initializing...</p>
-        </div>
+        <Box textAlign="center" py={16}>
+          <Box
+            as="div"
+            animation="spin 1s linear infinite"
+            borderRadius="full"
+            h={8}
+            w={8}
+            borderBottom="2px solid"
+            borderColor="previa.sand"
+            mx="auto"
+            mb={4}
+          />
+          <Text color="previa.darkStone">Initializing...</Text>
+        </Box>
       </DashboardLayout>
     );
   }
@@ -136,139 +148,167 @@ const Dashboard = () => {
   if (authError) {
     return (
       <DashboardLayout>
-        <div className="text-center py-16">
-          <p className="text-red-600">Authentication error: {authError}</p>
+        <Box textAlign="center" py={16}>
+          <Text color="red.600" mb={4}>Authentication error: {authError}</Text>
           <Button
             onClick={() => window.location.reload()}
-            className="mt-4 bg-sand hover:bg-sand/90 text-charcoal"
+            bg="previa.sand"
+            color="previa.charcoal"
+            _hover={{ bg: "previa.sand", opacity: 0.9 }}
           >
             Retry
           </Button>
-        </div>
+        </Box>
       </DashboardLayout>
     );
   }
 
   return (
     <DashboardLayout>
-        <div className="mb-8">
-          <h1 className="font-medium mb-2 text-5xl" style={{ color: '#403B31' }}>Welcome to Previa</h1>
-        </div>
+        <Box mb={8}>
+          <Heading as="h1" size="2xl" fontWeight="medium" mb={2} color="previa.charcoal">
+            Welcome to Previa
+          </Heading>
+        </Box>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <Grid templateColumns={{ base: '1fr', lg: 'repeat(3, 1fr)' }} gap={6} mb={8}>
           {/* Left Column - User Greeting, Widgets, and Financial Overview */}
-          <div className="lg:col-span-2 space-y-6">
-            <UserGreetingCard />
+          <GridItem colSpan={{ base: 1, lg: 2 }}>
+            <VStack spacing={6} align="stretch">
+              <UserGreetingCard />
 
-            {/* 2x2 Widget Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Monthly Spending Chart */}
-              {transactionsLoading ? (
-                <div className="h-[400px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
-              ) : (
-                <Suspense fallback={<Card className="h-[400px] flex items-center justify-center"><Skeleton className="h-[360px] w-full" /></Card>}>
-                  <MonthlySpendingChart transactions={transactions} />
-                </Suspense>
-              )}
+              {/* 2x2 Widget Grid */}
+              <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={4}>
+                {/* Monthly Spending Chart */}
+                {transactionsLoading ? (
+                  <ChartWidgetSkeleton height="400px" type="bar" />
+                ) : (
+                  <Suspense fallback={<ChartWidgetSkeleton height="400px" type="bar" />}>
+                    <MonthlySpendingChart transactions={transactions} />
+                  </Suspense>
+                )}
 
-              {/* Income vs Expenses Chart */}
-              {transactionsLoading ? (
-                <div className="h-[400px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
-              ) : (
-                <Suspense fallback={<Card className="h-[400px] flex items-center justify-center"><Skeleton className="h-[360px] w-full" /></Card>}>
-                  <IncomeVsExpensesChart transactions={transactions} />
-                </Suspense>
-              )}
+                {/* Income vs Expenses Chart */}
+                {transactionsLoading ? (
+                  <ChartWidgetSkeleton height="400px" type="line" />
+                ) : (
+                  <Suspense fallback={<ChartWidgetSkeleton height="400px" type="line" />}>
+                    <IncomeVsExpensesChart transactions={transactions} />
+                  </Suspense>
+                )}
 
-              {/* Unreconciled Alert */}
-              {transactionsLoading ? (
-                <div className="h-[200px] rounded-lg animate-pulse" style={{ backgroundColor: '#F2E9D8' }}></div>
-              ) : (
-                <Suspense fallback={<Card className="h-[200px] flex items-center justify-center"><Skeleton className="h-[160px] w-full" /></Card>}>
-                  <UnreconciledAlert transactions={transactions} />
-                </Suspense>
-              )}
+                {/* Unreconciled Alert */}
+                {transactionsLoading ? (
+                  <ChartWidgetSkeleton height="200px" showLegend={false} />
+                ) : (
+                  <Suspense fallback={<ChartWidgetSkeleton height="200px" showLegend={false} />}>
+                    <UnreconciledAlert transactions={transactions} />
+                  </Suspense>
+                )}
 
-              {/* Recent Transactions */}
-              <RecentTransactionsList
-                transactions={transactions}
-                loading={transactionsLoading}
-                limit={5}
+                {/* Recent Transactions */}
+                <RecentTransactionsList
+                  transactions={transactions}
+                  loading={transactionsLoading}
+                  limit={5}
+                />
+              </Grid>
+
+              {/* Financial Overview Cards */}
+              <FinancialOverviewCards
+                accountsCount={currentUsage.accounts}
+                transactionsThisMonth={currentUsage.transactionsThisMonth}
+                transactionsTotal={transactions.length}
+                receiptsThisMonth={currentUsage.receiptsThisMonth}
+                receiptsTotal={receipts.length}
+                tier={displayTier}
+                loading={{
+                  accounts: accountsLoading,
+                  transactions: transactionsLoading,
+                  receipts: receiptsLoading,
+                }}
               />
-            </div>
-
-            {/* Financial Overview Cards */}
-            <FinancialOverviewCards
-              accountsCount={currentUsage.accounts}
-              transactionsThisMonth={currentUsage.transactionsThisMonth}
-              transactionsTotal={transactions.length}
-              receiptsThisMonth={currentUsage.receiptsThisMonth}
-              receiptsTotal={receipts.length}
-              tier={displayTier}
-              loading={{
-                accounts: accountsLoading,
-                transactions: transactionsLoading,
-                receipts: receiptsLoading,
-              }}
-            />
-
-          </div>
+            </VStack>
+          </GridItem>
 
           {/* Right Column - Tier Display & Bank Accounts */}
-          <div className="space-y-6">
-            <TierDisplay
-              tier={displayTier}
-              currentUsage={currentUsage}
-            />
+          <GridItem colSpan={{ base: 1, lg: 1 }}>
+            <VStack spacing={6} align="stretch">
+              <TierDisplay
+                tier={displayTier}
+                currentUsage={currentUsage}
+              />
 
-            {/* Bank Accounts List */}
-            <BankAccountsList
-              accounts={bankAccounts}
-              loading={accountsLoading}
-              onAddAccount={() => navigate('/onboarding/upload')}
-            />
+              {/* Bank Accounts List */}
+              <BankAccountsList
+                accounts={bankAccounts}
+                loading={accountsLoading}
+                onAddAccount={() => navigate('/onboarding/upload')}
+              />
 
-            {/* Show upgrade CTA for free tier */}
-            {displayTier.tier === 'user' && (
-              <Card className="bg-gradient-to-br from-sand/20 to-stone-200/20 border-sand/30">
-                <CardHeader>
-                  <CardTitle className="text-lg">Upgrade to Premium</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <ul className="space-y-2 text-sm text-charcoal/80">
-                    <li className="flex items-start">
-                      <span className="mr-2">✓</span>
-                      <span>Unlimited bank accounts</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">✓</span>
-                      <span>Unlimited transactions</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">✓</span>
-                      <span>Unlimited receipt storage</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="mr-2">✓</span>
-                      <span>Priority support</span>
-                    </li>
-                  </ul>
-                  <Button
-                    className="w-full bg-sand hover:bg-sand/90 text-charcoal"
-                    onClick={() => setShowUpgradePrompt(true)}
-                  >
-                    View Plans
-                  </Button>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+              {/* Show upgrade CTA for free tier */}
+              {displayTier.tier === 'user' && (
+                <Card
+                  bgGradient="linear(to-br, previa.sand, stone.200)"
+                  bgGradientOpacity={0.2}
+                  borderColor="previa.sand"
+                  borderOpacity={0.3}
+                >
+                  <CardHeader>
+                    <CardTitle fontSize="lg">Upgrade to Premium</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <VStack spacing={4} align="stretch">
+                      <List spacing={2} fontSize="sm" color="previa.charcoal" opacity={0.8}>
+                        <ListItem>
+                          <Flex align="flex-start">
+                            <Text mr={2}>✓</Text>
+                            <Text>Unlimited bank accounts</Text>
+                          </Flex>
+                        </ListItem>
+                        <ListItem>
+                          <Flex align="flex-start">
+                            <Text mr={2}>✓</Text>
+                            <Text>Unlimited transactions</Text>
+                          </Flex>
+                        </ListItem>
+                        <ListItem>
+                          <Flex align="flex-start">
+                            <Text mr={2}>✓</Text>
+                            <Text>Unlimited receipt storage</Text>
+                          </Flex>
+                        </ListItem>
+                        <ListItem>
+                          <Flex align="flex-start">
+                            <Text mr={2}>✓</Text>
+                            <Text>Priority support</Text>
+                          </Flex>
+                        </ListItem>
+                      </List>
+                      <Button
+                        w="full"
+                        bg="previa.sand"
+                        color="previa.charcoal"
+                        _hover={{ bg: "previa.sand", opacity: 0.9 }}
+                        onClick={() => setShowUpgradePrompt(true)}
+                      >
+                        View Plans
+                      </Button>
+                    </VStack>
+                  </CardContent>
+                </Card>
+              )}
+            </VStack>
+          </GridItem>
+        </Grid>
         {/* Upgrade Prompt Modal */}
         <UpgradePrompt
           open={showUpgradePrompt}
           onOpenChange={setShowUpgradePrompt}
         />
+
+        {/* Previa AI Copilot Sidebar - Temporarily disabled while debugging */}
+        {/* <PreviaCopilotSidebar defaultOpen={false} /> */}
     </DashboardLayout>
   );
 };

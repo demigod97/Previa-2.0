@@ -1,5 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Box, Flex, Text } from "@chakra-ui/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/chakra-ui/card";
+import { Select } from "@/components/chakra-ui/select";
 import { useState, useMemo } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, subMonths, isWithinInterval } from "date-fns";
@@ -19,7 +20,6 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
     let startDate: Date;
     let endDate = now;
 
-    // Determine date range based on period
     switch (period) {
       case "month":
         startDate = startOfMonth(now);
@@ -33,7 +33,6 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
         break;
     }
 
-    // Filter transactions for expenses only within period
     const periodTransactions = transactions.filter((tx) => {
       const txDate = new Date(tx.date);
       return (
@@ -42,11 +41,9 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
       );
     });
 
-    // Group by day for month view, by week for 3 months, by month for year
     const groupBy = period === "month" ? "day" : period === "3months" ? "week" : "month";
 
     if (groupBy === "day") {
-      // Daily aggregation
       const days = eachDayOfInterval({ start: startDate, end: endDate });
       return days.map((day) => {
         const dayStr = format(day, "yyyy-MM-dd");
@@ -60,7 +57,6 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
         };
       });
     } else if (groupBy === "week") {
-      // Weekly aggregation (simplified: group by week number)
       const weekMap = new Map<string, number>();
       periodTransactions.forEach((tx) => {
         const txDate = new Date(tx.date);
@@ -73,7 +69,6 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
         amount,
       }));
     } else {
-      // Monthly aggregation
       const monthMap = new Map<string, number>();
       periodTransactions.forEach((tx) => {
         const monthKey = format(new Date(tx.date), "MMM yyyy");
@@ -92,27 +87,28 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
   }, [chartData]);
 
   return (
-    <Card className="border-previa-sand">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-        <CardTitle className="text-previa-charcoal font-semibold">Monthly Spending</CardTitle>
-        <Select value={period} onValueChange={(value) => setPeriod(value as Period)}>
-          <SelectTrigger className="w-[140px] border-sand focus:ring-sand">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="month">This Month</SelectItem>
-            <SelectItem value="3months">Last 3 Months</SelectItem>
-            <SelectItem value="year">Last 12 Months</SelectItem>
-          </SelectContent>
-        </Select>
+    <Card borderColor="previa.sand">
+      <CardHeader>
+        <Flex justify="space-between" align="center">
+          <CardTitle color="previa.charcoal" fontWeight="semibold">Monthly Spending</CardTitle>
+          <Select
+            value={period}
+            onValueChange={(value) => setPeriod(value as Period)}
+            width="140px"
+          >
+            <option value="month">This Month</option>
+            <option value="3months">Last 3 Months</option>
+            <option value="year">Last 12 Months</option>
+          </Select>
+        </Flex>
       </CardHeader>
       <CardContent>
-        <div className="mb-4">
-          <p className="text-sm text-stone">Total Spending</p>
-          <p className="text-2xl font-mono font-bold text-charcoal">
+        <Box mb={4}>
+          <Text fontSize="sm" color="previa.stone">Total Spending</Text>
+          <Text fontSize="2xl" fontFamily="mono" fontWeight="bold" color="previa.charcoal">
             ${totalSpending.toFixed(2)}
-          </p>
-        </div>
+          </Text>
+        </Box>
         <ResponsiveContainer width="100%" height={250}>
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#D9C8B4" opacity={0.3} />
@@ -150,4 +146,3 @@ export function MonthlySpendingChart({ transactions }: MonthlySpendingChartProps
     </Card>
   );
 }
-

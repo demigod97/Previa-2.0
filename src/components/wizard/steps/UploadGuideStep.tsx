@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/chakra-ui/card';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Button } from '@/components/chakra-ui/button';
+import { Progress } from '@/components/chakra-ui/progress';
 import { FileText, FileSpreadsheet, Upload, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';

@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Box, Text, Link as ChakraLink } from '@chakra-ui/react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/chakra-ui/card';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { SignUpForm } from './SignUpForm';
@@ -39,57 +40,59 @@ const AuthForm = () => {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <Box width="full" maxW="md" mx="auto">
       {mode === 'signin' ? (
-        <Card style={{ backgroundColor: '#F2E9D8', borderColor: '#D9C8B4' }}>
+        <Card>
           <CardHeader>
-            <CardTitle style={{ color: '#403B31' }}>Sign In</CardTitle>
-            <CardDescription style={{ color: '#595347' }}>
+            <CardTitle>Sign In</CardTitle>
+            <CardDescription>
               Choose your preferred sign-in method to access your financial dashboard
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <OAuthProviders 
+            <OAuthProviders
               onProviderClick={handleOAuthProvider}
               loading={oauthLoading}
               mode="signin"
             />
-            
-            <div className="mt-4 text-center">
-              <p style={{ color: '#595347' }} className="text-sm">
+
+            <Box mt={4} textAlign="center">
+              <Text fontSize="sm" color="previa.darkStone">
                 Don't have an account?{' '}
-                <button
-                  type="button"
+                <ChakraLink
+                  as="button"
                   onClick={() => setMode('signup')}
-                  className="underline hover:no-underline"
-                  style={{ color: '#403B31' }}
+                  color="previa.charcoal"
+                  textDecoration="underline"
+                  _hover={{ textDecoration: 'none' }}
                 >
                   Sign up
-                </button>
-              </p>
-            </div>
+                </ChakraLink>
+              </Text>
+            </Box>
           </CardContent>
         </Card>
       ) : (
         <SignUpForm onSuccess={handleSignUpSuccess} />
       )}
-      
+
       {mode === 'signup' && (
-        <div className="mt-4 text-center">
-          <p style={{ color: '#595347' }} className="text-sm">
+        <Box mt={4} textAlign="center">
+          <Text fontSize="sm" color="previa.darkStone">
             Already have an account?{' '}
-            <button
-              type="button"
+            <ChakraLink
+              as="button"
               onClick={() => setMode('signin')}
-              className="underline hover:no-underline"
-              style={{ color: '#403B31' }}
+              color="previa.charcoal"
+              textDecoration="underline"
+              _hover={{ textDecoration: 'none' }}
             >
               Sign in
-            </button>
-          </p>
-        </div>
+            </ChakraLink>
+          </Text>
+        </Box>
       )}
-    </div>
+    </Box>
   );
 };
 

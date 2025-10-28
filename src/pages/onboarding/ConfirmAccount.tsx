@@ -2,11 +2,11 @@ import { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/chakra-ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Input } from '@/components/chakra-ui/input';
+import { Label } from '@/components/chakra-ui/label';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Loader2, AlertCircle, CheckCircle2, Edit2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 

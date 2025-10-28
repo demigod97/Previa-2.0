@@ -40,8 +40,19 @@ customTechnicalDocuments:
   - docs/archon_claude.md                      # Archon MCP workflow and task management
   - docs/claude-best-practices.md              # Claude 4 prompt engineering best practices
 
-  # Frontend specifications
-  - docs/frontend-spec-new.md                  # Complete UI/UX specification with design tokens
+  # Documentation index
+  - docs/INDEX.md                              # Master documentation index (start here!)
+
+  # Frontend specifications (Chakra UI v3.0)
+  - docs/frontend-spec-Update.md               # UI/UX specification (v3.0 CURRENT)
+  - docs/design-system.md                      # Chakra UI theming and component patterns
+
+  # User flow guides
+  - docs/USER-FLOW-RECONCILIATION.md           # Reconciliation workflow and navigation
+
+  # Receipt OCR implementation
+  - docs/RECEIPT-OCR-IMPLEMENTATION-COMPLETE.md  # Receipt processing system complete guide
+  - docs/RECEIPT-OCR-DEPLOYMENT-GUIDE.md       # Deployment instructions
 
   # Gamification
   - docs/gamification/implementation-plan.md   # Gamification strategy and implementation
@@ -260,7 +271,9 @@ techStack:
 fileStructure:
   src:
     components:
-      - ui/                    # shadcn/ui components
+      - chakra-ui/            # Chakra UI components (v3.0)
+      - receipt/              # Receipt components (StatusBadge, ConfidenceIndicator)
+      - reconciliation/       # Reconciliation workflow components
       - financial/            # Financial domain components
       - onboarding/           # Onboarding flow components
       - upload/               # Upload and document components
@@ -269,9 +282,16 @@ fileStructure:
     hooks: hooks/
     pages: pages/
     lib: lib/                 # Utilities (currency, date, etc.)
-    services: services/
+    services:
+      - receiptService.ts     # Receipt API operations
+      - services/
+    utils:
+      - categoryInference.ts  # Merchant category mapping (80+ Australian patterns)
     types: types/
     integrations: integrations/supabase/
+    test:
+      fixtures:
+        - receipt-mock-data.ts  # Mock receipt generators (8 Australian merchants)
 
   supabase:
     functions: supabase/functions/
@@ -305,7 +325,7 @@ agentBehavior:
   # MCP server usage
   mcpUsage:
     database: supabase  # All DB operations
-    ui: shadcn         # All UI components
+    ui: chakra-ui      # All UI components (Chakra UI v3.0)
     tasks: archon      # All task management
 
   # Code patterns

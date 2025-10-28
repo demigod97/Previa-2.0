@@ -1,36 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run lint:*)",
-      "mcp__playwright__browser_click",
-      "mcp__playwright__browser_close",
-      "Bash(npm run test:run:*)",
-      "mcp__supabase__list_tables",
-      "mcp__playwright__browser_type",
-      "mcp__playwright__browser_wait_for",
-      "mcp__playwright__browser_navigate",
-      "mcp__playwright__browser_file_upload",
-      "mcp__playwright__browser_snapshot",
-      "Bash(npm audit:*)",
-      "Bash(npm run build:*)",
-      "Read(//d/c/**)",
-      "Bash(npm test:*)",
-      "Bash(npm install:*)",
-      "Bash(cat:*)",
-      "Bash(mkdir:*)",
-      "mcp__archon__rag_get_available_sources",
-      "mcp__archon__rag_list_pages_for_source",
-      "mcp__archon__find_projects",
-      "mcp__archon__manage_task",
-      "mcp__archon__find_tasks",
-      "mcp__supabase__execute_sql",
-      "mcp__supabase__apply_migration",
-      "mcp__supabase__list_edge_functions",
-      "mcp__supabase__get_logs",
-      "mcp__supabase__deploy_edge_function",
       "mcp__archon__rag_search_knowledge_base",
-      "mcp__archon__rag_search_code_examples",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

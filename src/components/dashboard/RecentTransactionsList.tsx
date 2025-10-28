@@ -1,10 +1,13 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Calendar, ArrowRight } from 'lucide-react';
+import { Box, Flex, Text, Icon } from '@chakra-ui/react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Calendar, ArrowRight, FileText } from 'lucide-react';
 import type { Transaction } from '@/types/financial';
+import { TransactionCardSkeleton } from '@/components/ui/skeletons';
+import { EmptyState } from '@/components/ui/EmptyState';
 
 interface RecentTransactionsListProps {
   transactions: Transaction[];
@@ -39,80 +42,122 @@ export const RecentTransactionsList: React.FC<RecentTransactionsListProps> = ({
 
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg text-previa-charcoal flex items-center gap-2">
-          📊 Recent Transactions
-        </CardTitle>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate('/transactions')}
-          className="text-previa-sand hover:text-previa-darkStone hover:bg-previa-cream transition-all duration-150 hover:scale-102 active:scale-98 min-h-[44px] min-w-[44px]"
-        >
-          View All
-          <ArrowRight className="ml-1 h-4 w-4" />
-        </Button>
+      <CardHeader>
+        <Flex justify="space-between" align="center">
+          <CardTitle fontSize="lg" color="previa.charcoal">
+            <Flex align="center" gap={2}>
+              📊 Recent Transactions
+            </Flex>
+          </CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate('/transactions')}
+            color="previa.sand"
+            minH="44px"
+            minW="44px"
+            _hover={{
+              color: "previa.darkStone",
+              bg: "previa.cream",
+              transform: "scale(1.02)",
+            }}
+            _active={{ transform: "scale(0.98)" }}
+            transition="all 0.15s"
+          >
+            View All
+            <Icon as={ArrowRight} ml={1} w={4} h={4} />
+          </Button>
+        </Flex>
       </CardHeader>
       <CardContent>
         {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="h-12 animate-pulse bg-previa-sand/20 rounded"></div>
-            ))}
-          </div>
+          <TransactionCardSkeleton count={limit} />
         ) : recentTransactions.length === 0 ? (
-          <div className="text-center py-8 bg-white rounded-lg border border-previa-stone/20">
-            <p className="text-sm text-previa-stone">
-              📭 No transactions yet. Upload your first bank statement to get started!
-            </p>
-          </div>
+          <EmptyState
+            icon={<FileText className="h-12 w-12" />}
+            title="No Transactions Yet"
+            description="Upload your first bank statement to see your transactions here."
+            action={
+              <Button
+                onClick={() => navigate('/onboarding/upload')}
+                bg="previa.sand"
+                color="previa.charcoal"
+                _hover={{ bg: "previa.sand", opacity: 0.9 }}
+              >
+                Upload Statement
+              </Button>
+            }
+            variant="outline"
+            minH="240px"
+          />
         ) : (
-          <div className="bg-white rounded-lg border border-previa-stone/20 divide-y divide-charcoal/10">
+          <Box
+            bg="white"
+            borderRadius="lg"
+            border="1px solid"
+            borderColor="previa.sand"
+          >
             {recentTransactions.map((transaction, index) => (
-              <div
+              <Flex
                 key={transaction.id}
-                className={`flex items-center justify-between p-3 hover:bg-previa-sand/10 transition-all duration-200 ease-out cursor-pointer min-h-[64px] ${
-                  index === 0 ? 'rounded-t-lg' : ''
-                } ${index === recentTransactions.length - 1 ? 'rounded-b-lg' : ''}`}
+                justify="space-between"
+                align="center"
+                p={3}
+                minH="64px"
+                cursor="pointer"
+                borderTop={index > 0 ? "1px solid" : "none"}
+                borderColor="previa.sand"
+                borderTopRadius={index === 0 ? "lg" : "none"}
+                borderBottomRadius={index === recentTransactions.length - 1 ? "lg" : "none"}
+                _hover={{ bg: "previa.cream" }}
+                transition="all 0.2s ease-out"
                 onClick={() => navigate('/transactions')}
               >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <p className="font-medium truncate text-previa-charcoal">
+                <Box flex={1} minW={0}>
+                  <Flex align="center" gap={2} mb={1}>
+                    <Text fontWeight="medium" noOfLines={1} color="previa.charcoal">
                       {transaction.description || 'Unknown'}
-                    </p>
+                    </Text>
                     {transaction.category && (
                       <Badge
                         variant="outline"
-                        className="shrink-0 bg-previa-sand/20 border-previa-sand"
+                        flexShrink={0}
+                        bg="previa.cream"
+                        borderColor="previa.sand"
+                        color="previa.darkStone"
                       >
                         {transaction.category}
                       </Badge>
                     )}
-                  </div>
-                  <p className="text-xs flex items-center text-previa-stone">
-                    <Calendar className="inline h-3 w-3 mr-1" />
-                    {new Date(transaction.transaction_date).toLocaleDateString('en-AU', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </p>
-                </div>
-                <div
-                  className={`text-lg font-semibold font-mono shrink-0 ml-4 ${
-                    transaction.amount >= 0 ? 'text-green-600' : 'text-red-600'
-                  }`}
+                  </Flex>
+                  <Flex align="center" fontSize="xs" color="previa.stone">
+                    <Icon as={Calendar} w={3} h={3} mr={1} />
+                    <Text>
+                      {new Date(transaction.transaction_date).toLocaleDateString('en-AU', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                  </Flex>
+                </Box>
+                <Text
+                  fontSize="lg"
+                  fontWeight="semibold"
+                  fontFamily="mono"
+                  flexShrink={0}
+                  ml={4}
+                  color={transaction.amount >= 0 ? "green.600" : "red.600"}
                 >
                   {transaction.amount >= 0 ? '+' : ''}
                   {transaction.amount.toLocaleString('en-AU', {
                     style: 'currency',
                     currency: 'AUD'
                   })}
-                </div>
-              </div>
+                </Text>
+              </Flex>
             ))}
-          </div>
+          </Box>
         )}
       </CardContent>
     </Card>

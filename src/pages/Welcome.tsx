@@ -1,8 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 import { FileText, Zap, BarChart3 } from 'lucide-react';
-import Logo from '@/components/ui/Logo';
+import Logo from '@/components/chakra-ui/Logo';
 
 interface BenefitCardProps {
   icon: React.ReactNode;

@@ -13,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+} from '@/components/chakra-ui/dialog';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Check } from 'lucide-react';
 import type { TierLimitType } from '@/types/financial';
 

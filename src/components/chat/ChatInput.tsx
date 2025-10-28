@@ -4,10 +4,17 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import {
+  Box,
+  VStack,
+  HStack,
+  Text,
+  Icon,
+} from '@chakra-ui/react';
+import { Button } from '@/components/chakra-ui/button';
+import { Textarea } from '@/components/chakra-ui/textarea';
 import { Send, Loader2 } from 'lucide-react';
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/chakra-ui/carousel';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -60,9 +67,9 @@ const ChatInput = ({
   };
 
   return (
-    <div className="space-y-4">
+    <VStack spacing={4} align="stretch">
       {/* Input area */}
-      <div className="flex gap-2">
+      <HStack spacing={2}>
         <Textarea
           ref={textareaRef}
           value={message}
@@ -70,30 +77,39 @@ const ChatInput = ({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled || isLoading}
-          className="min-h-[44px] max-h-[200px] resize-none bg-white border-sand focus:border-darkStone"
+          minH="44px"
+          maxH="200px"
+          resize="none"
+          bg="white"
+          borderColor="previa.sand"
+          _focus={{ borderColor: 'previa.darkStone' }}
           rows={1}
         />
         <Button
           onClick={handleSend}
           disabled={!message.trim() || disabled || isLoading}
-          className="bg-sand hover:bg-sand/90 text-charcoal h-[44px] px-4"
+          bg="previa.sand"
+          _hover={{ bg: 'previa.sand', opacity: 0.9 }}
+          color="previa.charcoal"
+          h="44px"
+          px={4}
         >
           {isLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Icon as={Loader2} boxSize={4} animation="spin 1s linear infinite" />
           ) : (
-            <Send className="h-4 w-4" />
+            <Icon as={Send} boxSize={4} />
           )}
         </Button>
-      </div>
+      </HStack>
 
       {/* Helper text */}
-      <p className="text-xs text-stone text-center">
+      <Text fontSize="xs" color="previa.stone" textAlign="center">
         Press Ctrl+Enter to send • AI responses may take a moment
-      </p>
+      </Text>
 
       {/* Example questions carousel */}
       {exampleQuestions.length > 0 && !isLoading && (
-        <div>
+        <Box>
           <Carousel className="w-full">
             <CarouselContent className="-ml-2 md:-ml-4">
               {exampleQuestions.map((question, index) => (
@@ -101,7 +117,16 @@ const ChatInput = ({
                   <Button
                     variant="outline"
                     size="sm"
-                    className="text-left whitespace-nowrap h-auto py-2 px-3 text-sm bg-white hover:bg-sand border-sand text-charcoal"
+                    textAlign="left"
+                    whiteSpace="nowrap"
+                    h="auto"
+                    py={2}
+                    px={3}
+                    fontSize="sm"
+                    bg="white"
+                    _hover={{ bg: 'previa.sand' }}
+                    borderColor="previa.sand"
+                    color="previa.charcoal"
                     onClick={() => handleExampleClick(question)}
                   >
                     {question}
@@ -116,9 +141,9 @@ const ChatInput = ({
               </>
             )}
           </Carousel>
-        </div>
+        </Box>
       )}
-    </div>
+    </VStack>
   );
 };
 

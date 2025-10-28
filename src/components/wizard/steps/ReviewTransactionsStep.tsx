@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card } from '@/components/chakra-ui/card';
+import { Badge } from '@/components/chakra-ui/badge';
 import {
   Table,
   TableBody,
@@ -7,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/chakra-ui/table';
 import { Home, RefreshCw, MessageSquare, Settings, Trophy } from 'lucide-react';
 
 /**

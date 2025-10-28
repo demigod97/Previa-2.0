@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card';
+import { Card } from '@/components/chakra-ui/card';
 import { Check } from 'lucide-react';
 
 /**

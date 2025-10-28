@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 import { calculateTimeRemaining, formatTimeRemaining, type TimeRemaining } from '@/lib/dateUtils';
 import { cn } from '@/lib/utils';
 

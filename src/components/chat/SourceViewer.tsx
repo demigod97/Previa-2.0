@@ -1,8 +1,8 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/chakra-ui/dialog';
+import { Badge } from '@/components/chakra-ui/badge';
+import { ScrollArea } from '@/components/chakra-ui/scroll-area';
 import { Citation } from '@/types/message';
 
 interface SourceViewerProps {

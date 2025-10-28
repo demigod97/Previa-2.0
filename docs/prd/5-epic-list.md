@@ -1,7 +1,7 @@
 # 5. Epic List
 
 ## 1. Epic 1: Foundation & Core Services
-* **Goal**: Establish the technical foundation with monorepo setup, database schema (bank accounts, statements, receipts, transactions, reconciliation_matches), user authentication, and user/premium_user tier implementation. Apply Previa branding (color palette, logo) and configure shadcn/ui with design tokens.
+* **Goal**: Establish the technical foundation with monorepo setup, database schema (bank accounts, statements, receipts, transactions, reconciliation_matches), user authentication, and user/premium_user tier implementation. Apply Previa branding (color palette, logo) and configure Chakra UI theme with Previa design tokens.
 
 ### Epic 1.X: User Sign-up & Staff Role System (NEW - In Progress)
 * **Goal**: Enable user self-service sign-up with verification codes and establish a staff role system (team, super_admin) for platform administration, separate from user tiers.
@@ -22,7 +22,7 @@
 * **Goal**: Deliver the core value proposition with the AI reconciliation engine that matches transactions to receipts. Build the matching interface (side-by-side comparison, confidence indicators, approve/reject workflows) inspired by Monarch and Expensify patterns.
 
 ## 5. Epic 5: Multi-View Dashboard & Financial Insights
-* **Goal**: Build the primary user-facing dashboard with 4 views: Home (widgets for spending/income/trends), Reconciliation Engine, Transaction Table (filterable/sortable), and AI Chat Assistant. Include gamified financial literacy elements.
+* **Goal**: Build the primary user-facing dashboard with 4 views: Home (widgets for spending/income/trends), Reconciliation Engine, Transaction Table (AG-Grid with filtering, sorting, export), and AI Chat Assistant (Copilot Kit). Include gamified financial literacy elements.
 
 ## 6. Epic 6: Data Export & Integrations
 * **Goal**: Allow users to export reconciled data in standardized formats (CSV/JSON) compatible with Xero and QuickBooks. Prepare architecture for future direct API integrations.

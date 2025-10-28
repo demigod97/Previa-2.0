@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/chakra-ui/button';
 import NotebookCard from './NotebookCard';
 import { Check, Grid3X3, List, ChevronDown, CheckSquare, Square, Trash2 } from 'lucide-react';
 import { useNotebooks } from '@/hooks/useNotebooks';
@@ -10,8 +10,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+} from '@/components/chakra-ui/dropdown-menu';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/chakra-ui/alert-dialog';
 import { useNotebookDelete } from '@/hooks/useNotebookDelete';
 
 const NotebookGrid = () => {

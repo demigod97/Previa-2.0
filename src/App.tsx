@@ -1,12 +1,12 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { WizardProvider } from "@/contexts/WizardContext";
+import { ChatModeProvider } from "@/contexts/ChatModeContext";
 import { ErrorBoundary } from "@/components/error";
+import { ChakraProvider } from '@chakra-ui/react';
+import { previaTheme } from '@/theme';
 import { AppLayout } from "@/components/layout";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Welcome from "./pages/Welcome";
@@ -24,6 +24,8 @@ import ProcessingStatus from "./pages/onboarding/ProcessingStatus";
 import ConfirmAccount from "./pages/onboarding/ConfirmAccount";
 import Upload from "./pages/Upload";
 import MultiDocProcessingStatus from "./pages/ProcessingStatus";
+import Receipts from "./pages/Receipts";
+import ReceiptDetails from "./pages/ReceiptDetails";
 
 const queryClient = new QueryClient();
 
@@ -40,29 +42,29 @@ const AppContent = () => {
             </ProtectedRoute>
           }
         />
-        <Route 
-          path="/reconciliation" 
+        <Route
+          path="/reconciliation"
           element={
             <ProtectedRoute fallback={<Auth />}>
               <ReconciliationView />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/transactions" 
+        <Route
+          path="/transactions"
           element={
             <ProtectedRoute fallback={<Auth />}>
               <TransactionsView />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/chat" 
+        <Route
+          path="/chat"
           element={
             <ProtectedRoute fallback={<Auth />}>
               <ChatView />
             </ProtectedRoute>
-          } 
+          }
         />
         <Route
           path="/settings"
@@ -93,6 +95,23 @@ const AppContent = () => {
           element={
             <ProtectedRoute fallback={<Auth />}>
               <MultiDocProcessingStatus />
+            </ProtectedRoute>
+          }
+        />
+        {/* Receipt routes */}
+        <Route
+          path="/receipts"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <Receipts />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/receipts/:receiptId"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <ReceiptDetails />
             </ProtectedRoute>
           }
         />
@@ -131,21 +150,21 @@ const AppContent = () => {
 
 const App = () => (
   <ErrorBoundary>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
+    <ChakraProvider theme={previaTheme}>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <WizardProvider>
-              <ErrorBoundary>
-                <AppContent />
-              </ErrorBoundary>
-            </WizardProvider>
-          </BrowserRouter>
+          <ChatModeProvider>
+            <BrowserRouter>
+              <WizardProvider>
+                <ErrorBoundary>
+                  <AppContent />
+                </ErrorBoundary>
+              </WizardProvider>
+            </BrowserRouter>
+          </ChatModeProvider>
         </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ChakraProvider>
   </ErrorBoundary>
 );
 

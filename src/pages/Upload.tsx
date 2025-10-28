@@ -1,8 +1,21 @@
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import {
+  Box,
+  Grid,
+  GridItem,
+  Flex,
+  Heading,
+  Text,
+  VStack,
+  HStack,
+  Icon,
+} from '@chakra-ui/react';
+import { DashboardLayout } from '@/components/layout';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Badge } from '@/components/chakra-ui/badge';
+import { Progress } from '@/components/chakra-ui/progress';
 import { FileText, Receipt, Upload as UploadIcon, X, Eye, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { uploadBankStatement, uploadReceipt } from '@/services/storageService';
@@ -194,185 +207,212 @@ export default function Upload() {
   };
 
   const getStatusBadge = (status: string | null) => {
-    const statusMap: Record<string, { label: string; color: string }> = {
-      pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-800' },
-      processing: { label: 'Processing', color: 'bg-blue-100 text-blue-800' },
-      completed: { label: 'Completed', color: 'bg-green-100 text-green-800' },
-      failed: { label: 'Failed', color: 'bg-red-100 text-red-800' },
+    const statusMap: Record<string, { label: string; colorScheme: string }> = {
+      pending: { label: 'Pending', colorScheme: 'yellow' },
+      processing: { label: 'Processing', colorScheme: 'blue' },
+      completed: { label: 'Completed', colorScheme: 'green' },
+      failed: { label: 'Failed', colorScheme: 'red' },
     };
 
     const statusInfo = statusMap[status || 'pending'] || statusMap.pending;
     return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusInfo.color}`}>
+      <Badge colorScheme={statusInfo.colorScheme} variant="subtle" fontSize="xs" px={2} py={1} borderRadius="full">
         {statusInfo.label}
-      </span>
+      </Badge>
     );
   };
 
   return (
-    <div className="min-h-screen bg-previa-cream p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold text-previa-charcoal mb-2">Upload Documents</h1>
-        <p className="text-previa-stone mb-8">
+    <DashboardLayout>
+      <Box maxW="6xl" mx="auto">
+        <Heading as="h1" size="2xl" fontWeight="bold" color="previa.charcoal" mb={2}>
+          Upload Documents
+        </Heading>
+        <Text color="previa.stone" mb={8}>
           Upload bank statements and receipts for AI processing and reconciliation.
-        </p>
+        </Text>
 
         {/* Upload Zones */}
-        <div className="grid md:grid-cols-2 gap-6 mb-8">
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6} mb={8}>
           {/* Bank Statements Zone */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileText className="w-5 h-5" />
-                Bank Statements
+              <CardTitle>
+                <HStack spacing={2}>
+                  <Icon as={FileText} boxSize={5} />
+                  <Text>Bank Statements</Text>
+                </HStack>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div
+              <Box
                 {...bankStatementDropzone.getRootProps()}
-                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                  bankStatementDropzone.isDragActive
-                    ? 'border-previa-charcoal bg-previa-sand'
-                    : 'border-previa-stone bg-white'
-                }`}
+                border="2px dashed"
+                borderColor={bankStatementDropzone.isDragActive ? 'previa.charcoal' : 'previa.stone'}
+                bg={bankStatementDropzone.isDragActive ? 'previa.sand' : 'white'}
+                borderRadius="lg"
+                p={8}
+                textAlign="center"
+                cursor="pointer"
+                transition="all 0.2s"
               >
                 <input {...bankStatementDropzone.getInputProps()} />
-                <UploadIcon className="w-12 h-12 mx-auto mb-4 text-previa-stone" />
-                <p className="text-previa-charcoal font-medium mb-1">
+                <Icon as={UploadIcon} boxSize={12} mx="auto" mb={4} color="previa.stone" />
+                <Text color="previa.charcoal" fontWeight="medium" mb={1}>
                   Drop bank statements here
-                </p>
-                <p className="text-previa-stone text-sm">
+                </Text>
+                <Text color="previa.stone" fontSize="sm">
                   PDF or CSV, max 50MB
-                </p>
-              </div>
+                </Text>
+              </Box>
             </CardContent>
           </Card>
 
           {/* Receipts Zone */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Receipt className="w-5 h-5" />
-                Receipts
+              <CardTitle>
+                <HStack spacing={2}>
+                  <Icon as={Receipt} boxSize={5} />
+                  <Text>Receipts</Text>
+                </HStack>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div
+              <Box
                 {...receiptDropzone.getRootProps()}
-                className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                  receiptDropzone.isDragActive
-                    ? 'border-previa-charcoal bg-previa-sand'
-                    : 'border-previa-stone bg-white'
-                }`}
+                border="2px dashed"
+                borderColor={receiptDropzone.isDragActive ? 'previa.charcoal' : 'previa.stone'}
+                bg={receiptDropzone.isDragActive ? 'previa.sand' : 'white'}
+                borderRadius="lg"
+                p={8}
+                textAlign="center"
+                cursor="pointer"
+                transition="all 0.2s"
               >
                 <input {...receiptDropzone.getInputProps()} />
-                <UploadIcon className="w-12 h-12 mx-auto mb-4 text-previa-stone" />
-                <p className="text-previa-charcoal font-medium mb-1">
+                <Icon as={UploadIcon} boxSize={12} mx="auto" mb={4} color="previa.stone" />
+                <Text color="previa.charcoal" fontWeight="medium" mb={1}>
                   Drop receipts here
-                </p>
-                <p className="text-previa-stone text-sm">
+                </Text>
+                <Text color="previa.stone" fontSize="sm">
                   PDF, JPG, or PNG, max 50MB
-                </p>
-              </div>
+                </Text>
+              </Box>
             </CardContent>
           </Card>
-        </div>
+        </Grid>
 
         {/* Upload Queue */}
         {uploadQueue.length > 0 && (
-          <Card className="mb-8">
+          <Card mb={8}>
             <CardHeader>
               <CardTitle>Upload Queue ({uploadQueue.length})</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {uploadQueue.map(item => (
-                <div key={item.id} className="flex items-center gap-3 p-3 bg-previa-cream rounded-lg">
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-previa-charcoal">{item.file.name}</p>
-                    <p className="text-xs text-previa-stone">
-                      {(item.file.size / 1024 / 1024).toFixed(2)} MB · {item.type === 'bank_statement' ? 'Bank Statement' : 'Receipt'}
-                    </p>
-                    {item.status === 'uploading' && (
-                      <Progress value={item.progress} className="mt-2" />
-                    )}
-                    {item.status === 'error' && (
-                      <p className="text-xs text-red-600 mt-1">{item.error}</p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    {item.status === 'pending' && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeFromQueue(item.id)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                    {item.status === 'success' && <span className="text-green-600">✓</span>}
-                    {item.status === 'error' && <span className="text-red-600">✗</span>}
-                  </div>
-                </div>
-              ))}
+            <CardContent>
+              <VStack spacing={3} align="stretch">
+                {uploadQueue.map(item => (
+                  <HStack key={item.id} gap={3} p={3} bg="previa.cream" borderRadius="lg">
+                    <VStack flex={1} align="stretch" spacing={1}>
+                      <Text fontSize="sm" fontWeight="medium" color="previa.charcoal">
+                        {item.file.name}
+                      </Text>
+                      <Text fontSize="xs" color="previa.stone">
+                        {(item.file.size / 1024 / 1024).toFixed(2)} MB · {item.type === 'bank_statement' ? 'Bank Statement' : 'Receipt'}
+                      </Text>
+                      {item.status === 'uploading' && (
+                        <Box mt={2}>
+                          <Progress value={item.progress} />
+                        </Box>
+                      )}
+                      {item.status === 'error' && (
+                        <Text fontSize="xs" color="red.600" mt={1}>{item.error}</Text>
+                      )}
+                    </VStack>
+                    <Box>
+                      {item.status === 'pending' && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFromQueue(item.id)}
+                        >
+                          <Icon as={X} boxSize={4} />
+                        </Button>
+                      )}
+                      {item.status === 'success' && <Text color="green.600">✓</Text>}
+                      {item.status === 'error' && <Text color="red.600">✗</Text>}
+                    </Box>
+                  </HStack>
+                ))}
+              </VStack>
             </CardContent>
           </Card>
         )}
 
         {/* Upload Button */}
         {uploadQueue.some(f => f.status === 'pending') && (
-          <Button size="lg" className="w-full mb-8" onClick={handleUpload}>
+          <Button size="lg" w="full" mb={8} onClick={handleUpload}>
             Upload {uploadQueue.filter(f => f.status === 'pending').length} Files
           </Button>
         )}
 
         {/* Recent Uploads */}
         {(recentBankStatements.length > 0 || recentReceipts.length > 0) && (
-          <div className="mt-8">
-            <h2 className="text-2xl font-bold text-previa-charcoal mb-4">Recent Uploads</h2>
+          <Box mt={8}>
+            <Heading as="h2" size="xl" fontWeight="bold" color="previa.charcoal" mb={4}>
+              Recent Uploads
+            </Heading>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <Grid templateColumns={{ base: '1fr', md: 'repeat(2, 1fr)' }} gap={6}>
               {/* Recent Bank Statements */}
               {recentBankStatements.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <FileText className="w-5 h-5" />
-                      Bank Statements
+                    <CardTitle>
+                      <HStack spacing={2}>
+                        <Icon as={FileText} boxSize={5} />
+                        <Text fontSize="lg">Bank Statements</Text>
+                      </HStack>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
+                    <VStack spacing={3} align="stretch">
                       {recentBankStatements.map((statement) => (
-                        <div
+                        <HStack
                           key={statement.id}
-                          className="flex items-center gap-3 p-3 bg-previa-cream rounded-lg hover:bg-previa-sand transition-colors"
+                          gap={3}
+                          p={3}
+                          bg="previa.cream"
+                          borderRadius="lg"
+                          _hover={{ bg: 'previa.sand' }}
+                          transition="background-color 0.2s"
                         >
-                          <FileText className="w-4 h-4 text-previa-stone flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-previa-charcoal truncate">
+                          <Icon as={FileText} boxSize={4} color="previa.stone" flexShrink={0} />
+                          <VStack flex={1} align="stretch" spacing={1} minW={0}>
+                            <Text fontSize="sm" fontWeight="medium" color="previa.charcoal" noOfLines={1}>
                               {getFileName(statement.file_path)}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Clock className="w-3 h-3 text-previa-stone" />
-                              <p className="text-xs text-previa-stone">
+                            </Text>
+                            <HStack spacing={2}>
+                              <Icon as={Clock} boxSize={3} color="previa.stone" />
+                              <Text fontSize="xs" color="previa.stone">
                                 {formatDate(statement.uploaded_at)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                              </Text>
+                            </HStack>
+                          </VStack>
+                          <HStack spacing={2} flexShrink={0}>
                             {getStatusBadge(statement.processing_status)}
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => navigate(`/onboarding/processing/${statement.id}`)}
-                              className="p-1"
+                              p={1}
                             >
-                              <Eye className="w-4 h-4" />
+                              <Icon as={Eye} boxSize={4} />
                             </Button>
-                          </div>
-                        </div>
+                          </HStack>
+                        </HStack>
                       ))}
-                    </div>
+                    </VStack>
                   </CardContent>
                 </Card>
               )}
@@ -381,51 +421,58 @@ export default function Upload() {
               {recentReceipts.length > 0 && (
                 <Card>
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-lg">
-                      <Receipt className="w-5 h-5" />
-                      Receipts
+                    <CardTitle>
+                      <HStack spacing={2}>
+                        <Icon as={Receipt} boxSize={5} />
+                        <Text fontSize="lg">Receipts</Text>
+                      </HStack>
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
+                    <VStack spacing={3} align="stretch">
                       {recentReceipts.map((receipt) => (
-                        <div
+                        <HStack
                           key={receipt.id}
-                          className="flex items-center gap-3 p-3 bg-previa-cream rounded-lg hover:bg-previa-sand transition-colors"
+                          gap={3}
+                          p={3}
+                          bg="previa.cream"
+                          borderRadius="lg"
+                          _hover={{ bg: 'previa.sand' }}
+                          transition="background-color 0.2s"
                         >
-                          <Receipt className="w-4 h-4 text-previa-stone flex-shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-previa-charcoal truncate">
+                          <Icon as={Receipt} boxSize={4} color="previa.stone" flexShrink={0} />
+                          <VStack flex={1} align="stretch" spacing={1} minW={0}>
+                            <Text fontSize="sm" fontWeight="medium" color="previa.charcoal" noOfLines={1}>
                               {receipt.merchant || getFileName(receipt.file_path)}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Clock className="w-3 h-3 text-previa-stone" />
-                              <p className="text-xs text-previa-stone">
+                            </Text>
+                            <HStack spacing={2}>
+                              <Icon as={Clock} boxSize={3} color="previa.stone" />
+                              <Text fontSize="xs" color="previa.stone">
                                 {formatDate(receipt.created_at)}
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                              </Text>
+                            </HStack>
+                          </VStack>
+                          <HStack spacing={2} flexShrink={0}>
                             {getStatusBadge(receipt.processing_status)}
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => navigate(`/receipts/${receipt.id}`)}
-                              className="p-1"
+                              p={1}
                             >
-                              <Eye className="w-4 h-4" />
+                              <Icon as={Eye} boxSize={4} />
                             </Button>
-                          </div>
-                        </div>
+                          </HStack>
+                        </HStack>
                       ))}
-                    </div>
+                    </VStack>
                   </CardContent>
                 </Card>
               )}
-            </div>
-          </div>
+            </Grid>
+          </Box>
         )}
-      </div>
-    </div>
+      </Box>
+    </DashboardLayout>
   );
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Sidebar, TopBar } from '@/components/layout';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardHeader } from '@/components/chakra-ui/card';
+import { Button } from '@/components/chakra-ui/button';
+import { Input } from '@/components/chakra-ui/input';
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from '@/components/chakra-ui/table';
 import {
   flexRender,
   getCoreRowModel,
@@ -30,9 +30,9 @@ import { MobileTransactionFilters } from '@/components/transactions/MobileTransa
 import { useTransactions } from '@/hooks/financial/useTransactions';
 import { useDebounce } from '@/hooks/useDebounce';
 import { Transaction } from '@/types/financial';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Skeleton } from '@/components/chakra-ui/skeleton';
+import { AlertCircle, ChevronLeft, ChevronRight, Receipt } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/chakra-ui/alert';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -41,7 +41,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/chakra-ui/select';
+import { EmptyState } from '@/components/ui/EmptyState';
+import { useNavigate } from 'react-router-dom';
 
 /**
  * TransactionsView - Comprehensive transaction management table
@@ -57,6 +59,7 @@ import {
 const TransactionsView = () => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const { data: transactions, isLoading, error } = useTransactions(user?.id, 1000);
 
   // Table state
@@ -323,10 +326,36 @@ const TransactionsView = () => {
                     ))}
                   </div>
                 ) : mobileFilteredTransactions.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <p className="text-sm font-medium text-charcoal">No transactions found</p>
-                    <p className="text-xs text-stone mt-1">Try adjusting your filters</p>
-                  </div>
+                  <EmptyState
+                    icon={<Receipt className="h-12 w-12" />}
+                    title={transformedTransactions.length === 0 ? "No Transactions Yet" : "No Matches Found"}
+                    description={transformedTransactions.length === 0
+                      ? "Upload your first bank statement to start tracking your transactions."
+                      : "Try adjusting your search or filter criteria."}
+                    action={
+                      transformedTransactions.length === 0 ? (
+                        <Button
+                          onClick={() => navigate('/onboarding/upload')}
+                          bg="previa.sand"
+                          color="previa.charcoal"
+                          _hover={{ bg: "previa.sand", opacity: 0.9 }}
+                        >
+                          Upload Statement
+                        </Button>
+                      ) : (
+                        <Button
+                          onClick={handleClearMobileFilters}
+                          variant="outline"
+                          borderColor="previa.sand"
+                          _hover={{ bg: "previa.sand", opacity: 0.1 }}
+                        >
+                          Clear Filters
+                        </Button>
+                      )
+                    }
+                    variant="outline"
+                    minH="280px"
+                  />
                 ) : (
                   mobileFilteredTransactions.map((transaction) => (
                     <MobileTransactionCard
@@ -368,6 +397,26 @@ const TransactionsView = () => {
                     {[...Array(5)].map((_, i) => (
                       <Skeleton key={i} className="h-12 w-full bg-stone/10" />
                     ))}
+                  </div>
+                ) : transformedTransactions.length === 0 ? (
+                  <div className="p-8">
+                    <EmptyState
+                      icon={<Receipt className="h-12 w-12" />}
+                      title="No Transactions Yet"
+                      description="Upload your first bank statement to start tracking and managing your transactions."
+                      action={
+                        <Button
+                          onClick={() => navigate('/onboarding/upload')}
+                          bg="previa.sand"
+                          color="previa.charcoal"
+                          _hover={{ bg: "previa.sand", opacity: 0.9 }}
+                        >
+                          Upload Statement
+                        </Button>
+                      }
+                      variant="outline"
+                      minH="320px"
+                    />
                   </div>
                 ) : (
                   <>
@@ -420,7 +469,7 @@ const TransactionsView = () => {
                                 colSpan={columns.length}
                                 className="h-24 text-center text-stone"
                               >
-                                No transactions found.
+                                No matches found. Try adjusting your search or filters.
                               </TableCell>
                             </TableRow>
                           )}

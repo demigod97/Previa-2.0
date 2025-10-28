@@ -3,9 +3,9 @@
 
 import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/chakra-ui/card';
+import { Progress } from '@/components/chakra-ui/progress';
+import { Badge } from '@/components/chakra-ui/badge';
 import { Link } from 'react-router-dom';
 import { Sparkles, TrendingUp } from 'lucide-react';
 import {
