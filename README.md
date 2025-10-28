@@ -18,21 +18,49 @@
 
 ---
 
+## 🧪 Quick Testing Guide for Tutors/Assessors
+
+**To test the Previa MVP, use these sample files:**
+
+📄 **Sample Bank Statement (3 months)**: [`docs/pitch_deck/sample-statement-3months-fake.pdf`](docs/pitch_deck/sample-statement-3months-fake.pdf)
+- Contains 3 months of realistic Australian bank transactions
+- Use this to test the onboarding flow and transaction extraction
+
+🧾 **Sample Invoice/Receipt**: [`docs/pitch_deck/sample_invoice.pdf`](docs/pitch_deck/sample_invoice.pdf)
+- Australian tax invoice format
+- Use this to test receipt OCR and reconciliation matching
+
+**Testing Instructions:**
+1. Visit the development deployment: **https://previa.raava.app/**
+2. Create a new account (or use Google OAuth)
+3. Upload the **sample bank statement** during onboarding
+4. Navigate to the Upload Hub and upload the **sample invoice**
+5. Go to the Reconciliation Engine to see AI-powered transaction matching in action
+
+**Expected Results:**
+- Bank statement will be processed and transactions extracted automatically (Mistral API)
+- Receipt will be parsed with merchant, amount, and date information (Mistral API)
+- AI will suggest matches between transactions and receipts (GPT-4o-mini)
+- Confidence scores will be displayed (High ≥0.80, Medium 0.50-0.79, Low <0.50)
+
+---
+
 ## Table of Contents
 
-1. [Executive Summary](#executive-summary)
-2. [Quick Links Dashboard](#quick-links-dashboard)
-3. [Documentation Map](#documentation-map)
-4. [Implementation Status Dashboard](#implementation-status-dashboard)
-5. [Key Process Flowcharts & Architecture](#key-process-flowcharts--architecture)
-6. [Story Summaries by Epic](#story-summaries-by-epic)
-7. [Technical Stack Summary](#technical-stack-summary)
-8. [Target Users & Use Cases](#target-users--use-cases)
-9. [Assessment Requirements Mapping](#assessment-requirements-mapping)
-10. [How to Navigate This Submission](#how-to-navigate-this-submission)
-11. [Quick Start Guide](#quick-start-guide)
-12. [Contributing & License](#contributing--license)
-13. [Next Steps & Remaining Work](#next-steps--remaining-work)
+1. [🧪 Quick Testing Guide for Tutors/Assessors](#-quick-testing-guide-for-tutorsassessors)
+2. [Executive Summary](#executive-summary)
+3. [Quick Links Dashboard](#quick-links-dashboard)
+4. [Documentation Map](#documentation-map)
+5. [Implementation Status Dashboard](#implementation-status-dashboard)
+6. [Key Process Flowcharts & Architecture](#key-process-flowcharts--architecture)
+7. [Story Summaries by Epic](#story-summaries-by-epic)
+8. [Technical Stack Summary](#technical-stack-summary)
+9. [Target Users & Use Cases](#target-users--use-cases)
+10. [Assessment Requirements Mapping](#assessment-requirements-mapping)
+11. [How to Navigate This Submission](#how-to-navigate-this-submission)
+12. [Quick Start Guide](#quick-start-guide)
+13. [Contributing & License](#contributing--license)
+14. [Next Steps & Remaining Work](#next-steps--remaining-work)
 
 ---
 

@@ -31,7 +31,8 @@
       "Bash(findstr:*)",
       "Bash(node -e:*)",
       "Bash(pandoc:*)",
-      "Bash(where:*)"
+      "Bash(where:*)",
+      "Bash(markdown-pdf:*)"
     ],
     "deny": [],
     "ask": []
