@@ -3,7 +3,18 @@
     "allow": [
       "mcp__archon__rag_search_knowledge_base",
       "Bash(test:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "mcp__chakra-ui__get_component_props",
+      "mcp__chakra-ui__get_component_example",
+      "Bash(npm run build:dev:*)",
+      "mcp__supabase__list_migrations",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__list_edge_functions",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_snapshot"
     ],
     "deny": [],
     "ask": []

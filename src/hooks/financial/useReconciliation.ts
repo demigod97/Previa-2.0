@@ -86,7 +86,75 @@ export function useUnmatchedReceipts() {
 }
 
 /**
- * Fetch AI match suggestions for a transaction
+ * Fetch all AI match suggestions (sorted by confidence score)
+ */
+export function useAIMatchSuggestions() {
+  const { user } = useAuth();
+
+  return useQuery({
+    queryKey: ['ai-match-suggestions', user?.id],
+    queryFn: async () => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { data, error } = await supabase
+        .from('ai_match_suggestions')
+        .select(`
+          id,
+          transaction_id,
+          receipt_id,
+          confidence_score,
+          match_reason,
+          status,
+          created_at,
+          transactions!inner (
+            id,
+            user_id,
+            bank_statement_id,
+            transaction_date,
+            description,
+            amount,
+            category,
+            status,
+            created_at
+          ),
+          receipts!inner (
+            id,
+            user_id,
+            merchant,
+            receipt_date,
+            amount,
+            tax,
+            file_path,
+            file_size,
+            processing_status,
+            confidence_score,
+            ocr_data,
+            created_at
+          )
+        `)
+        .eq('user_id', user.id)
+        .eq('status', 'suggested')
+        .order('confidence_score', { ascending: false });
+
+      if (error) throw error;
+
+      return (data || []).map(suggestion => ({
+        ...suggestion,
+        transaction: {
+          ...suggestion.transactions,
+          type: (suggestion.transactions.amount < 0 ? 'expense' : 'income') as 'income' | 'expense',
+          date: suggestion.transactions.transaction_date,
+        },
+        receipt: suggestion.receipts,
+      }));
+    },
+    enabled: !!user,
+    staleTime: 30_000, // 30 seconds
+  });
+}
+
+/**
+ * Fetch AI match suggestions for a specific transaction
  */
 export function useMatchSuggestions(transactionId?: string) {
   const { user } = useAuth();
@@ -96,9 +164,17 @@ export function useMatchSuggestions(transactionId?: string) {
     queryFn: async (): Promise<MatchSuggestion[]> => {
       if (!user || !transactionId) throw new Error('Missing required parameters');
 
-      // TODO: Call Edge Function that uses AI to suggest matches
-      // For now, return empty array (will be implemented in backend story)
-      return [];
+      const { data, error } = await supabase
+        .from('ai_match_suggestions')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('transaction_id', transactionId)
+        .eq('status', 'suggested')
+        .order('confidence_score', { ascending: false })
+        .limit(5);
+
+      if (error) throw error;
+      return data || [];
     },
     enabled: !!user && !!transactionId,
     staleTime: 60_000, // 1 minute
@@ -208,6 +284,171 @@ export function useDeleteMatch() {
     onError: (error) => {
       console.error('Failed to delete match:', error);
       toast.error('Failed to delete match. Please try again.');
+    },
+  });
+}
+
+/**
+ * Approve an AI match suggestion
+ */
+export function useApproveSuggestion() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (suggestionId: string): Promise<void> => {
+      if (!user) throw new Error('User not authenticated');
+
+      // Get the suggestion details
+      const { data: suggestion, error: fetchError } = await supabase
+        .from('ai_match_suggestions')
+        .select('transaction_id, receipt_id, confidence_score')
+        .eq('id', suggestionId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Update suggestion status to 'approved'
+      const { error: updateError } = await supabase
+        .from('ai_match_suggestions')
+        .update({ status: 'approved' })
+        .eq('id', suggestionId);
+
+      if (updateError) throw updateError;
+
+      // Create reconciliation match
+      const { error: matchError } = await supabase
+        .from('reconciliation_matches')
+        .insert({
+          user_id: user.id,
+          transaction_id: suggestion.transaction_id,
+          receipt_id: suggestion.receipt_id,
+          confidence: suggestion.confidence_score * 100, // Convert 0-1 to 0-100
+          status: 'approved',
+        });
+
+      if (matchError) throw matchError;
+
+      // Update transaction status to 'matched'
+      const { error: txUpdateError } = await supabase
+        .from('transactions')
+        .update({ status: 'matched' })
+        .eq('id', suggestion.transaction_id);
+
+      if (txUpdateError) throw txUpdateError;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai-match-suggestions'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['receipts'] });
+      toast.success('Match approved successfully!');
+    },
+    onError: (error) => {
+      console.error('Failed to approve suggestion:', error);
+      toast.error('Failed to approve match. Please try again.');
+    },
+  });
+}
+
+/**
+ * Reject an AI match suggestion
+ */
+export function useRejectSuggestion() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (suggestionId: string): Promise<void> => {
+      if (!user) throw new Error('User not authenticated');
+
+      const { error } = await supabase
+        .from('ai_match_suggestions')
+        .update({ status: 'rejected' })
+        .eq('id', suggestionId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['ai-match-suggestions'] });
+      toast.success('Match rejected.');
+    },
+    onError: (error) => {
+      console.error('Failed to reject suggestion:', error);
+      toast.error('Failed to reject match. Please try again.');
+    },
+  });
+}
+
+/**
+ * Bulk approve high confidence AI match suggestions
+ */
+export function useBulkApproveSuggestions() {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (suggestionIds: string[]): Promise<number> => {
+      if (!user) throw new Error('User not authenticated');
+
+      let successCount = 0;
+
+      for (const suggestionId of suggestionIds) {
+        try {
+          // Get suggestion details
+          const { data: suggestion, error: fetchError } = await supabase
+            .from('ai_match_suggestions')
+            .select('transaction_id, receipt_id, confidence_score')
+            .eq('id', suggestionId)
+            .single();
+
+          if (fetchError) throw fetchError;
+
+          // Update suggestion status
+          const { error: updateError } = await supabase
+            .from('ai_match_suggestions')
+            .update({ status: 'approved' })
+            .eq('id', suggestionId);
+
+          if (updateError) throw updateError;
+
+          // Create reconciliation match
+          const { error: matchError } = await supabase
+            .from('reconciliation_matches')
+            .insert({
+              user_id: user.id,
+              transaction_id: suggestion.transaction_id,
+              receipt_id: suggestion.receipt_id,
+              confidence: suggestion.confidence_score * 100,
+              status: 'approved',
+            });
+
+          if (matchError) throw matchError;
+
+          // Update transaction status
+          const { error: txUpdateError } = await supabase
+            .from('transactions')
+            .update({ status: 'matched' })
+            .eq('id', suggestion.transaction_id);
+
+          if (txUpdateError) throw txUpdateError;
+
+          successCount++;
+        } catch (error) {
+          console.error(`Failed to approve suggestion ${suggestionId}:`, error);
+        }
+      }
+
+      return successCount;
+    },
+    onSuccess: (count) => {
+      queryClient.invalidateQueries({ queryKey: ['ai-match-suggestions'] });
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['receipts'] });
+      toast.success(`${count} match${count !== 1 ? 'es' : ''} approved successfully!`);
+    },
+    onError: (error) => {
+      console.error('Failed to bulk approve suggestions:', error);
+      toast.error('Failed to approve matches. Please try again.');
     },
   });
 }

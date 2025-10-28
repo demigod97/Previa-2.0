@@ -12,6 +12,7 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import Welcome from "./pages/Welcome";
 import Dashboard from "./pages/Dashboard";
 import ReconciliationView from "./pages/ReconciliationView";
+import ReconciliationEnhanced from "./pages/ReconciliationEnhanced";
 import TransactionsView from "./pages/TransactionsView";
 import ChatView from "./pages/ChatView";
 import Settings from "./pages/Settings";
@@ -44,6 +45,14 @@ const AppContent = () => {
         />
         <Route
           path="/reconciliation"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <ReconciliationEnhanced />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/reconciliation/manual"
           element={
             <ProtectedRoute fallback={<Auth />}>
               <ReconciliationView />

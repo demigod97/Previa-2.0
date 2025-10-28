@@ -170,6 +170,26 @@ export default function Upload() {
 
         if (error) throw error;
         documentId = data.id;
+
+        // Invoke process-receipt Edge Function
+        try {
+          const { error: fnError } = await supabase.functions.invoke('process-receipt', {
+            body: {
+              receipt_id: documentId,
+              user_id: user.id,
+              file_path: filePath,
+              bucket: 'receipts',
+            },
+          });
+
+          if (fnError) {
+            console.error('Error invoking process-receipt function:', fnError);
+            // Don't throw - receipt is uploaded, processing can be retried
+          }
+        } catch (fnInvokeError) {
+          console.error('Failed to invoke process-receipt function:', fnInvokeError);
+          // Don't throw - receipt is uploaded, processing can be retried
+        }
       }
 
       // Update status to success
@@ -395,7 +415,7 @@ export default function Upload() {
                             <HStack spacing={2}>
                               <Icon as={Clock} boxSize={3} color="previa.stone" />
                               <Text fontSize="xs" color="previa.stone">
-                                {formatDate(statement.uploaded_at)}
+                                {formatDate(statement.created_at)}
                               </Text>
                             </HStack>
                           </VStack>

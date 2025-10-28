@@ -6,7 +6,7 @@ export interface BankStatement {
   user_id: string;
   file_path: string;
   processing_status: string | null;
-  uploaded_at: string;
+  created_at: string;
   extracted_at: string | null;
   error_message: string | null;
 }
@@ -23,7 +23,7 @@ export function useBankStatements(userId?: string, limit = 10) {
         .from('bank_statements')
         .select('*')
         .eq('user_id', userId)
-        .order('uploaded_at', { ascending: false })
+        .order('created_at', { ascending: false })
         .limit(limit);
 
       if (error) {
