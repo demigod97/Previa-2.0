@@ -1,0 +1,46 @@
+story: docs/stories/8.1-public-feedback-portal.md
+story_number: "8.1"
+story_title: "Public Feedback Portal"
+feature: "Feedback Portal"
+archon_tasks:
+  - task_id: "bb0d6830-50e3-4125-828c-290639cadff8"
+    task_title: "Story 8.1 - Task 1: Database & Backend Setup"
+    story_section: "Database & Backend Setup"
+    task_order: 110
+  - task_id: "18035647-a179-4b55-a6cd-6a0a7fa6fea6"
+    task_title: "Story 8.1 - Task 2: Frontend - Wizard Infrastructure"
+    story_section: "Frontend - Wizard Infrastructure"
+    task_order: 109
+  - task_id: "eb1e27f1-f142-430b-89d5-18c5f837d13a"
+    task_title: "Story 8.1 - Task 3: Frontend - Step 1 Type Selection"
+    story_section: "Frontend - Step 1: Type Selection"
+    task_order: 108
+  - task_id: "18f25b59-9f6d-42e4-83ec-ab7cb7b7f282"
+    task_title: "Story 8.1 - Task 4: Frontend - Step 2 Details Form"
+    story_section: "Frontend - Step 2: Details Form"
+    task_order: 107
+  - task_id: "0dcb34ec-a95a-4c8c-84e5-3e33879e2b56"
+    task_title: "Story 8.1 - Task 5: Frontend - Step 3 Contact Info"
+    story_section: "Frontend - Step 3: Contact Info"
+    task_order: 106
+  - task_id: "a0e012c8-4438-4cee-80d5-c575c5138837"
+    task_title: "Story 8.1 - Task 6: Frontend - Submission Logic"
+    story_section: "Frontend - Submission Logic"
+    task_order: 105
+  - task_id: "1953319c-07c5-451e-af7f-a3ddfbfd773d"
+    task_title: "Story 8.1 - Task 7: Frontend - Success State"
+    story_section: "Frontend - Success State"
+    task_order: 104
+  - task_id: "28d89949-5f19-4597-a8d2-befae0ae6d39"
+    task_title: "Story 8.1 - Task 8: Admin Dashboard"
+    story_section: "Admin Dashboard"
+    task_order: 103
+  - task_id: "5711d025-6c1f-43ec-98e1-caea61d198e3"
+    task_title: "Story 8.1 - Task 9: Testing & QA"
+    story_section: "Testing & QA"
+    task_order: 102
+  - task_id: "d15c64ab-431c-4063-aa7e-514797894670"
+    task_title: "Story 8.1 - Task 10: Documentation & Polish"
+    story_section: "Documentation & Polish"
+    task_order: 101
+created_at: "2025-10-28T11:02:00Z"

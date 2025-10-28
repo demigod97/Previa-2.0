@@ -81,6 +81,7 @@ export function WizardProvider({ children }: WizardProviderProps) {
 
   // Open wizard (resumes from last viewed step if not completed)
   const openWizard = useCallback(() => {
+    console.log('🧙 Opening wizard...');
     setIsOpen(true);
   }, []);
 

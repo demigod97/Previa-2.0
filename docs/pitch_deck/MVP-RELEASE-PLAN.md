@@ -44,22 +44,35 @@ This plan outlines the creation of comprehensive MVP release documentation for t
 
 ## Documentation Structure
 
-### Document 0: Master Submission Index (NEW)
-**Location:** `docs/pitch_deck/FIT3195_MASTER_SUBMISSION_INDEX.md`
+### Document 0: Master Submission Index (NOW ROOT README.md)
+**Location:** `README.md` (root directory - moved from pitch_deck/)
 
 **Sections:**
 1. Executive Summary
-2. Quick Links Dashboard (GitHub, Jira, deployment, Supabase, n8n)
+2. Quick Links Dashboard (✅ GitHub, Jira links added by user)
 3. Documentation Map (100+ files organized)
 4. Implementation Status Dashboard (24/30 stories = 80%)
-5. Key Process Flowcharts (Mermaid diagrams)
+5. Key Process Flowcharts & Architecture (5 Mermaid diagrams + System Architecture)
 6. Story Summaries by Epic (35 stories detailed)
 7. Technical Stack Summary
-8. Assessment Requirements Mapping (FIT3195 → Documentation)
-9. How to Navigate This Submission
-10. Next Steps & Remaining Work
+8. Target Users & Use Cases (NEW - from old README)
+9. Assessment Requirements Mapping (FIT3195 → Documentation)
+10. How to Navigate This Submission
+11. Quick Start Guide (NEW - from old README)
+12. Contributing & License (NEW - from old README)
+13. Next Steps & Remaining Work
 
-**Purpose:** Central navigation hub for entire submission. Links all documents, shows progress, maps requirements, provides reading order for assessors.
+**Purpose:** Dual-purpose document serving as:
+1. Central navigation hub for entire FIT3195 submission
+2. Primary project documentation for developers and stakeholders
+
+**Enhancements:**
+- Integrated compelling tagline and elevator pitch from old README
+- Added system architecture diagram (React ↔ Supabase ↔ n8n)
+- Included quick start installation instructions
+- Added target user profiles (Households, Freelancers, Small Businesses)
+- Integrated contributing, license, and support sections
+- Moved to root for better discoverability on GitHub
 
 ### Document 1: MVP Release Submission Package
 **Location:** `docs/pitch_deck/MVP-RELEASE-SUBMISSION.md`
@@ -349,7 +362,10 @@ This plan outlines the creation of comprehensive MVP release documentation for t
 
 **Phase 1 (Analysis):** ✅ Complete
 **Phase 2 (Core Docs):** ✅ Complete (6/6)
-  - ✅ Master Submission Index (DONE - 10,000 words, 10 sections) 🆕
+  - ✅ Master Submission Index → Root README.md (DONE - 12,000 words, 13 sections) 🔥
+    - Integrated old README content (Quick Start, Architecture, Contributing)
+    - Enhanced with Target Users & Use Cases
+    - Moved to root for better GitHub discoverability
   - ✅ MVP Release Submission Package (DONE - 32,000 words)
   - ✅ Product Roadmap (DONE - 13,000 words)
   - ⏳ Demo Preparation Guide (DEFER - covered in submission doc)
@@ -372,5 +388,5 @@ This plan outlines the creation of comprehensive MVP release documentation for t
 
 ---
 
-**Last Updated:** 2025-10-28 (Master Index Created)
+**Last Updated:** 2025-10-28 (Master Index → Root README.md transformation complete)
 **Next Review:** After demo screen implementations

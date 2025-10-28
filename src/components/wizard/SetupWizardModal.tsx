@@ -1,5 +1,6 @@
 import {
   Dialog,
+  ModalOverlay,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -26,6 +27,8 @@ import { ReviewTransactionsStep } from './steps/ReviewTransactionsStep';
 export function SetupWizardModal() {
   const { currentStep, isOpen, closeWizard } = useWizard();
 
+  console.log('🧙 SetupWizardModal render - isOpen:', isOpen, 'currentStep:', currentStep);
+
   // Determine which step component to render
   const renderStep = () => {
     switch (currentStep) {
@@ -45,8 +48,9 @@ export function SetupWizardModal() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && closeWizard()}>
-      <DialogContent 
+    <Dialog isOpen={isOpen} onClose={closeWizard}>
+      <ModalOverlay />
+      <DialogContent
         className="max-w-3xl bg-white p-8 max-h-[90vh] overflow-y-auto"
         aria-describedby="wizard-description"
       >

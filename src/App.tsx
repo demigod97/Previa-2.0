@@ -28,6 +28,7 @@ import MultiDocProcessingStatus from "./pages/ProcessingStatus";
 import Receipts from "./pages/Receipts";
 import ReceiptDetails from "./pages/ReceiptDetails";
 import { AdvancedAnalyticsDemo } from "./pages/demo";
+import FeedbackDashboard from "./pages/admin/FeedbackDashboard";
 
 const queryClient = new QueryClient();
 
@@ -122,6 +123,15 @@ const AppContent = () => {
           element={
             <ProtectedRoute fallback={<Auth />}>
               <ReceiptDetails />
+            </ProtectedRoute>
+          }
+        />
+        {/* Admin routes */}
+        <Route
+          path="/admin/feedback"
+          element={
+            <ProtectedRoute fallback={<Auth />}>
+              <FeedbackDashboard />
             </ProtectedRoute>
           }
         />

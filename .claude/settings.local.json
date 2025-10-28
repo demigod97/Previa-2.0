@@ -23,7 +23,14 @@
       "Bash(npm run lint)",
       "mcp__supabase__deploy_edge_function",
       "Bash(cat:*)",
-      "Bash(npx supabase functions deploy:*)"
+      "Bash(npx supabase functions deploy:*)",
+      "mcp__archon__find_projects",
+      "mcp__archon__find_tasks",
+      "Bash(npm install:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(node -e:*)",
+      "Bash(pandoc:*)"
     ],
     "deny": [],
     "ask": []

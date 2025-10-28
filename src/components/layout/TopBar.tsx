@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Bell, Sparkles, Trash2, Wand2 } from 'lucide-react';
+import { Bell, Sparkles, Trash2, Wand2, HelpCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useWizard } from '@/contexts/WizardContext';
+import { FeedbackPortal } from '@/components/feedback';
 import { Avatar, AvatarFallback } from '@/components/chakra-ui/avatar';
 import {
   DropdownMenu,
@@ -36,6 +37,7 @@ export function TopBar() {
   const { seedMockData, isLoading: isSeedingLoading } = useMockDataSeeding();
   const { deleteMockData, isLoading: isDeletingLoading } = useDeleteMockData();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const handleSignOut = async () => {
     await signOut();
@@ -143,6 +145,17 @@ export function TopBar() {
 
         {/* Right side - Notifications & User Menu */}
         <div className="flex items-center gap-4">
+          {/* Feedback/Support Button */}
+          <Button
+            variant="ghost"
+            className="relative text-darkStone hover:text-charcoal hover:bg-sand/50 flex items-center gap-2"
+            title="Send Feedback or Report Bug"
+            onClick={() => setIsFeedbackOpen(true)}
+          >
+            <HelpCircle className="h-5 w-5" />
+            <span className="text-sm font-medium">Help & Feedback</span>
+          </Button>
+
           {/* Notifications Bell */}
           <Button
             variant="ghost"
@@ -216,6 +229,12 @@ export function TopBar() {
 
       {/* Setup Wizard Modal */}
       <SetupWizardModal />
+
+      {/* Feedback Portal Modal */}
+      <FeedbackPortal
+        isOpen={isFeedbackOpen}
+        onClose={() => setIsFeedbackOpen(false)}
+      />
     </header>
   );
 }
