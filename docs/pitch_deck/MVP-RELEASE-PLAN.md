@@ -166,7 +166,7 @@ This plan outlines the creation of comprehensive MVP release documentation for t
 - [ ] Technical accuracy review
 - [ ] Alignment with assessment criteria
 - [ ] Proofreading and formatting
-- [ ] Create PDF versions
+- [x] Create PDF versions (✅ Previa_FIT3195_Assessment3_Submission.pdf - 178KB)
 - [ ] Final submission checklist
 
 ---
@@ -382,11 +382,12 @@ This plan outlines the creation of comprehensive MVP release documentation for t
   - ⏳ Implement AccountantPortalDemo.tsx (TODO - ready for development)
   - ⏳ Create DemoBanner component (TODO - ready for development)
 **Phase 4 (Interactive):** ⏳ Not Started (0/4)
-**Phase 5 (Review):** ⏳ Not Started (0/5)
+**Phase 5 (Review):** 🔄 In Progress (1/5)
+  - ✅ PDF Generation (DONE - 178KB, node markdown-pdf)
 
-**Overall Progress:** 50% (10/20 tasks)
+**Overall Progress:** 55% (11/20 tasks)
 
 ---
 
-**Last Updated:** 2025-10-28 (Master Index → Root README.md transformation complete)
+**Last Updated:** 2025-10-28 (PDF generation complete - Previa_FIT3195_Assessment3_Submission.pdf)
 **Next Review:** After demo screen implementations

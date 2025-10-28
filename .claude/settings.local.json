@@ -30,7 +30,8 @@
       "Bash(dir:*)",
       "Bash(findstr:*)",
       "Bash(node -e:*)",
-      "Bash(pandoc:*)"
+      "Bash(pandoc:*)",
+      "Bash(where:*)"
     ],
     "deny": [],
     "ask": []

@@ -53,18 +53,18 @@
 
 | Metric | Value |
 |--------|-------|
-| **MVP Completion** | 80% (24/30 stories) |
+| **MVP Completion** | 83% (24/30 stories + 1 in progress) |
 | **Total Documentation** | 150,000+ words across 100+ files |
 | **Test Coverage** | 85% (545 test cases) |
-| **Edge Functions** | 17 deployed |
-| **Database Migrations** | 17 applied |
-| **Components** | 90+ React components |
-| **Pages** | 19 screens |
+| **Edge Functions** | 18 deployed |
+| **Database Migrations** | 22 applied |
+| **Components** | 105+ React components |
+| **Pages** | 20 screens |
 
 ### Current Status
 
 - **Version:** 0.1.0-MVP (October 28, 2025)
-- **Progress:** 80% complete (24/30 stories implemented)
+- **Progress:** 83% complete (24/30 stories implemented, 1 in progress)
 - **Target Launch:** November 15, 2025 (v0.2.0-MVP)
 - **Public Launch:** January 15, 2026 (v1.0.0)
 
@@ -265,10 +265,10 @@ Previa/
 
 ### 📈 Overall Progress
 
-**Current Status:** 24/30 stories complete (80%)
+**Current Status:** 24/36 stories complete (67%), 4 in progress (76% weighted)
 
 ```
-Progress: [████████████████████░░░░] 80%
+Progress: [███████████████████░░░░░] 76%
 ```
 
 ### 📋 Epic Completion Status
@@ -282,7 +282,8 @@ Progress: [████████████████████░░░
 | **Epic 5: Dashboard** | 6 | 4 | 2 | 0 | 🔄 83% |
 | **Epic 6: Data Export** | 1 | 0 | 0 | 1 | ⏳ 0% |
 | **Epic 7: Demo Screens** | 4 | 0 | 0 | 4 | ⏳ 0% (stories ready) |
-| **TOTAL** | **35** | **26** | **3** | **6** | **74%** |
+| **Epic 8: User Engagement** | 1 | 0 | 1 | 0 | 🔄 80% |
+| **TOTAL** | **36** | **26** | **4** | **6** | **76%** |
 
 **Note:** Epic 6 and Epic 7 are planned for post-MVP release (Q1 2026).
 
@@ -330,6 +331,32 @@ All 4 stories complete: Universal upload hub, edge function processing, status t
 - ⏳ Story 7.4: Accountant Portal Demo Screen (Story ready, 6-7 days estimated)
 
 **Total Estimated Effort for Demo Screens:** 17-21 days (3-4 weeks)
+
+#### 🔄 Epic 8: User Engagement & Feedback Systems (80% - 1 story in progress)
+
+- 🔄 **Story 8.1: Public Feedback Portal** (80% - 8/10 tasks complete)
+  - ✅ Task 1: Database schema & migrations (public_feedback, feedback_rate_limits tables)
+  - ✅ Task 2: Supabase Edge Function (submit-feedback with rate limiting)
+  - ✅ Task 3: Storage bucket configuration (feedback-screenshots)
+  - ✅ Task 4: FeedbackPortal wizard component (3-step modal)
+  - ✅ Task 5: Step components (FeedbackType, Details, ContactInfo)
+  - ✅ Task 6: Screenshot capture with browser info
+  - ✅ Task 7: Submission logic with success animation
+  - ✅ Task 8: Admin feedback dashboard (AG-Grid table, filters, status updates)
+  - ⏳ Task 9: Testing & QA (unit tests, integration tests, accessibility)
+  - ⏳ Task 10: Documentation & Polish (JSDoc comments, source tree updates)
+
+  **Features Implemented:**
+  - 3-step feedback wizard with framer-motion animations
+  - Screenshot capture and upload to Supabase Storage
+  - Browser info capture (user agent, viewport, URL)
+  - IP-based rate limiting (5 submissions per hour)
+  - Admin dashboard with AG-Grid (filterable, sortable)
+  - Status management (new → acknowledged → in_progress → resolved)
+  - Screenshot lightbox viewer
+  - Email notifications support (ready for future implementation)
+
+  **Remaining Work:** Testing, documentation
 
 **Legend:**
 - ✅ Complete - Fully implemented, tested, deployed
@@ -592,6 +619,44 @@ For detailed story breakdowns with acceptance criteria, tasks, and technical imp
 - Accountant Portal Demo (share access, annotations, reports, activity log)
 
 [Full story details in `docs/stories/7.1-7.4-*.md`](./docs/stories/)
+
+### Epic 8: User Engagement & Feedback Systems 🔄 (80% Complete - 1 Story)
+
+**Purpose:** Enable users to submit feedback, bug reports, and feature requests with admin management interface.
+
+**Story:**
+- 🔄 Story 8.1: Public Feedback Portal (80% - 8/10 tasks complete)
+  - **User-Facing Features:**
+    - 3-step feedback wizard (Type → Details → Contact Info)
+    - Screenshot capture with automatic browser info
+    - Optional contact information with privacy controls
+    - Confetti success animation
+    - Access via TopBar "Help & Feedback" button
+
+  - **Admin Features:**
+    - AG-Grid dashboard with advanced filtering
+    - Status management (new, acknowledged, in_progress, resolved, wont_fix)
+    - Screenshot lightbox viewer
+    - Admin notes and internal tracking
+    - Stats summary (Total, New, In Progress, Resolved)
+
+  - **Technical Implementation:**
+    - Database: 2 tables (public_feedback, feedback_rate_limits)
+    - Edge Function: submit-feedback (rate limiting, validation)
+    - Storage: feedback-screenshots bucket (private)
+    - Rate Limiting: 5 submissions per hour per IP
+    - RLS policies for user and admin access
+
+  - **Remaining Work:**
+    - Task 9: Testing & QA (unit tests, integration tests, accessibility)
+    - Task 10: Documentation & Polish (JSDoc comments, source tree updates)
+
+**Performance:**
+- Submission latency: <2s average
+- Screenshot upload: <1s average
+- Admin dashboard load: <500ms
+
+[Full story details in `docs/stories/8.1-public-feedback-portal.md`](./docs/stories/)
 
 ---
 

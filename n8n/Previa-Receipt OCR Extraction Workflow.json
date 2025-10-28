@@ -1,0 +1,622 @@
+{
+  "name": "Previa-Receipt OCR",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "receipt-ocr",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -1264,
+        80
+      ],
+      "id": "abaa3cc8-3fea-4ccc-8fae-f249bd33b8fd",
+      "name": "Webhook",
+      "webhookId": "bbe14a94-f8e7-4292-b8a2-d543850f1895"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Webhook').item.json.headers['cf-warp-tag-id'] }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1632,
+        432
+      ],
+      "id": "679e9e16-f023-4684-bc9d-c71a2edd1c41",
+      "name": "Simple Memory1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        304
+      ],
+      "id": "2d6f805e-5c84-48fd-85a7-a39eb713697d",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "tZ3ovv6egqnDIYgT",
+          "name": "Previa-Processing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"receiptOCRData\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"merchant\": { \"type\": \"string\" },\n          \"receiptDate\": { \"type\": \"string\" },\n          \"amount\": { \"type\": \"number\" },\n          \"taxAmount\": { \"type\": \"number\" },\n          \"taxPercentage\": { \"type\": \"string\" },\n          \"taxType\": { \"type\": \"string\" },\n          \"confidenceScore\": { \"type\": \"string\" },\n          \"currencyType\": { \"type\": \"string\" }\n        },\n        \"required\": [\"merchant\", \"receiptDate\", \"amount\", \"taxAmount\", \"taxPercentage\", \"taxType\", \"confidenceScore\", \"currencyType\"]\n      }\n    }\n  },\n  \"required\": [\"receiptOCRData\"]\n}",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1648,
+        64
+      ],
+      "id": "3ee2f5a4-75d2-4a0f-a951-69f1f1ceab5d",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.extracted_text }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=Extract specific information from OCRed receipts or invoices and present the data as structured JSON in markdown format.\n\nYou must extract and/or compute the following fields for each receipt or invoice in the input:\n- merchant (shop/seller name)\n- receipt date\n- amount (total receipt amount)\n- tax amount (if available)\n- tax percentage (calculate if missing, based on amount and tax amount)\n- tax type (e.g., VAT, GST, Service, etc. If multiple types, prefer the main government/sales tax type.)\n- confidence score (estimate your own extraction confidence as a string percentage, e.g., \"90%\")\n- currency type (AUD/LKR/USD/EUR/etc.; if not mentioned, default to \"AUD\")\n\nBefore producing your answer:\n- Carefully review all the text in the provided OCR data. Look for textual variants and synonyms for tax, total, date, merchant, and currency.\n- If any field is missing, infer from context where possible, or mark as \"unknown\".\n- For tax percentage calculation, if tax amount and total are present, compute: (taxAmount ÷ (amount - taxAmount)) × 100 and return as a string rounded to one decimal place with \"%\" (e.g., \"10.0%\").\n- Record your confidence in each extraction as a string percentage. For partial or weak extraction, lower the score accordingly.\n- Use logical reasoning steps internally before producing the final output.\n\nOutput must be in JSON format as specified below, wrapped in markdown (DO NOT use code blocks or any other markdown features, JUST JSON in raw markdown). All fields required per the schema; if unavailable, insert \"unknown\" or 0 as appropriate.\n\nRequired JSON Format:\n\n{\n  \"receiptOCRData\": [\n    {\n      \"merchant\": \"[shop/seller name]\",\n      \"receiptDate\": \"[YYYY-MM-DD or other suitable format]\",\n      \"amount\": [number],\n      \"taxAmount\": [number],\n      \"taxPercentage\": \"[number%]\",\n      \"taxType\": \"[VAT/GST/other]\",\n      \"confidenceScore\": \"[percentage%]\",\n      \"currencyType\": \"[AUD/LKR/USD/etc.]\"\n    }\n    // (repeat for each receipt/invoice if more than one in input)\n  ]\n}\n\nExamples:\n\nExample 1 (all fields present):\n\nInput OCR data:  \n\"Best Buy Electronics  \nDate: 2023-10-12  \nTotal: USD 105.00  \nTax (GST): USD 5.00\"\n\nReasoning:\n- Merchant is at the top, \"Best Buy Electronics\".\n- Date clearly listed.\n- Amount is the \"Total\", USD 105.00.\n- Tax amount is USD 5.00, tax type \"GST\".\n- Tax percentage: 5.00/(105-5.00)×100 ≈ 5.0%.\n- Confidence is high as all values are explicit.\n- Currency is USD.\n\nOutput:\n{\n  \"receiptOCRData\": [\n    {\n      \"merchant\": \"Best Buy Electronics\",\n      \"receiptDate\": \"2023-10-12\",\n      \"amount\": 105.00,\n      \"taxAmount\": 5.00,\n      \"taxPercentage\": \"5.0%\",\n      \"taxType\": \"GST\",\n      \"confidenceScore\": \"100%\",\n      \"currencyType\": \"USD\"\n    }\n  ]\n}\n\nExample 2 (missing explicit currency):\n\nInput OCR data:  \n\"Supermarket  \nInvoice #112 \nDate: 2024-01-01  \nTotal: 33.25  \nGST: 3.02\"\n\nReasoning:\n- Merchant: \"Supermarket\".\n- Date: \"2024-01-01\".\n- Amount: 33.25.\n- Tax amount: 3.02, type \"GST\".\n- No currency found, default to AUD.\n- Tax percentage: 3.02/(33.25-3.02)×100 ≈ 10.0%.\n- All information present, high confidence.\n\nOutput:\n{\n  \"receiptOCRData\": [\n    {\n      \"merchant\": \"Supermarket\",\n      \"receiptDate\": \"2024-01-01\",\n      \"amount\": 33.25,\n      \"taxAmount\": 3.02,\n      \"taxPercentage\": \"10.0%\",\n      \"taxType\": \"GST\",\n      \"confidenceScore\": \"95%\",\n      \"currencyType\": \"AUD\"\n    }\n  ]\n}\n\nExample 3 (tax amount not available):\n\nInput OCR data:  \n\"Donut Co.  \n10 Aug 2023 09:10AM  \nTotal: $8.90  \nThank you!\"\n\nReasoning:\n- Merchant: \"Donut Co.\"\n- Date: \"10 Aug 2023\"\n- Amount: $8.90.\n- No tax info, so use 0 for taxAmount, \"unknown\" for taxType and taxPercentage.\n- No currency type explicit, assume default \"AUD\".\n\nOutput:\n{\n  \"receiptOCRData\": [\n    {\n      \"merchant\": \"Donut Co.\",\n      \"receiptDate\": \"2023-08-10\",\n      \"amount\": 8.90,\n      \"taxAmount\": 0,\n      \"taxPercentage\": \"unknown\",\n      \"taxType\": \"unknown\",\n      \"confidenceScore\": \"85%\",\n      \"currencyType\": \"AUD\"\n    }\n  ]\n}\n\n(Real examples may involve more fields, ambiguous layouts, or extra noise—ensure length and detail match input complexity.)\n\nEdge Cases and Considerations:\n- Input may be unstructured or contain misspellings. Use best judgment and contextual cues.\n- Dates may be in various formats; standardize to YYYY-MM-DD if possible.\n- For multiple receipts or invoices, repeat the structure in the \"receiptOCRData\" array.\n- Do not include partial fields; all fields must be present in each output item.\n- Do not include JSON schema or any explanation—output ONLY the required JSON as above.\n\n**Remember:** Review the input in detail, extract or infer each required field, estimate your extraction confidence, and output ONLY a complete JSON object matching the format above (and nothing else).",
+          "enableStreaming": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        -160
+      ],
+      "id": "3158a8bb-f954-445f-aeab-8838bb5bd21b",
+      "name": "Ai - Extract Bank Account Info"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/ocr",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"mistral-ocr-latest\",\n  \"document\": {\n    \"type\": \"document_url\",\n    \"document_url\": \"{{ $json.url }}\"\n  },\n  \"include_image_base64\": true\n}",
+        "options": {}
+      },
+      "id": "6daf64f2-d903-4a41-9774-8f8c4eeb421d",
+      "name": "Mistral DOC OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        96,
+        80
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "KNmE7poQRylPZsiI",
+          "name": "Previa-Mistral-wwdtt"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.mistral.ai/v1/files/{{ $json.id }}/url",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "expiry",
+              "value": "24"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f0bd174e-ebcd-4adc-8a35-e87c461302d0",
+      "name": "Mistral Signed URL",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -128,
+        80
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "KNmE7poQRylPZsiI",
+          "name": "Previa-Mistral-wwdtt"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.mistral.ai/v1/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "mistralCloudApi",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "purpose",
+              "value": "ocr"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {
+          "pagination": {}
+        }
+      },
+      "id": "f4a39975-161f-4725-b61f-94f864dbc6f3",
+      "name": "Mistral Upload",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -352,
+        80
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "KNmE7poQRylPZsiI",
+          "name": "Previa-Mistral-wwdtt"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "pages",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        320,
+        80
+      ],
+      "id": "8c245043-38ca-48cc-911f-7131331df95a",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "markdown",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        544,
+        80
+      ],
+      "id": "0537cf41-0346-4df0-8468-543f149cec4e",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "markdown"
+            }
+          ]
+        },
+        "options": {
+          "mergeLists": false
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        768,
+        80
+      ],
+      "id": "261e4792-68a1-44a3-a56a-602c69e5d8d0",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://clfdfkkyurghuohjnryy.supabase.co/storage/v1/object/sign/receipts/{{ $json.file_path }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "supabaseApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"expiresIn\": 3600\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -800,
+        80
+      ],
+      "id": "970c1f32-9f01-40e7-bccb-2e92fae6a5f4",
+      "name": "Generate Signed URL",
+      "credentials": {
+        "supabaseApi": {
+          "id": "Lnze5Nji3VYuZ5Wo",
+          "name": "Previa-Supabase"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://clfdfkkyurghuohjnryy.supabase.co/storage/v1/{{ $json.signedURL }}",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": true
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -576,
+        80
+      ],
+      "id": "fd44a317-8854-4a31-abcd-8a35ea5b2a74",
+      "name": "Download File"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be008dab-33b1-4bb0-8c9a-9b8077ef12e2",
+              "name": "receipt_id",
+              "value": "={{ $json.body.receipt_id }}",
+              "type": "string"
+            },
+            {
+              "id": "0e611d61-1930-4c6f-b1bc-51962a242671",
+              "name": "user_id",
+              "value": "={{ $json.body.user_id }}",
+              "type": "string"
+            },
+            {
+              "id": "63dd2439-ba8f-48a7-9fa6-fdd2fd2809be",
+              "name": "file_url",
+              "value": "={{ $json.body.file_url }}",
+              "type": "string"
+            },
+            {
+              "id": "b92ea023-f83d-4f9e-a222-738b20c4130f",
+              "name": "file_path",
+              "value": "={{ $json.body.file_path }}",
+              "type": "string"
+            },
+            {
+              "id": "26f2b4b6-147b-4968-9bca-9eb6098b1b58",
+              "name": "document_type",
+              "value": "={{ $json.body.bucket }}",
+              "type": "string"
+            },
+            {
+              "id": "b1feddbf-1e4a-4751-85c6-969f2306ddca",
+              "name": "storage_bucket",
+              "value": "={{ $json.body.bucket }}",
+              "type": "string"
+            },
+            {
+              "id": "423c38ff-b5b2-4009-bb85-c3b3ed4bc152",
+              "name": "webhookUrl",
+              "value": "={{ $json.webhookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "4d91254e-5492-473a-b7a7-cd63ea2e51d8",
+              "name": "executionMode",
+              "value": "={{ $json.executionMode }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -992,
+        80
+      ],
+      "id": "3b256467-7ebf-488b-9e84-4ce5327c403e",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Simpler version - just join markdown array\nconst items = $input.all();\n\nconst transformedItems = items.map(item => {\n  const markdown = item.json.markdown || [];\n  const text = Array.isArray(markdown) ? markdown.join('\\n\\n') : String(markdown);\n  \n  return {\n    json: { text: text }\n  };\n});\n\nreturn transformedItems;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        992,
+        80
+      ],
+      "id": "ae09d4e3-f3f9-457c-ae21-ad7084b7bcd4",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9fea51c0-b3a9-49b5-8608-3264c9d00304",
+              "name": "extracted_text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1216,
+        80
+      ],
+      "id": "9b9f4358-35c3-4c24-8eda-8b4d9d450381",
+      "name": "Extracted Text1"
+    }
+  ],
+  "pinData": {
+    "Webhook": [
+      {
+        "json": {
+          "headers": {
+            "host": "n8n-prod.coralshades.ai",
+            "user-agent": "Deno/2.1.4 (variant; SupabaseEdgeRuntime/1.69.4)",
+            "content-length": "743",
+            "accept": "*/*",
+            "accept-encoding": "gzip, br",
+            "accept-language": "*",
+            "cdn-loop": "cloudflare; loops=1",
+            "cf-connecting-ip": "2406:da1c:136:5d0a:b9e7:3900:e4e4:336f",
+            "cf-ipcountry": "AU",
+            "cf-ray": "9959deb65b9d5729-SYD",
+            "cf-visitor": "{\"scheme\":\"https\"}",
+            "cf-warp-tag-id": "185275f9-ee94-48f7-acee-2077082588aa",
+            "connection": "keep-alive",
+            "content-type": "application/json",
+            "x-forwarded-for": "2406:da1c:136:5d0a:b9e7:3900:e4e4:336f",
+            "x-forwarded-proto": "https"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "receipt_id": "6177a111-b433-492f-b20b-93283b851241",
+            "user_id": "7d1ad1b1-b921-4629-9ec9-d63df7e0e308",
+            "file_url": "https://clfdfkkyurghuohjnryy.supabase.co/storage/v1/object/sign/receipts/7d1ad1b1-b921-4629-9ec9-d63df7e0e308/1761648228391_CoralShades%20September%20Invoice.pdf?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9iYzEyN2Y0OS02MjBmLTQzMGEtODNkYS01YjllOTNmNWNhZTkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWNlaXB0cy83ZDFhZDFiMS1iOTIxLTQ2MjktOWVjOS1kNjNkZjdlMGUzMDgvMTc2MTY0ODIyODM5MV9Db3JhbFNoYWRlcyBTZXB0ZW1iZXIgSW52b2ljZS5wZGYiLCJpYXQiOjE3NjE2NDg2MDIsImV4cCI6MTc2MTY1MjIwMn0.7IxvvqNimL_Y1aOjXU3hXe2fw2M6S6LhrEbXjUdrpBU",
+            "file_path": "7d1ad1b1-b921-4629-9ec9-d63df7e0e308/1761648228391_CoralShades September Invoice.pdf",
+            "bucket": "receipts"
+          },
+          "webhookUrl": "https://n8n-prod.coralshades.ai/webhook/receipt-ocr",
+          "executionMode": "production"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Simple Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "Ai - Extract Bank Account Info",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai - Extract Bank Account Info",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Ai - Extract Bank Account Info",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral DOC OCR": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Signed URL": {
+      "main": [
+        [
+          {
+            "node": "Mistral DOC OCR",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Upload": {
+      "main": [
+        [
+          {
+            "node": "Mistral Signed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Signed URL": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Mistral Upload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Generate Signed URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Extracted Text1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extracted Text1": {
+      "main": [
+        [
+          {
+            "node": "Ai - Extract Bank Account Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "075e2acc-25a8-400a-b14a-b4c9df8dd36f",
+  "meta": {
+    "instanceId": "1611a0f2d6b428cf9dbc76c998e83bf12ee9b56fcdc3e5a977e5ca4acf1cbdb0"
+  },
+  "id": "VXIB9EL6KBoTtVTB",
+  "tags": [
+    {
+      "createdAt": "2025-08-27T03:11:51.581Z",
+      "updatedAt": "2025-10-09T22:42:16.758Z",
+      "id": "xJmN110gg6kaxmfw",
+      "name": "Previa"
+    }
+  ]
+}
